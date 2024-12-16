@@ -1,0 +1,23 @@
+{
+    "name": "taskflow",
+    "version": "1.0.0",
+    "description": "Projet M2",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+  
+      "dev:backend": "cd backend && npm run start:dev",
+      "dev:frontend": "cd frontend && npm run dev",
+      "build:backend": "cd backend && npm run build",
+      "build:frontend": "cd frontend && npm run build",
+  
+      "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+  
+    "private": true,
+    "workspaces": ["backend", "frontend", "shared"]
+  }
+  
