@@ -3,16 +3,51 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
-
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UtilisateursService {
-  constructor(
-    @InjectRepository(UtilisateurEntity)
-    private readonly utilisateurRepository: Repository<UtilisateurEntity>,
-  ) {}
+    constructor(
+        @InjectRepository(UtilisateurEntity)
+        private readonly utilisateurRepository: Repository<UtilisateurEntity>,
+        private readonly jwtService: JwtService,
+    ) {}
 
-  async create(createUtilisateurDto: CreateUtilisateurDto): Promise<UtilisateurEntity> {
-    const utilisateur = this.utilisateurRepository.create(createUtilisateurDto);
-    return this.utilisateurRepository.save(utilisateur);
-  }
+    async create(createUtilisateurDto: CreateUtilisateurDto): Promise<UtilisateurEntity> {
+       
+        const hashedPassword = await bcrypt.hash(createUtilisateurDto.mot_de_passe, 10);    
+        
+        const utilisateur = this.utilisateurRepository.create({
+            nom: createUtilisateurDto.nom,
+            prenom: createUtilisateurDto.prenom,
+            email: createUtilisateurDto.email,
+            mot_de_passe: hashedPassword,
+            telephone: createUtilisateurDto.telephone,
+            admin: createUtilisateurDto.admin,
+        });
+    
+        return this.utilisateurRepository.save(utilisateur);
+      }
+
+    async validateUser(email: string, mot_de_passe: string): Promise<UtilisateurEntity | null> {
+        const utilisateur = await this.utilisateurRepository.findOne({ where: { email } });
+        
+        if (!utilisateur) {
+            return null;
+        }
+
+        const isPasswordValid = await bcrypt.compare(mot_de_passe, utilisateur.mot_de_passe);
+
+        if (isPasswordValid) {
+            return utilisateur;
+        }
+
+        return null;
+    }
+
+    // Générer un JWT pour l'utilisateur connecté
+    async generateJwt(user: UtilisateurEntity): Promise<string> {
+        const payload = { email: user.email, id: user.id };
+        return this.jwtService.sign(payload); // Générer un jeton JWT
+    }
 }

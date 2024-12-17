@@ -2,13 +2,29 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { UtilisateursService } from './utilisateurs.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
+import { ConnexionDto } from './dto/connexion.dto';
+import * as bcrypt from 'bcrypt';
 
-@Controller('utilisateur') // Endpoint : /utilisateur
+
+@Controller('auth')
 export class UtilisateursController {
   constructor(private readonly UtilisateursService: UtilisateursService) {}
 
-  @Post()
+  @Post("creation")
   async create(@Body() createUtilisateursDto: CreateUtilisateurDto): Promise<UtilisateurEntity> {
     return this.UtilisateursService.create(createUtilisateursDto);
+  }
+
+  @Post('connexion')
+  async login(@Body() loginDto: ConnexionDto): Promise<{ accessToken: string } | null> {
+    const { email, mot_de_passe } = loginDto;
+    const utilisateur = await this.UtilisateursService.validateUser(email, mot_de_passe);
+
+    if (!utilisateur) {
+      return null;
+    }
+
+    const accessToken = await this.UtilisateursService.generateJwt(utilisateur);
+    return { accessToken };
   }
 }
