@@ -12,7 +12,7 @@ export class UtilisateurEntity implements Utilisateur {
   @Column()
   prenom: string;
 
-  @Column()
+  @Column({unique:true})
   email: string;
 
   @Column()

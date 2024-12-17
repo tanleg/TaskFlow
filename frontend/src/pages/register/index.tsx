@@ -3,27 +3,58 @@ import { useNavigate } from "react-router-dom";
 import logo from 'frontend/src/assets/logo_2.png';
 import { CircularProgress, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from "axios";
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [dob, setDob] = useState("");
-  const [address, setAddress] = useState("");
+//   const [dob, setDob] = useState("");
+//   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);  // Ajout de l'état de chargement
   
   const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (firstName && lastName && dob && address && email && password) {
-        setLoading(true);  // Démarre le chargement
-        setTimeout(() => {  // Simule un délai avant la redirection
-          console.log("Inscription réussie :", firstName, lastName, email);
-          navigate("/dashboard");
-        }, 2000); // Temps de chargement de 2 secondes
+    if (firstName && lastName /*&& dob && address */&& email && telephone && password) {
+        // setLoading(true);  // Démarre le chargement
+
+        // setTimeout(() => {  // Simule un délai avant la redirection
+        //   console.log("Inscription réussie :", firstName, lastName, email);
+        //   navigate("/dashboard");
+        // }, 2000); // Temps de chargement de 2 secondes
+
+        
+        try {
+            setLoading(true);  // Démarre le chargement
+            const response = await axios.post("http://localhost:3000/auth/creation", {
+              nom: firstName,
+              prenom: lastName,
+            //   dateOfBirth: dob,
+            //   address: address,
+              email: email,
+              mot_de_passe: password,
+              telephone: telephone,
+              admin: false
+            });
+    
+            console.log("Réponse du serveur :", response.data);
+            
+            alert("Inscription réussie !");
+            navigate("/dashboard");
+    
+        } catch (error) {
+            console.error("Erreur lors de l'inscription :", error);
+            alert("Erreur lors de l'inscription. Veuillez réessayer.");
+        } finally {
+            setLoading(false);
+        }
+
+
       } else {
         alert("Veuillez remplir tous les champs.");
       }
@@ -125,7 +156,48 @@ const RegisterPage: React.FC = () => {
               transition: "all 0.3s ease-in-out",
             }}
           />
+
           <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: "100%",
+              marginBottom: "20px",
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid #e0e0e0",
+              fontSize: "16px",
+              fontFamily: "'Open Sans', sans-serif",
+              outline: "none",
+              backgroundColor: "#f9f9f9",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.3s ease-in-out",
+            }}
+          />
+
+          <input
+            type="text"
+            placeholder="Téléphone"
+            value={telephone}
+            onChange={(e) => setTelephone(e.target.value)}
+            style={{
+              width: "100%",
+              marginBottom: "20px",
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid #e0e0e0",
+              fontSize: "16px",
+              fontFamily: "'Open Sans', sans-serif",
+              outline: "none",
+              backgroundColor: "#f9f9f9",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.3s ease-in-out",
+            }}
+          />
+
+          {/* <input
             type="date"
             placeholder="Date de naissance"
             value={dob}
@@ -162,26 +234,8 @@ const RegisterPage: React.FC = () => {
               boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
               transition: "all 0.3s ease-in-out",
             }}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              padding: "14px",
-              borderRadius: "10px",
-              border: "1px solid #e0e0e0",
-              fontSize: "16px",
-              fontFamily: "'Open Sans', sans-serif",
-              outline: "none",
-              backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.3s ease-in-out",
-            }}
-          />
+          /> */}
+          
           <div style={{ position: "relative", marginBottom: "20px" }}>
             <input
               type={showPassword ? "text" : "password"}
