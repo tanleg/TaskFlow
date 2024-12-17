@@ -13,7 +13,7 @@ export class UtilisateursService {
         private readonly jwtService: JwtService,
     ) {}
 
-<<<<<<< HEAD
+
     async create(createUtilisateurDto: CreateUtilisateurDto): Promise<UtilisateurEntity> {
        
         const hashedPassword = await bcrypt.hash(createUtilisateurDto.mot_de_passe, 10);    

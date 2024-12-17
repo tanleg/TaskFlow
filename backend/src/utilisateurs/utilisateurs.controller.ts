@@ -3,7 +3,6 @@ import { UtilisateursService } from './utilisateurs.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
 import { ConnexionDto } from './dto/connexion.dto';
-import * as bcrypt from 'bcrypt';
 
 
 @Controller('auth')
