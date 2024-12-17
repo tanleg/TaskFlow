@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
+import axios from "axios";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("test@gmail.com");
@@ -15,25 +16,50 @@ const LoginPage: React.FC = () => {
   
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (email && password) {
-      console.log("Connexion réussie :", email, "Remember Me:", rememberMe);
+    //   console.log("Connexion réussie :", email, "Remember Me:", rememberMe);
 
-      setLoading(true); // Afficher le chargement
-      setTimeout(() => {
-        if (rememberMe) {
-            localStorage.setItem("email", email);
-            localStorage.setItem("password", password);
-        } else {
-            localStorage.removeItem("email");
-            localStorage.removeItem("password");
+    //   setLoading(true); // Afficher le chargement
+    //   setTimeout(() => {
+    //     if (rememberMe) {
+    //         localStorage.setItem("email", email);
+    //         localStorage.setItem("password", password);
+    //     } else {
+    //         localStorage.removeItem("email");
+    //         localStorage.removeItem("password");
+    //     }
+    //     setLoading(false);
+
+    //     navigate("/dashboard");
+    // },2000);
+
+        try {
+            setLoading(true); // Afficher le chargement
+
+            const response = await axios.post("http://localhost:3000/auth/connexion", {
+                email: email,
+                mot_de_passe: password,
+            });
+
+            console.log("Réponse du serveur :", response.data);
+            
+            if (response.data){
+                alert("Inscription réussie !");
+                navigate("/dashboard");    
+            }else{
+                alert("Mauvais mot de passe");
+            }
+
+        } catch (error) {
+            console.error("Erreur lors de la connexion :", error);
+            alert("Erreur lors de la connexion. Veuillez réessayer.");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
 
-        navigate("/dashboard");
-    },2000);
     } else {
       alert("Veuillez saisir un email et un mot de passe.");
     }
