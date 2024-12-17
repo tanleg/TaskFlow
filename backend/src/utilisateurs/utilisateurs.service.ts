@@ -15,4 +15,9 @@ export class UtilisateursService {
     const utilisateur = this.utilisateurRepository.create(createUtilisateurDto);
     return this.utilisateurRepository.save(utilisateur);
   }
+
+  // Méthode pour récupérer un utilisateur par email
+  async findByEmail(email: string): Promise<UtilisateurEntity> {
+    return this.utilisateurRepository.findOne({ where: { email } });
+  }
 }
