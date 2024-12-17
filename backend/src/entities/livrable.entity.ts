@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Livrable } from '../../../shared/src/types/livrable.type';
 
-@Entity()
+@Entity("livrable")
 export class LivrableEntity implements Livrable {
   @PrimaryGeneratedColumn()
   id: number;

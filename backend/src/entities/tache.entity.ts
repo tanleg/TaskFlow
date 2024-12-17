@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Tache } from '../../../shared/src/types/tache.type';
 
-@Entity()
+@Entity("tache")
 export class TacheEntity implements Tache {
   @PrimaryGeneratedColumn()
   id: number;

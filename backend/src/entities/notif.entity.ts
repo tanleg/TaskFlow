@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Notif } from '../../../shared/src/types/notif.type';
 
-@Entity()
+@Entity("notif")
 export class NotifEntity implements Notif {
   @PrimaryGeneratedColumn()
   id: number;

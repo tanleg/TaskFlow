@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Utilisateur } from '../../../shared/src/types/utilisateur.type';
 
-@Entity()
+@Entity("utilisateur")
 export class UtilisateurEntity implements Utilisateur {
   @PrimaryGeneratedColumn()
   id: number;

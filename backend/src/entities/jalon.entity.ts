@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Jalon } from '../../../shared/src/types/jalon.type';
 
-@Entity()
+@Entity("jalon")
 export class JalonEntity implements Jalon {
   @PrimaryGeneratedColumn()
   id: number;

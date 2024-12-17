@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Fichier } from '../../../shared/src/types/fichier.type';
 
-@Entity()
+@Entity("fichier")
 export class FichierEntity implements Fichier{
     @PrimaryGeneratedColumn()
     id: number;
