@@ -1,0 +1,18 @@
+/* Global styles */
+:root {
+    --primary-color: #005B96;
+    --secondary-color: #00A676;
+    --background-color: #F5F5F5;
+    --text-color: #333333;
+    --font-title: 'Montserrat', sans-serif;
+    --font-text: 'Open Sans', sans-serif;
+  }
+  
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-text);
+    margin: 0;
+    padding: 0;
+  }
+  

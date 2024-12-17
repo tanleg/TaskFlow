@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import React from "react";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// // import Sidebar from "frontend/src/components/Sidebar.tsx";
+// import Dashboard from "frontend/src/pages/dashboard/index.tsx";
+// import Projects from "frontend/src/pages/projets/index.tsx";
+// import Chats from "frontend/src/pages/chat/index.tsx";
+// import Users from "frontend/src/pages/utilisateurs/index.tsx";
+// import LoginPage from "frontend/src/pages/login/index.tsx"; // Importation de la page de connexion
+// import Register from "frontend/src/pages/register/index.tsx";
+// import Layout from "frontend/src/layouts/layouts.tsx";
+// import NotFoundPage from "frontend/src/pages/404.tsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+// const App: React.FC = () => {
+//   return (
+//     <Router>
+//       <Routes>
+//         {/* Route pour la page de connexion */}
+//         <Route path="/" element={<LoginPage />} />
+//         <Route path="/register" element={<Register />} />
 
+//         {/* Routes protégées dans le Layout */}
+//         <Route element={<Layout />}>
+//           <Route path="/dashboard" element={<Dashboard />} />
+//           <Route path="/projects" element={<Projects />} />
+//           <Route path="/chats" element={<Chats />} />
+//           <Route path="/users" element={<Users />} />
+//           {/* Ajoutez d'autres routes ici */}
+//           <Route path="*" element={<NotFoundPage />} />
+//         </Route>
+//       </Routes>
+//     </Router>
+//   );
+// };
+
+// export default App;
+
+
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Sidebar from "frontend/src/components/Sidebar.tsx";
+import Dashboard from "frontend/src/pages/dashboard/index.tsx";
+import Projects from "frontend/src/pages/projets/index.tsx";
+import Chats from "frontend/src/pages/chat/index.tsx";
+import Users from "frontend/src/pages/utilisateurs/index.tsx";
+import LoginPage from "frontend/src/pages/login/index.tsx"; // Importation de la page de connexion
+import Register from "frontend/src/pages/register/index.tsx";
+import Layout from "frontend/src/layouts/layouts.tsx";
+import NotFoundPage from "frontend/src/pages/404.tsx";
+
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Route pour la page de connexion */}
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<Register />} />
 
-export default App
+        {/* Routes protégées dans le Layout */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/chats" element={<Chats />} />
+          <Route path="/users" element={<Users />} />
+          {/* Ajoutez d'autres routes ici */}
+        </Route>
+
+        {/* Route 404 en dehors du Layout */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
