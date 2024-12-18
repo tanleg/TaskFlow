@@ -10,9 +10,9 @@ export class UtilisateursController {
   constructor(private readonly UtilisateursService: UtilisateursService) {}
 
   @Post("creation")
-  async create(@Body() createUtilisateursDto: CreateUtilisateurDto): Promise<UtilisateurEntity> {
-    return this.UtilisateursService.create(createUtilisateursDto);
-  }
+  async create(@Body() createUtilisateursDto: CreateUtilisateurDto): Promise<{ accessToken: string }> {
+      return this.UtilisateursService.create(createUtilisateursDto);
+  }  
 
   @Post('connexion')
   async login(@Body() loginDto: ConnexionDto): Promise<{ accessToken: string } | null> {
