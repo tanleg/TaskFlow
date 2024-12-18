@@ -5,6 +5,7 @@ import { UtilisateurEntity } from '../entities/utilisateur.entity';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+
 @Injectable()
 export class UtilisateursService {
     constructor(
@@ -14,6 +15,7 @@ export class UtilisateursService {
     ) {}
 
 
+    // creer un utilisateur en bdd 
     async create(createUtilisateurDto: CreateUtilisateurDto): Promise<{ accessToken: string }> {
 
         const hashedPassword = await bcrypt.hash(createUtilisateurDto.mot_de_passe, 10);
@@ -32,6 +34,7 @@ export class UtilisateursService {
         return { accessToken };
     }
 
+    // checker les infos de connection d'un utilisateur
     async validateUser(email: string, mot_de_passe: string): Promise<UtilisateurEntity | null> {
         const utilisateur = await this.utilisateurRepository.findOne({ where: { email } });
         
@@ -48,6 +51,7 @@ export class UtilisateursService {
         return null;
     }
 
+
     // Générer un JWT pour l'utilisateur connecté
     async generateJwt(user: UtilisateurEntity): Promise<string> {
         const payload = { email: user.email, id: user.id };
@@ -55,6 +59,7 @@ export class UtilisateursService {
     }
 
     // Méthode pour récupérer un utilisateur par email
+    // (pas encore utilisé)
     async findByEmail(email: string): Promise<UtilisateurEntity> {
         return this.utilisateurRepository.findOne({ where: { email } });
     }

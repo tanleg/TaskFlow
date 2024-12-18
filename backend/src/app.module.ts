@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
+import { UtilisateurEntity } from './entities/utilisateur.entity';
 
 @Module({
   imports: [
@@ -17,8 +20,16 @@ import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
         logging: true
-      }),
-      UtilisateursModule,
+    }),
+    
+    TypeOrmModule.forFeature([UtilisateurEntity]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'yourSecretKey', // Utilisez une clé sécurisée dans un fichier d'env
+      signOptions: { expiresIn: '1h' },
+    }),
+
+    UtilisateursModule,
   ],
   controllers: [AppController],
   providers: [AppService],
