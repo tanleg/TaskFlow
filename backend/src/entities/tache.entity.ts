@@ -1,29 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Tache } from '../../../shared/src/types/tache.type';
 
-@Entity("tache")
-export class TacheEntity implements Tache {
+@Entity('tache')
+export class TacheEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 50 })
   nom: string;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   date_debut: Date;
 
-  @Column({type: 'timestamp', nullable: true})
+  @Column({nullable: true})
   date_fin_reelle: Date | null ;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   date_fin: Date;
 
   @Column({ default: false })
   termine: boolean;
 
-  @Column()
-  id_projet: number;
+  @ManyToOne(() => ProjetEntity, projet => projet.taches)
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
 
-  @Column()
-  id_utilisateur: number;
+  @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.taches)
+  @JoinColumn({ name: 'id_utilisateur' })
+  utilisateur: UtilisateurEntity;
 }
