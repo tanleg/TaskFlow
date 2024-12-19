@@ -6,11 +6,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
 import { UtilisateurEntity } from './entities/utilisateur.entity';
-<<<<<<< HEAD
 import { EvenementsModule } from './evenements/evenements.module';
-=======
-import { ProjetModule } from './projet/projet.module';
->>>>>>> 9cac112d3863de401eb6dec80648e5c1c4b9a6a0
 
 @Module({
   imports: [
@@ -19,8 +15,8 @@ import { ProjetModule } from './projet/projet.module';
         type: 'postgres',
         host: 'localhost',
         port: 5432,
-        username: 'alexis',
-        password: 'Y3wyp9h/',
+        username: 'postgres',
+        password: 'root',
         database: 'taskflow',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
@@ -35,12 +31,7 @@ import { ProjetModule } from './projet/projet.module';
     }),
 
     UtilisateursModule,
-<<<<<<< HEAD
     EvenementsModule
-=======
-
-    ProjetModule,
->>>>>>> 9cac112d3863de401eb6dec80648e5c1c4b9a6a0
   ],
   controllers: [AppController],
   providers: [AppService],

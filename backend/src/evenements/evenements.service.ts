@@ -18,12 +18,10 @@ export class EvenementsService {
         private readonly livrableRepository: Repository<LivrableEntity>,
     ) {}
 
-    // lister les taches d'un utilisateur
     async findTachesByUserId(userId: number): Promise<TacheEntity[]> {
         return this.tacheRepository.find({
-            where: { id_utilisateur: userId }
-    });
-  }
-  
-
+          where: { utilisateur: { id: userId } }, // Utilisation de la relation "utilisateur"
+          relations: ['utilisateur', 'projet'], // Charge également les relations
+        });
+    }  
 }
