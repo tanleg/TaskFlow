@@ -50,9 +50,9 @@ export class UtilisateursController {
 //   recupere les infos du user avec le bon token
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req): { id: number } {
+  getProfile(@Request() req): { id: number, prenom: string } {
     const user = req.user;
-    return { id: user.id };
+    return { id: user.id, prenom: user.prenom };
   }
 
   

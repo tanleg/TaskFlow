@@ -14,9 +14,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 
   async validate(payload: any) {
-    if (!payload || !payload.id) {
+    if (!payload || !payload.id || !payload.prenom) {
         throw new UnauthorizedException('Token invalide');
     }
-    return { id: payload.id }; // Retourne les données nécessaires
+    return { id: payload.id, prenom: payload.prenom }; // Retourne les données nécessaires
   }
 }
