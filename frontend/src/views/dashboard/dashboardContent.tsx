@@ -1,39 +1,110 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { Event, Flag, Assignment, CalendarToday, Work } from "@mui/icons-material"; // Icônes Material-UI
+import { Flag, Assignment, CalendarToday, Work } from "@mui/icons-material"; // Icônes Material-UI
 import DialogAddProjects from "frontend/src/views/dashboard/dialogAddProjects.tsx";
 import { useNavigate } from "react-router-dom";
 import { projects } from "frontend/src/views/projets/projects.ts"; // Importation des projets
+import axios from "axios";
 // import InfoVisite from "frontend/src/views/dashboard/infoEvents.tsx";
 
-
-// Liste d'événements (simulée)
-const upcomingEvents = [
-  { date: "19/01/2025", type: "livrable", project: "Projet 3", color: "linear-gradient(135deg, #FFECB3, #FFD54F)", icon: <Event /> },
-  { date: "20/01/2025", type: "échéance", project: "Projet 1", color: "linear-gradient(135deg, #FFCDD2, #E57373)", icon: <Flag /> },
-  { date: "25/01/2025", type: "livrable", project: "Projet 1", color: "linear-gradient(135deg, #FFECB3, #FFD54F)", icon: <Event /> },
-  { date: "30/01/2029", type: "Jalon", project: "Projet 2", color: "linear-gradient(135deg, #C8E6C9, #81C784)", icon: <CalendarToday /> },
-  { date: "30/01/2029", type: "Tâche", project: "Projet 5", color: "linear-gradient(135deg, #BBDEFB, #64B5F6)", icon: <Assignment /> },
-];
-
-
+  
 const DashboardContent: React.FC = () => {
+
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();  // Initialisation du hook useNavigate
 
   // Ouvrir/fermer la popup
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
-
+  
   // Fonction pour naviguer vers la page des projets
   const handleNavigateToProjects = () => {
-    navigate("/projects");  // Redirection vers la page des projets
+      navigate("/projects");  // Redirection vers la page des projets
+    };
+    
+    // Fonction pour naviguer vers la page de détail d'un projet
+    const handleNavigateToProjectDetails = (id: number) => {
+        navigate(`/projet/${id}`);  // Redirection vers la page des détails du projet
   };
 
-  // Fonction pour naviguer vers la page de détail d'un projet
-  const handleNavigateToProjectDetails = (id: number) => {
-    navigate(`/projet/${id}`);  // Redirection vers la page des détails du projet
+  const [user_id, setId] = useState<string | null>(null);
+
+  async function recup_id() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.error('Aucun token trouvé');
+      setId(null);
+      return;
+    }
+    
+    try {
+        const response = await axios.get('http://localhost:3000/auth/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+  
+        setId(response.data.id || null);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du profil utilisateur', error);
+        setId(null);
+    }
   };
+
+  async function getEvenements(){
+    let evenement;
+    let liste_evenement = [];
+    let color;
+    let icon;
+    if (user_id){
+        recup_id();
+    }else{
+        return
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:3000/evenements/2`);
+        // const response = await axios.get(`http://localhost:3000/evenements/${user_id}`);
+        for (let element of response.data){
+            console.log(element.type)
+            switch (element.type) {
+                case "Tâche":
+                  color = "linear-gradient(135deg, #FFCDD2, #E57373)";
+                  icon = <Assignment />;
+                  break;
+                case "Livrable":
+                  color = "linear-gradient(135deg, #FFECB3, #FFD54F)";
+                  icon = <Flag />
+                  break;
+                case "Jalon":
+                  color = "linear-gradient(135deg, #C8E6C9, #81C784)";
+                  icon = <CalendarToday />
+                  break;
+              }
+            
+            evenement = { date: element.date_fin, type: element.type, project: element.nom, color: color, icon: icon }
+            liste_evenement.push(evenement)
+        }
+        setUpcomingEvents(liste_evenement);
+        
+    } catch (err:any) {
+        alert(err.message);
+    }
+  }
+
+  // récupération de l'ID utilisateur
+  useEffect(() => {
+    recup_id();
+  }, []);
+
+  // Chargement des événements
+  useEffect(() => {
+    if (user_id) {
+      getEvenements();
+    }
+  }, [user_id]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
