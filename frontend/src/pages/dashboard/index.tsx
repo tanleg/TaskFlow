@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
       {/* Contenu principal du Dashboard */}
       <DashboardContent />
     </Box>
+
   );
 };
 

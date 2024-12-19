@@ -18,6 +18,34 @@ const RegisterPage: React.FC = () => {
   
   const navigate = useNavigate();
 
+    async function autoLogin(){
+        try {
+            setLoading(true); // Afficher le chargement
+
+            const response = await axios.post("http://localhost:3000/auth/connexion", {
+                email: email,
+                mot_de_passe: password,
+            });
+
+            console.log("Réponse du serveur :", response.data);
+            
+            if (response.data){
+                if (response.data.accessToken)
+                    localStorage.setItem('authToken', response.data.accessToken);
+                
+                navigate("/dashboard");    
+            }else{
+                alert("Erreur lors de la connexion. Veuillez réessayer.");
+            }
+
+        } catch (error) {
+            console.error("Erreur lors de la connexion :", error);
+            alert("Erreur lors de la connexion. Veuillez réessayer.");
+        } finally {
+            setLoading(false);
+        }
+    }
+  
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (firstName && lastName /*&& dob && address */&& email && telephone && password) {
@@ -45,7 +73,8 @@ const RegisterPage: React.FC = () => {
             console.log("Réponse du serveur :", response.data);
             
             alert("Inscription réussie !");
-            navigate("/dashboard");
+            autoLogin()
+            // navigate("/dashboard");
     
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);

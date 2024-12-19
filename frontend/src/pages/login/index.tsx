@@ -48,6 +48,10 @@ const LoginPage: React.FC = () => {
             
             if (response.data){
                 alert("Inscription réussie !");
+
+                if (response.data.accessToken)
+                    localStorage.setItem('authToken', response.data.accessToken);
+
                 navigate("/dashboard");    
             }else{
                 alert("Mauvais mot de passe");
