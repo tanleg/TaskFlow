@@ -1,7 +1,14 @@
 import React from "react";
+import { Box } from "@mui/material";
 
 const Projects: React.FC = () => {
-  return <h1>Bienvenue sur la page projets </h1>;
+  return (
+    <Box sx={{ marginLeft: "290px", padding: "20px" }}>
+      <h1>Bienvenue sur la page projet</h1>
+    </Box>
+)
 };
 
 export default Projects;
+
+

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ServerDescription } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import * as bcrypt from 'bcrypt';
@@ -54,7 +54,7 @@ export class UtilisateursService {
 
     // Générer un JWT pour l'utilisateur connecté
     async generateJwt(user: UtilisateurEntity): Promise<string> {
-        const payload = { email: user.email, id: user.id };
+        const payload = { id: user.id };
         return this.jwtService.sign(payload); // Générer un jeton JWT
     }
 

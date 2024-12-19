@@ -1,54 +1,3 @@
-// import React from "react";
-// import { AppBar, Toolbar, IconButton, Box } from "@mui/material";
-// import NotificationsIcon from "@mui/icons-material/Notifications";
-
-
-// const AppBarComponent: React.FC = () => {
-//   return (
-//     <Box
-//       sx={{
-//         display: "flex",
-//         justifyContent: "center",
-//         padding: "16px",
-//         backgroundColor: "#F3F3F5", // Fond extérieur léger
-//       }}
-//     >
-//       <AppBar
-//         position="static"
-//         sx={{
-//           backgroundColor: "#FFFFFF", // Fond blanc
-//           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Ombre douce
-//           borderRadius: "12px", // Coins arrondis
-//           maxWidth: "1200px", // Largeur maximale de la barre
-//           width: "100%", // Prend toute la largeur disponible
-//         }}
-//       >
-//         <Toolbar
-//           sx={{
-//             display: "flex",
-//             justifyContent: "space-between",
-//             alignItems: "center",
-//           }}
-//         >
-          
-
-//           {/* Espace central vide */}
-
-//           {/* Icône à droite */}
-//           <IconButton
-//             aria-label="notifications"
-//             sx={{ color: "#000", marginLeft: "auto" }} // Alignement complet à droite
-//           >
-//             <NotificationsIcon />
-//           </IconButton>
-//         </Toolbar>
-//       </AppBar>
-//     </Box>
-//   );
-// };
-
-// export default AppBarComponent;
-
 import React, { useState } from "react";
 import { AppBar, Toolbar, IconButton, Box, Drawer, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -91,6 +40,7 @@ const AppBarComponent: React.FC = () => {
         justifyContent: "center",
         padding: "16px",
         backgroundColor: "#F3F3F5",
+        marginLeft: "290px",
       }}
     >
       <AppBar
@@ -192,3 +142,4 @@ const AppBarComponent: React.FC = () => {
 };
 
 export default AppBarComponent;
+
