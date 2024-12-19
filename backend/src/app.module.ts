@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
 import { UtilisateurEntity } from './entities/utilisateur.entity';
+import { ProjetModule } from './projet/projet.module';
 
 @Module({
   imports: [
@@ -14,8 +15,8 @@ import { UtilisateurEntity } from './entities/utilisateur.entity';
         type: 'postgres',
         host: 'localhost',
         port: 5432,
-        username: 'postgres',
-        password: 'root',
+        username: 'alexis',
+        password: 'Y3wyp9h/',
         database: 'taskflow',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
@@ -30,6 +31,8 @@ import { UtilisateurEntity } from './entities/utilisateur.entity';
     }),
 
     UtilisateursModule,
+
+    ProjetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

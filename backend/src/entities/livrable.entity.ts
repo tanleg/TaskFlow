@@ -1,23 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Livrable } from '../../../shared/src/types/livrable.type';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { ProjetEntity } from './projet.entity'; 
+import { UtilisateurEntity } from './utilisateur.entity'; 
 
-@Entity("livrable")
-export class LivrableEntity implements Livrable {
+
+@Entity('livrable')
+export class LivrableEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 50 })
   nom: string;
 
   @Column()
   date_fin: Date;
 
-  @Column({nullable: true})
-  date_fin_reelle: Date | null;
-
-  @Column({ default: false })
-  termine: boolean;
+  @Column({ nullable: true })
+  date_fin_reelle: Date;
 
   @Column()
-  id_projet: number;
+  termine: boolean;
+
+  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
+
+  @OneToMany(() => UtilisateurEntity, utilisateur => utilisateur.livrables)
+    utilisateurs: UtilisateurEntity[];
 }

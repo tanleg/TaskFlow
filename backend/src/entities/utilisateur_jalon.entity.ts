@@ -1,11 +1,18 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisateurJalon } from '../../../shared/src/types/utilisateur_jalon.type';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { JalonEntity } from './jalon.entity';
+import { UtilisateurEntity } from './utilisateur.entity';
 
-@Entity("utilisateur_jalon")
-export class UtilisateurJalonEntity implements UtilisateurJalon {
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity('utilisateur_jalon')
+export class UtilisateurJalonEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id_utilisateur: number;  
+  @ManyToOne(() => JalonEntity, jalon => jalon.utilisateurs)
+  @JoinColumn({ name: 'id' })
+  jalon: JalonEntity;
+
+  @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.jalons)
+  @JoinColumn({ name: 'id_utilisateur' })
+  utilisateur: UtilisateurEntity;
+  
 }

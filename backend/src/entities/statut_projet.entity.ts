@@ -1,8 +1,11 @@
-import { Entity, PrimaryColumn } from 'typeorm';
-import { StatutProjet } from '../../../shared/src/types/statut_projet.type';
+import { Entity, PrimaryColumn, OneToMany } from 'typeorm';
+import { ProjetEntity } from './projet.entity';
 
-@Entity("statut_projet")
-export class StatutProjetEntity implements StatutProjet{
-  @PrimaryColumn({ type: 'varchar', length: 150 })
+@Entity('statut_projet')
+export class StatutProjetEntity {
+  @PrimaryColumn({ length: 150 })
   statut: string;
+
+  @OneToMany(() => ProjetEntity, projet => projet.statutProjet)
+  projets: ProjetEntity[];
 }
