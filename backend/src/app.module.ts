@@ -14,7 +14,7 @@ import { UtilisateurEntity } from './entities/utilisateur.entity';
         type: 'postgres',
         host: 'localhost',
         port: 5432,
-        username: 'postgres',
+        username: 'sacroudr',
         password: 'root',
         database: 'taskflow',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],

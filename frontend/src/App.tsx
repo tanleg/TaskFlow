@@ -9,6 +9,7 @@ import LoginPage from "frontend/src/pages/login/index.tsx"; // Importation de la
 import Register from "frontend/src/pages/register/index.tsx";
 import Layout from "frontend/src/layouts/layouts.tsx";
 import NotFoundPage from "frontend/src/pages/404.tsx";
+import DetailsProjet from "./views/projets/detailsProjets";
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projet/:id" element={<DetailsProjet />} />
           <Route path="/chats" element={<Chats />} />
           <Route path="/users" element={<Users />} />
           {/* Ajoutez d'autres routes ici */}
