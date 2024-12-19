@@ -65,8 +65,8 @@ const DashboardContent: React.FC = () => {
     }
 
     try {
-        const response = await axios.get(`http://localhost:3000/evenements/2`);
-        // const response = await axios.get(`http://localhost:3000/evenements/${user_id}`);
+        // const response = await axios.get(`http://localhost:3000/evenements/2`);      //POUR TESTER
+        const response = await axios.get(`http://localhost:3000/evenements/${user_id}`);
         for (let element of response.data){
             console.log(element.type)
             switch (element.type) {
