@@ -3,18 +3,15 @@ import { Box, Typography } from "@mui/material";
 import axios from "axios";
 
 const DashboardHeader: React.FC = () => {
-  // Exemple d'utilisateur (cela peut être remplacé par des données réelles d'un système d'authentification)
-  const [user_id, setId] = useState<number | null>(null);
+  
   const [user_prenom, setPrenom] = useState<string | null>(null);
 
-
-//   recupere l'id et le prenom de l'utilisateur
-  async function recup_donnees() {
+//   recupere le prenom de l'utilisateur
+  async function recup_prenom() {
     const token = localStorage.getItem('authToken');
     
     if (!token) {
       console.error('Aucun token trouvé');
-      setId(null);
       setPrenom(null);
       return;
     }
@@ -26,11 +23,9 @@ const DashboardHeader: React.FC = () => {
         },
       });
   
-      setId(response.data.id || null);
       setPrenom(response.data.prenom || null);
     } catch (error) {
       console.error('Erreur lors de la récupération du profil utilisateur', error);
-      setId(null); // En cas d'erreur, réinitialisez l'utilisateur
       setPrenom(null); // En cas d'erreur, réinitialisez l'utilisateur
     }
   };
@@ -38,7 +33,7 @@ const DashboardHeader: React.FC = () => {
 
   useEffect(() => {
     // Simuler la récupération des données utilisateur (remplacer par des données réelles)
-    recup_donnees();
+    recup_prenom();
   }, []);
 
   return (

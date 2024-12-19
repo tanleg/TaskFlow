@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from 'typeorm';
 import { Tache } from '../../../shared/src/types/tache.type';
 
 @Entity("tache")
@@ -9,13 +9,13 @@ export class TacheEntity implements Tache {
   @Column()
   nom: string;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   date_debut: Date;
 
-  @Column({nullable: true})
+  @Column({type: 'timestamp', nullable: true})
   date_fin_reelle: Date | null ;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   date_fin: Date;
 
   @Column({ default: false })
