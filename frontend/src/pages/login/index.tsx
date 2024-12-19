@@ -8,8 +8,8 @@ import { Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
 import axios from "axios";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("123456789");
+  const [email, setEmail] = useState("test1@gmail.com");
+  const [password, setPassword] = useState("1234");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false); // Etat pour le chargement

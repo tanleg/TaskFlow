@@ -43,6 +43,7 @@ const Layout: React.FC = () => {
         <div style={{ padding: "12px", backgroundColor: "#F5F5F5", flexGrow: 1 }}>
           <Outlet />
         </div>
+        
       </div>
     </div>
   );
