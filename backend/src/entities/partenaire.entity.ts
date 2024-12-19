@@ -1,26 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Partenaire } from '../../../shared/src/types/partenaire.type';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { ProjetEntity } from './projet.entity';
+import { EntrepriseEntity } from './entreprise.entity';
 
-@Entity("partenaire")
-export class PartenaireEntity implements Partenaire {
+@Entity('partenaire')
+export class PartenaireEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 150 })
   nom: string;
 
-  @Column()
+  @Column({ length: 150 })
   prenom: string;
 
-  @Column()
+  @Column({ length: 150 })
   email: string;
 
-  @Column()
+  @Column({ length: 200 })
   lien: string;
 
-  @Column()
-  id_projet: number;
+  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
 
-  @Column()
-  entreprise: string;
+  @ManyToOne(() => EntrepriseEntity, { nullable: false })
+  @JoinColumn({ name: 'entreprise' })
+  entreprise: EntrepriseEntity;
 }

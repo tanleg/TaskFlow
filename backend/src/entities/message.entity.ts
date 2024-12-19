@@ -1,24 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Message } from '../../../shared/src/types/message.type';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { ProjetEntity } from './projet.entity';
+import { UtilisateurEntity } from './utilisateur.entity'; // Assurez-vous du chemin vers UtilisateurEntity
+import { PartenaireEntity } from './partenaire.entity'; // Assurez-vous du chemin vers PartenaireEntity
 
-@Entity("message")
-export class MessageEntity implements Message {
+@Entity('message')
+export class MessageEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 2000 })
   texte: string;
 
   @Column()
   date_envoi: Date;
 
-  @Column({nullable: true})
-  id_utilisateur: number | null;
+  @ManyToOne(() => UtilisateurEntity, { nullable: true })
+  @JoinColumn({ name: 'id_utilisateur' })
+  utilisateur: UtilisateurEntity;
 
-  @Column()
-  id_projet: number;
+  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
 
-  @Column({nullable: true})
-  id_partenaire: number | null;
-
+  @ManyToOne(() => PartenaireEntity, { nullable: true })
+  @JoinColumn({ name: 'id_partenaire' })
+  partenaire: PartenaireEntity;
 }

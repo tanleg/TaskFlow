@@ -1,21 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Notif } from '../../../shared/src/types/notif.type';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { ProjetEntity } from './projet.entity';
+import { UtilisateurEntity } from './utilisateur.entity';
 
-@Entity("notif")
-export class NotifEntity implements Notif {
+
+@Entity('notif')
+export class NotifEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 50 })
   titre: string;
 
-  @Column()
+  @Column({ length: 2000 })
   contenu: string;
 
   @Column()
   date_notif: Date;
 
-  @Column()
-  id_projet: number;
-  
+  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
+
+  @OneToMany(() => UtilisateurEntity, utilisateur => utilisateur.notifs)
+      utilisateurs: UtilisateurEntity[];
 }

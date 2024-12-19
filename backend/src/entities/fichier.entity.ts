@@ -1,29 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Fichier } from '../../../shared/src/types/fichier.type';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { ProjetEntity } from './projet.entity'; // Assurez-vous que le chemin vers le fichier ProjetEntity est correct
+import { UtilisateurEntity } from './utilisateur.entity'; // Assurez-vous que le chemin vers le fichier UtilisateurEntity est correct
+import { PartenaireEntity } from './partenaire.entity'; // Assurez-vous que le chemin vers le fichier PartenaireEntity est correct
 
-@Entity("fichier")
-export class FichierEntity implements Fichier{
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity('fichier')
+export class FichierEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    nom: string;
+  @Column({ length: 50 })
+  nom: string;
 
-    @Column()
-    url: string;
+  @Column({ length: 200 })
+  url: string;
 
-    @Column()
-    date_upload: Date;
+  @Column()
+  date_upload: Date;
 
-    @Column()
-    version: number;
+  @Column()
+  version: number;
 
-    @Column()
-    id_projet: number;
+  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @JoinColumn({ name: 'id_projet' })
+  projet: ProjetEntity;
 
-    @Column({nullable : true})
-    id_utilisateur: number | null;
+  @ManyToOne(() => UtilisateurEntity, { nullable: true })
+  @JoinColumn({ name: 'id_utilisateur' })
+  utilisateur: UtilisateurEntity;
 
-    @Column({nullable : true})
-    id_partenaire: number | null;
+  @ManyToOne(() => PartenaireEntity, { nullable: true })
+  @JoinColumn({ name: 'id_partenaire' })
+  partenaire: PartenaireEntity;
 }
