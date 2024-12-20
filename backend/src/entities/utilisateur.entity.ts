@@ -50,4 +50,5 @@ export class UtilisateurEntity {
 
   @OneToMany(() => UtilisateurProjetEntity, utilisateurProjet => utilisateurProjet.utilisateur)
   projets: UtilisateurProjetEntity[];
+    utilisateurProjets: any;
 }

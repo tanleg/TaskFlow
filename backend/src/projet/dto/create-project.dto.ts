@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsString, IsNotEmpty, IsBoolean, IsDate } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -9,6 +10,11 @@ export class CreateProjectDto {
   @IsNotEmpty()
   description: string;
 
+  @IsDate()
+  @IsNotEmpty()
+  @Transform(({ value }) => new Date(value), { toClassOnly: true })
+  date_creation: Date;
+  
   @IsBoolean()
   @IsNotEmpty()
   public: boolean = false;

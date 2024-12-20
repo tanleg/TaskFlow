@@ -3,7 +3,6 @@ import { Box, Button, Typography } from "@mui/material";
 import { Flag, Assignment, CalendarToday, Work } from "@mui/icons-material"; // Icônes Material-UI
 import DialogAddProjects from "frontend/src/views/dashboard/dialogAddProjects.tsx";
 import { useNavigate } from "react-router-dom";
-import { projects } from "frontend/src/views/projets/projects.ts"; // Importation des projets
 import axios from "axios";
 // import InfoVisite from "frontend/src/views/dashboard/infoEvents.tsx";
 
@@ -11,6 +10,7 @@ import axios from "axios";
 const DashboardContent: React.FC = () => {
 
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
+  const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();  // Initialisation du hook useNavigate
 
@@ -65,7 +65,6 @@ const DashboardContent: React.FC = () => {
     }
 
     try {
-        // const response = await axios.get(`http://localhost:3000/evenements/2`);      //POUR TESTER
         const response = await axios.get(`http://localhost:3000/evenements/${user_id}`);
         for (let element of response.data){
             console.log(element.type)
@@ -90,9 +89,33 @@ const DashboardContent: React.FC = () => {
         setUpcomingEvents(liste_evenement);
         
     } catch (err:any) {
-        alert(err.message);
+        console.log(`evenements -> ${err.message} --> erreur car 0 evenement`);
     }
   }
+
+  async function getProjets(){
+    let projet;
+    let liste_projets = [];
+
+    if (user_id){
+        recup_id();
+    }else{
+        return
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+        for (let element of response.data){
+            projet = { id: element.id, name: element.nom, description: element.description }
+            liste_projets.push(projet)
+        }
+        setUpcomingProjects(liste_projets);
+        
+    } catch (err:any) {
+        console.log(`projets -> ${err.message} --> erreur car 0 projet`);
+    }
+  }
+
 
   // récupération de l'ID utilisateur
   useEffect(() => {
@@ -103,6 +126,7 @@ const DashboardContent: React.FC = () => {
   useEffect(() => {
     if (user_id) {
       getEvenements();
+      getProjets();
     }
   }, [user_id]);
 
@@ -181,7 +205,7 @@ const DashboardContent: React.FC = () => {
         <Typography variant="h5" sx={{ fontFamily: "Open Sans, sans-serif", fontWeight: "bold", mb: "12px", color: "#333333" }}>
           Projets en cours
         </Typography>
-        {projects.map((project) => (
+        {upcomingProjects.map((project) => (
           <Box
             key={project.id}
             sx={{

@@ -1,23 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, JoinColumn, Column } from 'typeorm';
 import { ProjetEntity } from './projet.entity';
 import { UtilisateurEntity } from './utilisateur.entity';
 
 @Entity('utilisateur_projet')
 export class UtilisateurProjetEntity {
-  @PrimaryGeneratedColumn()
+  // Clé primaire composite : id (clé étrangère vers Projet)
+  @PrimaryColumn()
   id: number;
 
-  @ManyToOne(() => ProjetEntity, projet => projet.utilisateurs)
+  // Clé primaire composite : id_utilisateur (clé étrangère vers Utilisateur)
+  @PrimaryColumn()
+  id_utilisateur: number;
+
+  // Relation vers ProjetEntity (clé étrangère id -> Projet.id)
+  @ManyToOne(() => ProjetEntity, projet => projet.utilisateurProjets, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id' })
   projet: ProjetEntity;
 
-  @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.projets)
+  // Relation vers UtilisateurEntity (clé étrangère id_utilisateur -> Utilisateur.id)
+  @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.utilisateurProjets, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_utilisateur' })
   utilisateur: UtilisateurEntity;
 
-  @Column()
+  // Attributs
+  @Column({ type: 'boolean' })
   chef: boolean;
 
-  @Column()
+  @Column({ type: 'boolean' })
   visiteur: boolean;
 }

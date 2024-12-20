@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, ReactElement, useState } from "react";
+import React, { forwardRef, Ref, ReactElement, useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,12 @@ import {
   SelectChangeEvent,
   Checkbox,
   ListItemText,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Icône de fermeture
+import axios from "axios";
 
 // Transition component for the Dialog
 const Transition = forwardRef(function Transition(
@@ -57,6 +61,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [projectVisibility, setProjectVisibility] = useState("Privé");
 
   const users = [
     { id: "1", name: "Alice", email: "alice@example.com", role: "Developer" },
@@ -70,6 +75,11 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     const value = event.target.value;
     setSelectedUsers(typeof value === "string" ? value.split(",") : value);
   };
+
+  const handleProjectVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectVisibility(event.target.value);
+  };
+
   // Handle closing the dialog and reset form
   const handleClose = () => {
     // Reset form fields
@@ -79,7 +89,73 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     onClose(); // Close the dialog
   };
 
+  const [user_id, setId] = useState<string | null>(null);
 
+  async function recup_id() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.error('Aucun token trouvé');
+      setId(null);
+      return;
+    }
+    
+    try {
+        const response = await axios.get('http://localhost:3000/auth/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+  
+        setId(response.data.id || null);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du profil utilisateur', error);
+        setId(null);
+    }
+  };
+
+  const creer_projet = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (projectName && projectDescription && projectVisibility) {  
+      let statut = projectVisibility === "Public" ? true : false;
+  
+      if (!user_id) {
+        alert("Utilisateur non identifié.");
+        return;
+      }
+
+      try {
+        const response = await axios.post("http://localhost:3000/projets/create", {
+          nom: projectName,
+          description: projectDescription,
+          public: statut,
+          utilisateurId: user_id
+        });
+  
+        console.log("Réponse du serveur :", response.data);
+        console.log("Projet créé avec succès");
+
+        // handleClose();
+        ////// pas ouf :
+        window.location.reload()    // reload pour afficher le projet dans la liste
+        // faire une fonction pour afficher --> mieux et + fluide
+        //////
+      
+    } catch (error) {
+        console.error("Erreur lors de la création du projet :", error);
+        alert("Erreur lors de la création. Veuillez réessayer.");
+      }
+
+    } else {
+      alert("Veuillez remplir tous les champs.");
+    }
+  };
+  
+  useEffect(() => {
+    recup_id();
+  }, []);
+  
   return (
     <Dialog
       open={open}
@@ -203,12 +279,36 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
             color: "#333333",
           }}
         />
+
+        {/* Radio Buttons for Project Type */}
+        <FormControl component="fieldset" sx={{ marginTop: "16px" }}>
+          <RadioGroup
+            value={projectVisibility}
+            onChange={handleProjectVisibilityChange}
+            row
+            sx={{ display: "flex", justifyContent: "space-around" }}
+          >
+            <FormControlLabel
+              value="Privé"
+              control={<Radio />}
+              label="Privé"
+              sx={{ color: "#333333" }}
+            />
+            <FormControlLabel
+              value="Public"
+              control={<Radio />}
+              label="Public"
+              sx={{ color: "#333333" }}
+            />
+          </RadioGroup>
+        </FormControl>
+        
       </DialogContent>
 
       {/* Dialog Actions */}
       <DialogActions sx={{ pb: 2 }}> {/* pb: 2 ajoute de l'espace en bas */}
   <Button
-    onClick={() => alert("Projet ajouté !")}
+    onClick={creer_projet}
     variant="contained"
     sx={{
       mr: 1,

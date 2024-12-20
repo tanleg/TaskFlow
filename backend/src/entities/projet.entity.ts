@@ -59,7 +59,4 @@ export class ProjetEntity {
   @ManyToOne(() => StatutProjetEntity, statut => statut.projets)
   @JoinColumn({ name: 'statut' })
   statutProjet: StatutProjetEntity;
-
-  @OneToMany(() => UtilisateurEntity, utilisateur => utilisateur.projets)
-    utilisateurs: UtilisateurEntity[];
 }
