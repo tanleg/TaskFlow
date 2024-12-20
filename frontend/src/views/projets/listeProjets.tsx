@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
-import { projects } from "frontend/src/views/projets/projects.ts";
+import axios from "axios";
 
 const ListeProjets: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +10,67 @@ const ListeProjets: React.FC = () => {
     navigate(`/projet/${id}`);
   };
 
+  const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
+  const [user_id, setId] = useState<string | null>(null);
+  
+  async function getProjets(){
+    let projet;
+    let liste_projets = [];
+
+    if (user_id){
+        recup_id();
+    }else{
+        return
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+        for (let element of response.data){
+            projet = { id: element.id, name: element.nom, description: element.description }
+            liste_projets.push(projet)
+        }
+        setUpcomingProjects(liste_projets);
+        
+    } catch (err:any) {
+        console.log(`projets -> ${err.message} --> erreur car 0 projet`);
+    }
+  }
+
+  async function recup_id() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.error('Aucun token trouvé');
+      setId(null);
+      return;
+    }
+    
+    try {
+        const response = await axios.get('http://localhost:3000/auth/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+  
+        setId(response.data.id || null);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du profil utilisateur', error);
+        setId(null);
+    }
+  };
+
+    // récupération de l'ID utilisateur
+    useEffect(() => {
+        recup_id();
+    }, []);
+
+    // Chargement des événements
+    useEffect(() => {
+        if (user_id) {
+        getProjets();
+        }
+    }, [user_id]);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", minHeight: "100vh" }}>
       <Paper elevation={4} sx={{ padding: "20px", marginBottom: "20px", width: "100%", maxWidth: "800px", borderRadius: "15px", backgroundColor: "#ffffff" }}>
@@ -17,7 +78,7 @@ const ListeProjets: React.FC = () => {
           Liste de vos projets
         </Typography>
         <List>
-          {projects.map((projet) => (
+          {upcomingProjects.map((projet) => (
             <ListItem
               key={projet.id}
               onClick={() => handleProjectClick(projet.id)}
