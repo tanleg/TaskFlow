@@ -8,6 +8,7 @@ import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
 import { UtilisateurEntity } from './entities/utilisateur.entity';
 import { EvenementsModule } from './evenements/evenements.module';
 import { ProjetModule } from './projet/projet.module';
+import { FichiersModule } from './fichiers/fichiers.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { ProjetModule } from './projet/projet.module';
 
     UtilisateursModule,
     EvenementsModule,
-    ProjetModule
+    ProjetModule,
+    FichiersModule
   ],
   controllers: [AppController],
   providers: [AppService],
