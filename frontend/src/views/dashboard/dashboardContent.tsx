@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import InfoVisite from "frontend/src/views/dashboard/infoEvents.tsx";
 
-  
+
 const DashboardContent: React.FC = () => {
 
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
