@@ -51,4 +51,10 @@ export class ProjetService {
         return this.projetRepository.find();  
     }
  
+    async getProjetsPublics(): Promise<ProjetEntity[]> {
+        return this.projetRepository
+            .createQueryBuilder('projet')
+            .where('projet.public = :isPublic', { isPublic: true })
+            .getMany();
+    }
 }

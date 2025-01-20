@@ -17,6 +17,11 @@ export class ProjetController {
     const projets = await this.projetService.liste_projets(utilisateurId);
     return projets;
   }
+
+  @Get('public')
+  async findAllProjetsPublics(): Promise<ProjetEntity[]> {
+    return this.projetService.getProjetsPublics();
+  }
   
   @Get('display')
   async findAll(): Promise<ProjetEntity[]> {
