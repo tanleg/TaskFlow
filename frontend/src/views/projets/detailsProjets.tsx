@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography, Paper, Button } from "@mui/material";
 import axios from "axios";
+import DialogAddUser from "./dialogAddUser";
 
 const DetailsProjet: React.FC = () => {
   const { id } = useParams(); // Récupère l'identifiant du projet depuis l'URL
 
   const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
   const [user_id, setId] = useState<string | null>(null);
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => setOpenDialog(false);
+  
   async function getProjets(){
     let projet;
     let liste_projets = [];
@@ -83,29 +87,51 @@ const DetailsProjet: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: "20px",
-        backgroundColor: "#f4f6f8",
-        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        padding: "16px",
+        marginLeft: "285px",
+        backgroundColor: "#f4f6f8",
+        flexDirection: "column",
+       
       }}
     >
       <Paper
         elevation={4}
         sx={{
           padding: "30px",
-          maxWidth: "600px",
+          width: "100%",
+          maxWidth: "1140px",
           borderRadius: "15px",
         }}
       >
         <Typography variant="h4" sx={{ marginBottom: "20px", color: "#1976d2" }}>
           {projet.name}
+          <Button
+          variant="contained"
+          sx={{
+            fontFamily: "Open Sans, sans-serif",
+            fontWeight: "bold",
+            background: "linear-gradient(135deg, #005B96, #00A676)",
+            "&:hover": {
+              background: "linear-gradient(135deg, #004080, #007F56)",
+            },
+            padding: "10px 20px",
+            borderRadius: "12px",
+            marginLeft: "20px"
+          }}
+          onClick={handleOpenDialog}
+        >
+          Ajouter un utilisateur
+        </Button>
         </Typography>
         <Typography variant="body1" sx={{ color: "#6b6b6b" }}>
           {projet.description}
         </Typography>
       </Paper>
+
+    <DialogAddUser open={openDialog} onClose={handleCloseDialog} />
+      
     </Box>
   );
 };
