@@ -58,9 +58,15 @@ export class UtilisateursController {
   
   // GET pour récupérer un utilisateur par son email
   //INUTILE pour l'instant
-  @Get(':email')
-  async getByEmail(@Param('email') email: string): Promise<UtilisateurEntity> {
-    return this.UtilisateursService.findByEmail(email);
+  // @Get(':email')
+  // async getByEmail(@Param('email') email: string): Promise<UtilisateurEntity> {
+  //   return this.UtilisateursService.findByEmail(email);
+  // }
+
+  // Endpoint pour récupérer la liste des utilisateurs
+  @Get('user')
+  async getUser(): Promise<UtilisateurEntity[]> {
+    return this.UtilisateursService.getUserList();
   }
 }
 

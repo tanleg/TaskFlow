@@ -63,4 +63,9 @@ export class UtilisateursService {
     async findByEmail(email: string): Promise<UtilisateurEntity> {
         return this.utilisateurRepository.findOne({ where: { email } });
     }
+
+    // Méthode pour récupérer la liste des utilisateurs
+    async getUserList(): Promise<UtilisateurEntity[]> {
+        return await this.utilisateurRepository.find(); // Récupère tous les utilisateurs
+  }
 }
