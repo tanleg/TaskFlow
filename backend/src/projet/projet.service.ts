@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
 import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
+import { AjoutUtilisateurProjetDto } from './dto/ajout-utilisateur-projet.dto';
 
 @Injectable()
 export class ProjetService {
@@ -15,9 +16,7 @@ export class ProjetService {
         private readonly utilisateurProjetRepository: Repository<UtilisateurProjetEntity>,
     ) {}
 
-    // Création d'un nouveau projet
     async create(createProjectDto: CreateProjectDto, utilisateurId:number) {
-        // Création d'un nouvel objet projet à partir du DTO
         const projet = this.projetRepository.create({
         nom: createProjectDto.nom,
         description: createProjectDto.description,
@@ -29,10 +28,10 @@ export class ProjetService {
         const savedProjet = await this.projetRepository.save(projet);
 
         await this.utilisateurProjetRepository.save({
-            id: savedProjet.id, // Relation avec le projet
-            id_utilisateur: utilisateurId, // Relation avec l'utilisateur (assurez-vous que l'utilisateurId est valide)
-            chef: true, // Définit cet utilisateur comme chef
-            visiteur: false, // Il n'est pas visiteur ici
+            id: savedProjet.id,
+            id_utilisateur: utilisateurId,
+            chef: true,
+            visiteur: false
         });
 
         return savedProjet;
@@ -57,4 +56,43 @@ export class ProjetService {
             .where('projet.public = :isPublic', { isPublic: true })
             .getMany();
     }
+
+    async ajouterUtilisateurProjet(ajouterUtilisateurProjetDto: AjoutUtilisateurProjetDto): Promise<{ message: string }> {
+        const { id, id_utilisateur } = ajouterUtilisateurProjetDto;
+
+        const ajt_utilisateur = this.utilisateurProjetRepository.create({
+            utilisateur: { id: id_utilisateur },
+            projet: { id: id },
+            chef: false,
+            visiteur: false
+        });
+    
+        await this.utilisateurProjetRepository.save(ajt_utilisateur);
+    
+        return { message: 'Utilisateur ajouté au projet' };
+    }
+
+    async supprUtilisateurProjet(utilisateurId: number, projetId: number): Promise<{ message: string }> {
+        //
+        //
+        //  CA SUPPRIME L'UTILISATEUR D'UN PROJET, MAIS LES EVENEMENTS ASSOCIéS A L'UTILISATEUR ET AU PROJET RESTENT
+        //  A CORRIGER
+        //
+        const utilisateurProjet = await this.utilisateurProjetRepository.findOne({
+          where: {
+            utilisateur: { id: utilisateurId },
+            projet: { id: projetId },
+          },
+        });
+    
+
+        if (!utilisateurProjet) {
+          throw new NotFoundException('Utilisateur non trouvé dans ce projet.');
+        }
+    
+        await this.utilisateurProjetRepository.remove(utilisateurProjet);
+    
+        return { message: 'Utilisateur supprimé du projet avec succès.' };
+    }
+    
 }
