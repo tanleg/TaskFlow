@@ -7,9 +7,10 @@ import { EvenementsController } from "./evenements.controller";
 import { EvenementsService } from "./evenements.service";
 import { UtilisateurJalonEntity } from "src/entities/utilisateur_jalon.entity";
 import { UtilisateurLivrableEntity } from "src/entities/utilisateur_livrable.entity";
+import { UtilisateurProjetEntity } from "src/entities/utilisateur_projet.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([TacheEntity, UtilisateurJalonEntity, JalonEntity, UtilisateurLivrableEntity, LivrableEntity])],
+    imports: [TypeOrmModule.forFeature([TacheEntity, UtilisateurJalonEntity, JalonEntity, UtilisateurLivrableEntity, LivrableEntity, UtilisateurProjetEntity])],
     controllers: [EvenementsController],
     providers: [EvenementsService],
 })

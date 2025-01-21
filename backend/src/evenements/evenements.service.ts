@@ -6,6 +6,11 @@ import { JalonEntity } from 'src/entities/jalon.entity';
 import { LivrableEntity } from 'src/entities/livrable.entity';
 import { UtilisateurJalonEntity } from 'src/entities/utilisateur_jalon.entity';
 import { UtilisateurLivrableEntity } from 'src/entities/utilisateur_livrable.entity';
+import { CreateJalonDto } from './dto/create-jalon.dto';
+import { CreateLivrableDto } from './dto/create-livrable.dto';
+import { CreateTacheDto } from './dto/create-tache.dto';
+import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
+
 @Injectable()
 export class EvenementsService {
     constructor(
@@ -23,7 +28,80 @@ export class EvenementsService {
     
         @InjectRepository(UtilisateurLivrableEntity)
         private readonly utilisateurLivrableRepository: Repository<UtilisateurLivrableEntity>,
+    
+        @InjectRepository(UtilisateurProjetEntity)
+        private readonly utilisateurProjetRepository: Repository<UtilisateurProjetEntity>,
     ) {}
+
+
+    async createJalon(createJalonDto: CreateJalonDto, utilisateurId: number, projetId: number) {
+
+        const jalon = this.jalonRepository.create({
+          nom: createJalonDto.nom,
+          date_fin: createJalonDto.date_fin,
+          projet: { id: projetId },
+        });
+
+        const savedJalon = await this.jalonRepository.save(jalon);
+      
+        const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
+            where: { projet: { id: projetId } },
+        });
+    
+        const utilisateurJalons = utilisateursDuProjet.map(utilisateur => {
+            return this.utilisateurJalonRepository.create({
+                jalon: { id: savedJalon.id },
+                utilisateur: { id: utilisateur.id_utilisateur },
+            });
+        });
+    
+        await this.utilisateurJalonRepository.save(utilisateurJalons);
+    
+        return savedJalon;
+    }
+
+    async createLivrable(createLivrableDto: CreateLivrableDto, utilisateurId: number, projetId: number) {
+
+        const livrable = this.livrableRepository.create({
+          nom: createLivrableDto.nom,
+          date_fin: createLivrableDto.date_fin,
+          date_fin_reelle: null,
+          termine: false,
+          projet: { id: projetId },
+        });
+
+        const savedLivrable = await this.livrableRepository.save(livrable);
+      
+        const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
+            where: { projet: { id: projetId } },
+        });
+    
+        const utilisateurLivrables = utilisateursDuProjet.map(utilisateur => {
+            return this.utilisateurLivrableRepository.create({
+                livrable: { id: savedLivrable.id },
+                utilisateur: { id: utilisateur.id_utilisateur },
+            });
+        });
+    
+        await this.utilisateurLivrableRepository.save(utilisateurLivrables);
+    
+        return savedLivrable;
+    } 
+
+    async createTache(createTacheDto: CreateTacheDto, utilisateurId: number, projetId: number) {
+
+        const tache = this.tacheRepository.create({
+          nom: createTacheDto.nom,
+          date_debut: createTacheDto.date_debut,
+          date_fin_reelle: null,
+          date_fin: createTacheDto.date_fin,
+          termine: false,
+          projet: { id: projetId },
+          utilisateur: { id: utilisateurId },
+        });
+
+        return await this.tacheRepository.save(tache);
+    }
 
     async getTachesForUtilisateur(userId: number): Promise<TacheEntity[]> {
         return this.tacheRepository.find({

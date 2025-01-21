@@ -1,11 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { LivrableEntity } from './livrable.entity';
 import { UtilisateurEntity } from './utilisateur.entity';
 
 @Entity('utilisateur_livrable')
 export class UtilisateurLivrableEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
+  
+  @PrimaryColumn()
+  id_utilisateur: number;
 
   @ManyToOne(() => LivrableEntity, livrable => livrable.utilisateurs)
   @JoinColumn({ name: 'id' })
