@@ -9,6 +9,7 @@ import { UtilisateurLivrableEntity } from 'src/entities/utilisateur_livrable.ent
 import { CreateJalonDto } from './dto/create-jalon.dto';
 import { CreateLivrableDto } from './dto/create-livrable.dto';
 import { CreateTacheDto } from './dto/create-tache.dto';
+import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
 
 @Injectable()
 export class EvenementsService {
@@ -27,6 +28,9 @@ export class EvenementsService {
     
         @InjectRepository(UtilisateurLivrableEntity)
         private readonly utilisateurLivrableRepository: Repository<UtilisateurLivrableEntity>,
+    
+        @InjectRepository(UtilisateurProjetEntity)
+        private readonly utilisateurProjetRepository: Repository<UtilisateurProjetEntity>,
     ) {}
 
 
@@ -40,12 +44,19 @@ export class EvenementsService {
 
         const savedJalon = await this.jalonRepository.save(jalon);
       
-        const utilisateurJalon = this.utilisateurJalonRepository.create({
-          jalon: { id: savedJalon.id },
-          utilisateur: { id: utilisateurId },
+        const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
+            where: { projet: { id: projetId } },
         });
-        await this.utilisateurJalonRepository.save(utilisateurJalon);
-
+    
+        const utilisateurJalons = utilisateursDuProjet.map(utilisateur => {
+            return this.utilisateurJalonRepository.create({
+                jalon: { id: savedJalon.id },
+                utilisateur: { id: utilisateur.id_utilisateur },
+            });
+        });
+    
+        await this.utilisateurJalonRepository.save(utilisateurJalons);
+    
         return savedJalon;
     }
 
@@ -61,12 +72,19 @@ export class EvenementsService {
 
         const savedLivrable = await this.livrableRepository.save(livrable);
       
-        const utilisateurLivrable = this.utilisateurLivrableRepository.create({
-          livrable: { id: savedLivrable.id },
-          utilisateur: { id: utilisateurId },
+        const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
+            where: { projet: { id: projetId } },
         });
-        await this.utilisateurLivrableRepository.save(utilisateurLivrable);
-
+    
+        const utilisateurLivrables = utilisateursDuProjet.map(utilisateur => {
+            return this.utilisateurLivrableRepository.create({
+                livrable: { id: savedLivrable.id },
+                utilisateur: { id: utilisateur.id_utilisateur },
+            });
+        });
+    
+        await this.utilisateurLivrableRepository.save(utilisateurLivrables);
+    
         return savedLivrable;
     } 
 
