@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Icône de fermeture
 import axios from "axios";
+import { Utilisateur } from "../../types/apps/utilisateur";
 
 // Transition component for the Dialog
 const Transition = forwardRef(function Transition(
@@ -62,14 +63,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
   const [projectDescription, setProjectDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [projectVisibility, setProjectVisibility] = useState("Privé");
-
-  const users = [
-    { id: "1", name: "Alice", email: "alice@example.com", role: "Developer" },
-    { id: "2", name: "Bob", email: "bob@example.com", role: "Designer" },
-    { id: "3", name: "Charlie", email: "charlie@example.com", role: "Project Manager" },
-    { id: "4", name: "David", email: "david@example.com", role: "Tester" },
-    { id: "5", name: "Eve", email: "eve@example.com", role: "Developer" },
-  ];
+  const [users, setUsers] = useState<Utilisateur[]>([]);
 
   const handleUserChange = (event: SelectChangeEvent<typeof selectedUsers>) => {
     const value = event.target.value;
@@ -114,6 +108,27 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     }
   };
 
+  async function fetchUsers() {
+    try {
+      const response = await axios.get(`http://localhost:3000/auth/otherusers/${user_id}`);
+
+      const formattedUsers = response.data.map((user: Utilisateur) => ({
+        id: user.id,
+        nom: user.nom,
+        prenom: user.prenom,
+        email: user.email,
+        telephone: user.telephone,
+        admin: user.admin,
+      }));
+
+      setUsers(formattedUsers);
+    
+    } catch (error) {
+      console.error("Erreur lors de la récupération des utilisateurs", error);
+      setUsers([]);
+    }
+  }
+
   const creer_projet = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -133,8 +148,19 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
           utilisateurId: user_id
         });
   
-        console.log("Réponse du serveur :", response.data);
-        console.log("Projet créé avec succès");
+        const projetId = response.data.id;
+        
+        for (const userId of selectedUsers) {
+            try {
+              await axios.post("http://localhost:3000/projets/ajouter/utilisateur", {
+                id: projetId,
+                id_utilisateur: userId,
+              });
+              console.log(`Utilisateur ${userId} associé avec succès au projet ${projetId}`);
+            } catch (error) {
+              console.error(`Erreur lors de l'association de l'utilisateur ${userId} au projet ${projetId}`, error);
+            }
+          }
 
         // handleClose();
         ////// pas ouf :
@@ -145,7 +171,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     } catch (error) {
         console.error("Erreur lors de la création du projet :", error);
         alert("Erreur lors de la création. Veuillez réessayer.");
-      }
+    }
 
     } else {
       alert("Veuillez remplir tous les champs.");
@@ -155,6 +181,12 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
   useEffect(() => {
     recup_id();
   }, []);
+  
+  useEffect(() => {
+    if (user_id) {
+      fetchUsers();
+    }
+  }, [user_id]);
   
   return (
     <Dialog
@@ -226,12 +258,12 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
             renderValue={(selected) => (
               <div>
                 {selected.map((userId) => {
-                  const user = users.find((u) => u.id === userId);
+                  const user = users.find((u) => u.id === Number(userId));
                   return (
                     user && (
                       <Chip
                         key={user.id}
-                        label={`${user.name} (${user.email}, ${user.role})`}
+                        label={`${user.prenom} ${user.nom}`}
                         sx={{
                           margin: 0.5,
                           backgroundColor: "#F0F0F0",
@@ -253,8 +285,8 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
           >
             {users.map((user) => (
               <MenuItem key={user.id} value={user.id}>
-                <Checkbox checked={selectedUsers.indexOf(user.id) > -1} />
-                <ListItemText primary={`${user.name} - ${user.email} (${user.role})`} />
+                <Checkbox checked={selectedUsers.indexOf(String(user.id)) > -1} />
+                <ListItemText primary={`${user.prenom} ${user.nom} — ✉️${user.email} • 📞${user.telephone} | ${user.admin ? "Administrateur" : "Chercheur"}`} />
               </MenuItem>
             ))}
           </Select>

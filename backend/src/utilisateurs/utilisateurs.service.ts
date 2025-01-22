@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import * as bcrypt from 'bcrypt';
@@ -67,5 +67,12 @@ export class UtilisateursService {
     // Méthode pour récupérer la liste des utilisateurs
     async getUserList(): Promise<UtilisateurEntity[]> {
         return await this.utilisateurRepository.find(); // Récupère tous les utilisateurs
-  }
+    }
+
+    // Méthode pour récupérer la liste des utilisateurs sauf celui passé en parametre
+    async getOtherUsersList(id_user: number): Promise<UtilisateurEntity[]> {
+        return await this.utilisateurRepository.find({
+            where: { id: Not(id_user)}
+        });
+    }
 }
