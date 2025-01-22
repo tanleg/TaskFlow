@@ -24,12 +24,12 @@ export class EvenementsController {
 
     @Post('jalon/create')
         async createJalon(@Body() createJalonDto: CreateJalonDto, @Body('utilisateurId') utilisateurId: number, @Body('projetId') projetId: number): Promise<JalonEntity> {
-        return this.evenementsService.createJalon(createJalonDto, utilisateurId, projetId);
+        return this.evenementsService.createJalon(createJalonDto, projetId);
     }
 
     @Post('livrable/create')
         async createLivrable(@Body() createLivrableDto: CreateLivrableDto, @Body('utilisateurId') utilisateurId: number, @Body('projetId') projetId: number): Promise<LivrableEntity> {
-        return this.evenementsService.createLivrable(createLivrableDto, utilisateurId, projetId);
+        return this.evenementsService.createLivrable(createLivrableDto, projetId);
     }
     
     @Post('tache/create')

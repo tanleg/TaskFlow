@@ -2,7 +2,7 @@ import { Controller, Post, Get, Body, Param, Delete } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
-import { AjoutUtilisateurProjetDto } from './dto/ajout-utilisateur-projet.dto';
+import { AjoutSupprUtilisateurProjetDto } from './dto/ajout-suppr-utilisateur-projet.dto';
 
 @Controller('projets')
 export class ProjetController {
@@ -14,14 +14,13 @@ export class ProjetController {
   }
 
   @Post('ajouter/utilisateur')
-  async ajoutUtilisateurProjet(@Body() ajoutUtilisateurProjetDto: AjoutUtilisateurProjetDto) {
-    return await this.projetService.ajouterUtilisateurProjet(ajoutUtilisateurProjetDto);
+  async ajoutUtilisateurProjet(@Body() ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto) {
+    return await this.projetService.ajouterUtilisateurProjet(ajoutSupprUtilisateurProjetDto);
   }
 
   @Delete('supprimer/utilisateur')
-  async supprimerUtilisateurDuProjet(@Body() ajoutUtilisateurProjetDto: AjoutUtilisateurProjetDto) {
-    const { id, id_utilisateur } = ajoutUtilisateurProjetDto; 
-    return await this.projetService.supprUtilisateurProjet(id_utilisateur, id);
+  async supprimerUtilisateurDuProjet(@Body() ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto) {
+    return await this.projetService.supprUtilisateurProjet(ajoutSupprUtilisateurProjetDto);
   }
 
   @Get('display/:id')

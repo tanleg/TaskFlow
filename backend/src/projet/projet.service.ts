@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
 import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
-import { AjoutUtilisateurProjetDto } from './dto/ajout-utilisateur-projet.dto';
+import { AjoutSupprUtilisateurProjetDto } from './dto/ajout-suppr-utilisateur-projet.dto';
 
 @Injectable()
 export class ProjetService {
@@ -57,8 +57,8 @@ export class ProjetService {
             .getMany();
     }
 
-    async ajouterUtilisateurProjet(ajouterUtilisateurProjetDto: AjoutUtilisateurProjetDto): Promise<{ message: string }> {
-        const { id, id_utilisateur } = ajouterUtilisateurProjetDto;
+    async ajouterUtilisateurProjet(ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto): Promise<{ message: string }> {
+        const { id, id_utilisateur } = ajoutSupprUtilisateurProjetDto;
 
         const ajt_utilisateur = this.utilisateurProjetRepository.create({
             utilisateur: { id: id_utilisateur },
@@ -72,24 +72,53 @@ export class ProjetService {
         return { message: 'Utilisateur ajouté au projet' };
     }
 
-    async supprUtilisateurProjet(utilisateurId: number, projetId: number): Promise<{ message: string }> {
-        //
-        //
-        //  CA SUPPRIME L'UTILISATEUR D'UN PROJET, MAIS LES EVENEMENTS ASSOCIéS A L'UTILISATEUR ET AU PROJET RESTENT
-        //  A CORRIGER
-        //
+    async supprUtilisateurProjet(ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto): Promise<{ message: string }> {
+        const { id, id_utilisateur } = ajoutSupprUtilisateurProjetDto;
+        
         const utilisateurProjet = await this.utilisateurProjetRepository.findOne({
           where: {
-            utilisateur: { id: utilisateurId },
-            projet: { id: projetId },
+            utilisateur: { id: id_utilisateur },
+            projet: { id: id },
           },
         });
     
-
         if (!utilisateurProjet) {
           throw new NotFoundException('Utilisateur non trouvé dans ce projet.');
         }
-    
+
+        // supprime l'association de l'user à un jalon
+        await this.utilisateurProjetRepository.query(`
+            DELETE FROM utilisateur_jalon
+            USING jalon
+            WHERE utilisateur_jalon.id_utilisateur = $1
+            AND utilisateur_jalon.id = (
+                SELECT id
+                FROM jalon
+                WHERE id_projet = $2
+            );
+        `, [id_utilisateur, id]);
+
+        // supprime l'association de l'user à un livrable
+        await this.utilisateurProjetRepository.query(`
+            DELETE FROM utilisateur_livrable
+            USING livrable
+            WHERE utilisateur_livrable.id_utilisateur = $1
+            AND utilisateur_livrable.id = (
+                SELECT id
+                FROM livrable
+                WHERE id_projet = $2
+            );
+        `, [id_utilisateur, id]);
+
+        // supprime l'association de l'user à une tache en remplacant l'id_utilisateur par NULL
+        await this.utilisateurProjetRepository.query(`
+            UPDATE tache
+            SET id_utilisateur = null
+            WHERE id_utilisateur = $1
+            AND id_projet = $2;
+        `, [id_utilisateur, id]);
+
+        // vire l'user du projet
         await this.utilisateurProjetRepository.remove(utilisateurProjet);
     
         return { message: 'Utilisateur supprimé du projet avec succès.' };
