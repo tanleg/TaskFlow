@@ -34,7 +34,7 @@ export class EvenementsService {
     ) {}
 
 
-    async createJalon(createJalonDto: CreateJalonDto, utilisateurId: number, projetId: number) {
+    async createJalon(createJalonDto: CreateJalonDto, projetId: number) {
 
         const jalon = this.jalonRepository.create({
           nom: createJalonDto.nom,
@@ -60,7 +60,7 @@ export class EvenementsService {
         return savedJalon;
     }
 
-    async createLivrable(createLivrableDto: CreateLivrableDto, utilisateurId: number, projetId: number) {
+    async createLivrable(createLivrableDto: CreateLivrableDto, projetId: number) {
 
         const livrable = this.livrableRepository.create({
           nom: createLivrableDto.nom,

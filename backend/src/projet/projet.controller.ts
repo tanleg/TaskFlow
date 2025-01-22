@@ -1,7 +1,8 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Delete } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
+import { AjoutSupprUtilisateurProjetDto } from './dto/ajout-suppr-utilisateur-projet.dto';
 
 @Controller('projets')
 export class ProjetController {
@@ -10,6 +11,16 @@ export class ProjetController {
   @Post('create')
   async create(@Body() createProjectDto: CreateProjectDto, @Body('utilisateurId') utilisateurId: number): Promise<ProjetEntity> {
     return this.projetService.create(createProjectDto, utilisateurId);
+  }
+
+  @Post('ajouter/utilisateur')
+  async ajoutUtilisateurProjet(@Body() ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto) {
+    return await this.projetService.ajouterUtilisateurProjet(ajoutSupprUtilisateurProjetDto);
+  }
+
+  @Delete('supprimer/utilisateur')
+  async supprimerUtilisateurDuProjet(@Body() ajoutSupprUtilisateurProjetDto: AjoutSupprUtilisateurProjetDto) {
+    return await this.projetService.supprUtilisateurProjet(ajoutSupprUtilisateurProjetDto);
   }
 
   @Get('display/:id')
