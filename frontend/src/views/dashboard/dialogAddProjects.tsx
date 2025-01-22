@@ -82,7 +82,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     setSelectedUsers([]);
     onClose(); // Close the dialog
   };
-
+  
   const [user_id, setId] = useState<string | null>(null);
 
   async function recup_id() {
@@ -250,46 +250,58 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
         />
         <FormControl fullWidth margin="dense" variant="outlined">
           <InputLabel>Utilisateurs</InputLabel>
-          <Select
-            multiple
-            value={selectedUsers}
-            onChange={handleUserChange}
-            label="Utilisateurs"
-            renderValue={(selected) => (
-              <div>
-                {selected.map((userId) => {
-                  const user = users.find((u) => u.id === Number(userId));
-                  return (
-                    user && (
-                      <Chip
-                        key={user.id}
-                        label={`${user.prenom} ${user.nom}`}
-                        sx={{
-                          margin: 0.5,
-                          backgroundColor: "#F0F0F0",
-                          borderRadius: "16px",
-                        }}
-                      />
-                    )
-                  );
-                })}
-              </div>
-            )}
-            sx={{
-              fontFamily: "Open Sans, sans-serif",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-              },
-              color: "#333333",
-            }}
-          >
-            {users.map((user) => (
-              <MenuItem key={user.id} value={user.id}>
-                <Checkbox checked={selectedUsers.indexOf(String(user.id)) > -1} />
-                <ListItemText primary={`${user.prenom} ${user.nom} — ✉️${user.email} • 📞${user.telephone} | ${user.admin ? "Administrateur" : "Chercheur"}`} />
-              </MenuItem>
-            ))}
-          </Select>
+            <Select
+              multiple
+              value={selectedUsers}
+              onChange={handleUserChange}
+              label="Utilisateurs"
+              renderValue={(selected) => (
+                <div>
+                  {selected.map((userId) => {
+                    const user = users.find((u) => String(u.id) === userId);
+                    return (
+                      user && (
+                        <Chip
+                          key={user.id}
+                          label={`${user.prenom} ${user.nom}`}
+                          sx={{
+                            margin: 0.5,
+                            backgroundColor: "#F0F0F0",
+                            borderRadius: "16px",
+                          }}
+                        />
+                      )
+                    );
+                  })}
+                </div>
+              )}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 48 * 5 + 8, // Limite la hauteur à 5 éléments visibles (48px par élément + espacement)
+                    overflowY: "auto", // Active la barre de défilement verticale
+                  },
+                },
+              }}
+              sx={{
+                fontFamily: "Open Sans, sans-serif",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+                color: "#333333",
+              }}
+            >
+              {users.map((user) => (
+                <MenuItem key={user.id} value={String(user.id)}>
+                  <Checkbox checked={selectedUsers.indexOf(String(user.id)) > -1} />
+                  <ListItemText
+                    primary={`${user.prenom} ${user.nom} — ✉️${user.email} • 📞${user.telephone} | ${
+                      user.admin ? "Administrateur" : "Chercheur"
+                    }`}
+                  />
+                </MenuItem>
+              ))}
+            </Select>
         </FormControl>
 
         <TextField
