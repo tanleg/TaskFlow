@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param, Res, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, Request, UnauthorizedException, UseGuards, Param } from '@nestjs/common';
 import { UtilisateursService } from './utilisateurs.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
@@ -68,5 +68,10 @@ export class UtilisateursController {
   async getUser(): Promise<UtilisateurEntity[]> {
     return this.UtilisateursService.getUserList();
   }
-}
 
+    // Endpoint pour récupérer la liste des utilisateurs sauf l'id passé en parametre
+    @Get('otherusers/:id')
+    async getOtherUsers(@Param('id') id: number): Promise<UtilisateurEntity[]> {
+      return this.UtilisateursService.getOtherUsersList(id);
+    }
+}
