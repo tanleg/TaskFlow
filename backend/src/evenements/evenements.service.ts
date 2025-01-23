@@ -10,6 +10,7 @@ import { CreateJalonDto } from './dto/create-jalon.dto';
 import { CreateLivrableDto } from './dto/create-livrable.dto';
 import { CreateTacheDto } from './dto/create-tache.dto';
 import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
+import { UtilisateurEntity } from 'src/entities/utilisateur.entity';
 
 @Injectable()
 export class EvenementsService {
@@ -31,6 +32,9 @@ export class EvenementsService {
     
         @InjectRepository(UtilisateurProjetEntity)
         private readonly utilisateurProjetRepository: Repository<UtilisateurProjetEntity>,
+
+        @InjectRepository(UtilisateurEntity)
+        private readonly utilisateurRepository: Repository<UtilisateurEntity>,
     ) {}
 
 
@@ -129,7 +133,7 @@ export class EvenementsService {
     }
 
     // Liste les 5 prochains evenements pour un utilisateur
-    async get5ProchainsEvenements(userId: number): Promise<any[]> {
+    async get5PremiersEvenements(userId: number): Promise<any[]> {
         // Récupérer les tâches
         const taches = await this.getTachesForUtilisateur(userId);
         const tachesWithType = taches.map(tache => ({
@@ -166,4 +170,94 @@ export class EvenementsService {
         return allEvenements.slice(0, 5);
     }
     
+
+    async getTachesDansProjet(ProjetId: number): Promise<TacheEntity[]> {
+        const taches = await this.tacheRepository.find({
+            where: { 
+                projet: { id: ProjetId }
+            },
+          relations: ['utilisateur', 'projet'],
+        });
+
+        return taches.sort((a, b) => a.date_debut.getTime() - b.date_debut.getTime());
+
+    }
+
+    async getJalonsDansProjet(projetId: number): Promise<JalonEntity[]> {
+        const utilisateurJalons = await this.utilisateurJalonRepository.find({
+            where: {
+                jalon: { projet: { id: projetId } }
+            },
+            relations: ['jalon', 'jalon.projet']
+        });
+    
+        return utilisateurJalons.map((utilisateurJalon) => utilisateurJalon.jalon);
+    }
+    
+
+    async getLivrablesDansProjet(projetId: number): Promise<LivrableEntity[]> {
+        const utilisateurLivrables = await this.utilisateurLivrableRepository.find({
+            where: {
+                livrable: { projet: { id: projetId } }
+            },
+            relations: ['livrable', 'livrable.projet']
+        });
+    
+        return utilisateurLivrables.map((utilisateurJalon) => utilisateurJalon.livrable);
+    }
+
+
+    // Liste les prochains evenements pour un utilisateur dans un projet
+    async getProchainsEvenementsDuProjet(ProjetId: number): Promise<any[]> {
+        // Récupérer les tâches
+        const taches = await this.getTachesDansProjet(ProjetId);
+        const tachesWithType = taches.map(tache => ({
+            ...tache,
+            type: 'Tâche',
+        }));
+
+        // Récupérer les jalons
+        const jalons = await this.getJalonsDansProjet(ProjetId);
+        const jalonsWithType = jalons.map(jalon => ({
+            ...jalon,
+            type: 'Jalon',
+        }));
+
+        // Récupérer les livrables
+        const livrables = await this.getLivrablesDansProjet(ProjetId);
+        const livrablesWithType = livrables.map(livrable => ({
+            ...livrable,
+            type: 'Livrable',
+        }));
+
+        // Combiner tous les événements
+        const allEvenements = [...tachesWithType, ...jalonsWithType, ...livrablesWithType];
+
+        // Si aucun événement n'est trouvé, renvoyer un tableau vide
+        if (allEvenements.length === 0) {
+            return [];
+        }
+        return allEvenements
+    }
+
+    async updateUtilisateurAssigneAUneTache(id_tache: number, id_utilisateur_assigne: number): Promise<TacheEntity> {
+        
+        const tache = await this.tacheRepository.findOne({ where: { id: id_tache } });
+    
+        if (!tache) {
+            throw new Error(`Pas de tache avec l'id ${id_tache}`);
+        }
+    
+        const utilisateur = await this.utilisateurRepository.findOne({ where: { id: id_utilisateur_assigne } });
+
+        if (!utilisateur) {
+            throw new Error(`Pas d'utilisateur avec l'id ${id_utilisateur_assigne}`);
+        }
+
+        tache.utilisateur = utilisateur;
+    
+        return await this.tacheRepository.save(tache);
+    }
+    
+
 }

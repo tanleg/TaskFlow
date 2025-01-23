@@ -39,4 +39,9 @@ export class ProjetController {
     return this.projetService.findAll();
   }
 
+  @Get('/:id/users')
+  async findUtilisateursDeProjet(@Param('id') projet_id: number): Promise<any[]> {
+    return this.projetService.findUtilisateursDeProjet(projet_id);
+  }
+
 }

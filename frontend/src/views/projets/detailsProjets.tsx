@@ -24,31 +24,8 @@ const DetailsProjet: React.FC = () => {
 
   const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
   const [user_id, setId] = useState<string | null>(null);
-
-  const [members, setMembers] = useState<any[]>([ // Exemple de membres
-    { name: "Alice Dupont", role: "Chef de projet" },
-    { name: "Jean Martin", role: "Développeur Frontend" },
-    { name: "Claire Moreau", role: "Développeur Backend" },
-  ]);
-
-  const [tasks, setTasks] = useState<any[]>([
-    { name: "Rédaction du rapport M2", status: "Terminée", assignedTo: "Alice Dupont", startDate: "2025-01-10", endDate: "2025-01-15" },
-    { name: "Réalisation de la page projet", status: "En cours", assignedTo: "Jean Martin", startDate: "2025-01-16", endDate: "2025-01-20" },
-    { name: "Réalisation de la page chats", status: "À risque", assignedTo: "Claire Moreau", startDate: "2025-01-18", endDate: "2025-01-25" },
-    { name: "Réalisation de la page users", status: "En pause", assignedTo: "Alice Dupont", startDate: "2025-01-22", endDate: "2025-01-30" },
-  ]);
-
-  // Ajoutez ces données à votre état
-const [users, setUsers] = useState([
-  { id: 1, name: "Riad Sacroud" },
-  { id: 2, name: "John Doe" },
-  { id: 3, name: "Jane Doe" },
-  { id: 4, name: "Tommy" },
-  { id: 5, name: "Ghost" },
-  { id: 6, name: "Christophe Vignaud" },
-  { id: 7, name: "anne miras" },
-  { id: 8, name: "tanguy LEGOFF" },
-]);
+  const [members, setMembers] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogAssign, setOpenDialogAssign] = useState(false);
@@ -87,6 +64,58 @@ const [users, setUsers] = useState([
       handleCloseDialogAssign(); // Ferme la boîte de dialogue
     }
   };
+
+
+
+  async function getTaches() {
+    let tache;
+    let liste_taches = [];
+
+    try {
+      const response = await axios.get(`http://localhost:3000/evenements/projet/taches/${id}`);
+      
+      for (let element of response.data) {
+
+        tache = { 
+            name: element.nom,
+            status: element.termine ? "Terminé" : "En cours",
+            assignedTo: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
+            startDate: element.date_debut,
+            endDate: element.date_fin,
+        }
+            
+        liste_taches.push(tache);
+      }
+      setTasks(liste_taches);
+    } catch (err: any) {
+      console.log(`liste taches -> ${err.message}`);
+    }
+  }
+
+  async function getMembres() {
+    let membre;
+    let liste_membres = [];
+
+    try {
+      const response = await axios.get(`http://localhost:3000/projets/${id}/users`);
+      
+      for (let element of response.data) {
+
+        membre = { 
+            name: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
+            role: element.visiteur ? "Visiteur" : element.chef ? "Chef de projet" : "Chercheur",
+            email: element.utilisateur.email,
+            telephone: element.utilisateur.telephone,
+        }
+            
+        liste_membres.push(membre);
+      }
+      setMembers(liste_membres);
+    } catch (err: any) {
+      console.log(`liste membres -> ${err.message}`);
+    }
+  }
+
 
   async function getProjets() {
     let projet;
@@ -139,7 +168,9 @@ const [users, setUsers] = useState([
 
   useEffect(() => {
     if (user_id) {
+      getTaches();
       getProjets();
+      getMembres();
     }
   }, [user_id]);
 
@@ -227,6 +258,8 @@ const [users, setUsers] = useState([
               <TableRow >
                 <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Nom</TableCell>
                 <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Rôle</TableCell>
+                <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Email</TableCell>
+                <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Téléphone</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -234,6 +267,8 @@ const [users, setUsers] = useState([
                 <TableRow key={index}>
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.name}</TableCell>
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.role}</TableCell>
+                  <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.email}</TableCell>
+                  <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.telephone}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -331,7 +366,7 @@ const [users, setUsers] = useState([
       <DialogUserAssign
         open={openDialogAssign}
         onClose={handleCloseDialogAssign}
-        users={users} // Passez la liste des utilisateurs
+        users={members} // Passez la liste des utilisateurs
         onAssign={assignUserToTask} // Fonction pour attribuer une tâche
       />
       <DialogAddUser open={openDialog} onClose={handleCloseDialog} />

@@ -124,4 +124,16 @@ export class ProjetService {
         return { message: 'Utilisateur supprimé du projet avec succès.' };
     }
     
+    async findUtilisateursDeProjet(id_projet: number): Promise<any[]> {
+        const utilisateurProjets = await this.utilisateurProjetRepository.find({
+            where: { projet: { id: id_projet } }, // Filtrer par projet
+            relations: ['utilisateur', 'projet'], // Inclure les relations nécessaires
+        });
+    
+        return utilisateurProjets.map((utilisateurProjet) => ({
+            utilisateur: utilisateurProjet.utilisateur,
+            chef: utilisateurProjet.chef,
+            visiteur: utilisateurProjet.visiteur,
+        }));
+    }
 }
