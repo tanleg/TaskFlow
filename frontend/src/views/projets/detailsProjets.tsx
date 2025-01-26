@@ -65,8 +65,6 @@ const DetailsProjet: React.FC = () => {
     }
   };
 
-
-
   async function getTaches() {
     let tache;
     let liste_taches = [];
@@ -161,6 +159,39 @@ const DetailsProjet: React.FC = () => {
       setId(null);
     }
   }
+
+
+  //Cette partie sera utilisé lorsque l'api pour changer de le rôle d'un utilisateur en ADMIN sera disponible
+
+  // const handleMakeAdmin = async (memberId: number) => {
+  //   try {
+  //     // Appel API pour changer le rôle de l'utilisateur
+  //     await axios.put(`http://localhost:3000/projets/${id}/users/${memberId}/make-admin`);
+
+  //     // Mettre à jour localement l'état des membres
+  //     setMembers((prev) =>
+  //       prev.map((member) =>
+  //         member.id === memberId ? { ...member, role: "ADMIN" } : member
+  //       )
+  //     );
+  //   } catch (err: any) {
+  //     console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+  //   }
+  // };
+
+//Cette partie sera utilisé lorsque l'api pour virer un utilisateur du projet sera disponible
+
+  // const handleRemoveMember = async (index: number) => {
+  //   try {
+  //     const memberToRemove = members[index];
+  //     await axios.delete(`http://localhost:3000/projets/${id}/users/${memberToRemove.id}`);
+  //     setMembers((prev) => prev.filter((_, i) => i !== index)); // Supprime localement
+  //     console.log(`Membre ${memberToRemove.name} retiré avec succès.`);
+  //   } catch (err: any) {
+  //     console.error(`Erreur lors de la suppression du membre : ${err.message}`);
+  //   }
+  // };
+
 
   useEffect(() => {
     recup_id();
@@ -260,6 +291,7 @@ const DetailsProjet: React.FC = () => {
                 <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Rôle</TableCell>
                 <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Email</TableCell>
                 <TableCell sx={{ fontFamily:"Montserrat, sans-serif", fontWeight: "bold" }}>Téléphone</TableCell>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -269,6 +301,37 @@ const DetailsProjet: React.FC = () => {
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.role}</TableCell>
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.email}</TableCell>
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.telephone}</TableCell>
+                  <TableCell sx={{ fontFamily: "Open Sans, sans-serif" }}>
+                    {member.role !== "ADMIN" && (
+                      <Button
+                       variant="outlined"
+                      color="success"
+                        // onClick={() => handleMakeAdmin(member.id)}
+                      sx={{
+                        fontFamily: "Open Sans, sans-serif",
+                        fontWeight: "bold",
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                      }}
+                      >
+                        Déclarer admin
+                      </Button>
+                    )}
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      // onClick={() => handleRemoveMember(index)} // Fonction pour gérer la suppression
+                      sx={{
+                        fontFamily: "Open Sans, sans-serif",
+                        fontWeight: "bold",
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Virer
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

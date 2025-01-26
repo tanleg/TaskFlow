@@ -77,20 +77,20 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
   };
 
   // Supprimer les membres sélectionnés
-  const handleDeleteSelected = () => {
-    setMembers((prev) => prev.filter((member) => !selectedMembers.includes(member.id)));
-    setSelectedMembers([]); // Réinitialiser la sélection
-  };
+  // const handleDeleteSelected = () => {
+  //   setMembers((prev) => prev.filter((member) => !selectedMembers.includes(member.id)));
+  //   setSelectedMembers([]); // Réinitialiser la sélection
+  // };
 
   // Rendre les membres sélectionnés administrateurs
-  const handleMakeAdmin = () => {
-    setMembers((prev) =>
-      prev.map((member) =>
-        selectedMembers.includes(member.id) ? { ...member, role: "ADMIN" } : member
-      )
-    );
-    setSelectedMembers([]); // Réinitialiser la sélection
-  };
+  // const handleMakeAdmin = () => {
+  //   setMembers((prev) =>
+  //     prev.map((member) =>
+  //       selectedMembers.includes(member.id) ? { ...member, role: "ADMIN" } : member
+  //     )
+  //   );
+  //   setSelectedMembers([]); // Réinitialiser la sélection
+  // };
 
   return (
     <Dialog
@@ -203,13 +203,14 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
       {/* Boutons d'actions */}
       <DialogActions
         sx={{
-          justifyContent: "space-between",
+          display: "flex",
+          justifyContent: "flex-end", // Alignement à droite (modifiable selon vos besoins)
+          gap: 2, // Espacement entre les boutons
           px: 2,
           py: 2,
-          
         }}
       >
-        <Button
+        {/* <Button
           variant="outlined"
           color="error"
           disabled={selectedMembers.length === 0}
@@ -229,7 +230,7 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
             }}
         >
           Supprimer
-        </Button>
+        </Button> */}
         <Button 
             variant="outlined" 
             color="primary"
@@ -242,7 +243,7 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
             }}>
            Invitation
          </Button>
-        <Button
+        {/* <Button
           variant="outlined"
           color="success"
           disabled={selectedMembers.length === 0}
@@ -255,7 +256,7 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
         }}
         >
           Déclarer ADMIN
-        </Button>
+        </Button> */}
         <Button 
             variant="contained" 
             sx={{
