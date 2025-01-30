@@ -122,7 +122,8 @@
 
 import React, { useState } from "react";
 import { Box, Button, LinearProgress, Slider, styled, Typography } from "@mui/material";
-import DialogDeleteEvents from "./dialodDeleteProjets";
+import DialogDeleteEvents from "./dialodDeleteEvents";
+import DialogAddEvents from "./dialogAddEvents";
 
 interface Task {
   name: string;
@@ -160,8 +161,14 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
   const totalDuration = maxDate - minDate;
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogAddEvents, setOpenDialogAddEvents] = useState(false);
   const handleOpenDialog = () => setOpenDialog(true);
+
+  const handleOpenDialogAddEvents = () => setOpenDialogAddEvents(true);
   
+  const handleCloseDialogAddEvents = () => {
+    setOpenDialogAddEvents(false);
+  };
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -176,10 +183,6 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
     setZoomLevel(newValue as number);
   };
 
-  const handleAddEvent = () => {
-    // Logique pour ajouter un événement
-    alert("Ajouter un événement");
-  };
 
   // Calcul du pourcentage des tâches terminées
   const calculateCompletionPercentage = () => {
@@ -277,7 +280,7 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
                 },
                 padding: "10px 20px",
                 borderRadius: "8px",
-            }} onClick={handleAddEvent}>
+            }} onClick={handleOpenDialogAddEvents}>
           Ajouter un événement
         </Button>
         <Button 
@@ -315,6 +318,7 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
         </Box>
       </Box>
       <DialogDeleteEvents open={openDialog} onClose={handleCloseDialog} />
+      <DialogAddEvents open={openDialogAddEvents} onClose={handleCloseDialogAddEvents} />
     </Box>
   );
 };

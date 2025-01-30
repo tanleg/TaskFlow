@@ -17,6 +17,8 @@ import DialogAddUser from "./dialogAddUser";
 import DialogUserAssign from "./dialogUserAssign";
 import EditIcon from "@mui/icons-material/Edit";
 import Timeline from "./timeline";
+import File from "./file";
+
 
 
 const DetailsProjet: React.FC = () => {
@@ -425,6 +427,21 @@ const DetailsProjet: React.FC = () => {
           <Timeline tasks={tasks} />
         </Box>
 
+        <Box
+          sx={{
+            backgroundColor: "#F5F5F5",
+            borderRadius: "12px",
+            padding: "20px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            marginBottom: "20px",
+          }}
+        >
+          <Typography variant="h5" sx={{ marginBottom: "10px", color: "#1976d2", fontFamily:"Montserrat, sans-serif" }}>
+            Fichier
+          </Typography>
+          <File />
+        </Box>
+
       </Paper>
       <DialogUserAssign
         open={openDialogAssign}
@@ -433,6 +450,7 @@ const DetailsProjet: React.FC = () => {
         onAssign={assignUserToTask} // Fonction pour attribuer une tâche
       />
       <DialogAddUser open={openDialog} onClose={handleCloseDialog} />
+      
       </Box>
     );
     };
