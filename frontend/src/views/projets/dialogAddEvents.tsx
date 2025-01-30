@@ -8,7 +8,8 @@ import {
   Typography,
   TextField,
   MenuItem,
-  Button
+  Button,
+  DialogActions
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { FadeProps } from "@mui/material/Fade";
@@ -56,6 +57,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
         assignedTo: "",
         nomtache: "",
         milestoneName: "",
+        livrableName: "",
     });
 
     const [members, setMembers] = useState<any[]>([]);
@@ -87,6 +89,20 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
         getMembres();
     }, []);
 
+
+    const handleCancel = () => {
+      onClose();
+      setType("");
+      setFormData({ // Réinitialise les champs du formulaire
+        startDate: "",
+        endDate: "",
+        assignedTo: "",
+        nomtache: "",
+        milestoneName: "",
+        livrableName: "",
+      });
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -101,7 +117,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
         sx={{
             "& .MuiDialog-paper": {
             overflow: "visible",
-            fontFamily: "Poppins, sans-serif",
+            fontFamily: "Montserrat, sans-serif",
             borderRadius: "20px",
             boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.2)",
             backgroundColor: "#f9f9f9",
@@ -119,7 +135,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
             <Typography
             variant="h4"
             sx={{
-                fontFamily: "Poppins, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 fontWeight: 600,
                 fontSize: "1.8rem",
                 color: "#333",
@@ -161,33 +177,64 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 value={formData.assignedTo}
                 onChange={handleChange}
                 fullWidth
+                SelectProps={{
+                  renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
+                    const selectedMember = members.find(member => member.email === selected);
+                    return (
+                      <Typography>
+                        {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
+                      </Typography>
+                    );
+                  },
+                  MenuProps: {
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200, // Hauteur maximale du menu
+                        overflow: 'auto', // Active la barre de défilement
+                        '&::-webkit-scrollbar': { // Style pour WebKit (Chrome, Safari, etc.)
+                          width: '8px',
+                        },
+                        '&::-webkit-scrollbar-thumb': { // Style du curseur de la barre de défilement
+                          backgroundColor: '#888',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': { // Style de la piste de la barre de défilement
+                          backgroundColor: '#f1f1f1',
+                        },
+                      },
+                    },
+                  },
+                }}
                 >
                 {members.map((member, index) => (
-                    <MenuItem key={index} value={member.email}> {/* Ici, on utilise l'email comme valeur, tu peux changer ça selon ton besoin */}
-                    {member.name} - {member.role}
+                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
+                        <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
                     </MenuItem>
                 ))}
                 </TextField>
-                <TextField
-                label="Date de début"
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                label="Date de fin"
-                type="date"
-                name="endDate"
-                value={formData.endDate}
-                onChange={handleChange}
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                />
-                
-                
+                <Box sx={{ display: 'flex', gap: 2 }}> {/* Conteneur flex pour les dates */}
+                  <TextField
+                    label="Date de début"
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                  <TextField
+                    label="Date de fin"
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                </Box>
             </>
             )}
 
@@ -208,10 +255,39 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 value={formData.assignedTo}
                 onChange={handleChange}
                 fullWidth
+                SelectProps={{
+                  renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
+                    const selectedMember = members.find(member => member.email === selected);
+                    return (
+                      <Typography>
+                        {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
+                      </Typography>
+                    );
+                  },
+                  MenuProps: {
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200, // Hauteur maximale du menu
+                        overflow: 'auto', // Active la barre de défilement
+                        '&::-webkit-scrollbar': { // Style pour WebKit (Chrome, Safari, etc.)
+                          width: '8px',
+                        },
+                        '&::-webkit-scrollbar-thumb': { // Style du curseur de la barre de défilement
+                          backgroundColor: '#888',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': { // Style de la piste de la barre de défilement
+                          backgroundColor: '#f1f1f1',
+                        },
+                      },
+                    },
+                  },
+                }}
                 >
                 {members.map((member, index) => (
-                    <MenuItem key={index} value={member.email}> {/* Ici, on utilise l'email comme valeur, tu peux changer ça selon ton besoin */}
-                    {member.name} - {member.role}
+                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
+                        <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
                     </MenuItem>
                 ))}
                 </TextField>
@@ -228,15 +304,109 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
             </>
             )}
 
+            {type === "livrable" && (
+                <>
+                    <TextField
+                    label="Nom du livrable"
+                    name="livrableName"
+                    value={formData.livrableName}
+                    onChange={handleChange}
+                    fullWidth
+                    />
+                    <TextField
+                    select
+                    label="Personne assignée"
+                    name="assignedTo"
+                    value={formData.assignedTo}
+                    onChange={handleChange}
+                    fullWidth
+                    SelectProps={{
+                      renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
+                        const selectedMember = members.find(member => member.email === selected);
+                        return (
+                          <Typography>
+                            {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
+                          </Typography>
+                        );
+                      },
+                      MenuProps: {
+                        PaperProps: {
+                          sx: {
+                            maxHeight: 200, // Hauteur maximale du menu
+                            overflow: 'auto', // Active la barre de défilement
+                            '&::-webkit-scrollbar': { // Style pour WebKit (Chrome, Safari, etc.)
+                              width: '8px',
+                            },
+                            '&::-webkit-scrollbar-thumb': { // Style du curseur de la barre de défilement
+                              backgroundColor: '#888',
+                              borderRadius: '4px',
+                            },
+                            '&::-webkit-scrollbar-track': { // Style de la piste de la barre de défilement
+                              backgroundColor: '#f1f1f1',
+                            },
+                          },
+                        },
+                      },
+                    }}
+                    >
+                    {members.map((member, index) => (
+                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
+                        <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
+                    </MenuItem>
+                ))}
+                    </TextField>
+                    <TextField
+                    label="Date de fin"
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    />
+                    
+                </>
+              )}
+          <DialogActions sx={{ pb: 2 }}> {/* pb: 2 ajoute de l'espace en bas */}
             <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2, alignSelf: "center", fontWeight: "bold" }}
+              variant="contained"
+              sx={{
+                mr: 1,
+                fontFamily: "Open Sans, sans-serif",
+                fontWeight: "bold",
+                background: "linear-gradient(135deg, #005B96, #00A676)",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #005B96, #00A676)",
+                },
+                padding: "10px 20px",
+                borderRadius: "8px",
+              }}
             >
-            Ajouter
+              Ajouter
             </Button>
+            <Button
+              variant="outlined"
+              onClick={handleCancel}
+              color="error"
+              sx={{
+                fontFamily: "Open Sans, sans-serif",
+                fontWeight: "bold",
+                borderColor: "#D32F2F",
+                color: "#D32F2F",
+                padding: "10px 20px",
+                borderRadius: "8px",
+                "&:hover": {
+                  borderColor: "#D32F2F",
+                  color: "#D32F2F",
+                },
+              }}
+            >
+              Annuler
+            </Button>
+          </DialogActions>
         </Box>
-        </Dialog>
+      </Dialog>
     );
     };
 

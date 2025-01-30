@@ -351,43 +351,43 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
 
       {/* Dialog Actions */}
       <DialogActions sx={{ pb: 2 }}> {/* pb: 2 ajoute de l'espace en bas */}
-  <Button
-    onClick={creer_projet}
-    variant="contained"
-    sx={{
-      mr: 1,
-      fontFamily: "Open Sans, sans-serif",
-      fontWeight: "bold",
-      background: "linear-gradient(135deg, #005B96, #00A676)",
-      "&:hover": {
-        background: "linear-gradient(135deg, #005B96, #00A676)",
-      },
-      padding: "10px 20px",
-      borderRadius: "8px",
-    }}
-  >
-    Ajouter
-  </Button>
-  <Button
-    variant="outlined"
-    onClick={handleClose}
-    color="error"
-    sx={{
-      fontFamily: "Open Sans, sans-serif",
-      fontWeight: "bold",
-      borderColor: "#D32F2F",
-      color: "#D32F2F",
-      padding: "10px 20px",
-      borderRadius: "8px",
-      "&:hover": {
-        borderColor: "#D32F2F",
-        color: "#D32F2F",
-      },
-    }}
-  >
-    Annuler
-  </Button>
-</DialogActions>
+        <Button
+          onClick={creer_projet}
+          variant="contained"
+          sx={{
+            mr: 1,
+            fontFamily: "Open Sans, sans-serif",
+            fontWeight: "bold",
+            background: "linear-gradient(135deg, #005B96, #00A676)",
+            "&:hover": {
+              background: "linear-gradient(135deg, #005B96, #00A676)",
+            },
+            padding: "10px 20px",
+            borderRadius: "8px",
+          }}
+        >
+          Ajouter
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={handleClose}
+          color="error"
+          sx={{
+            fontFamily: "Open Sans, sans-serif",
+            fontWeight: "bold",
+            borderColor: "#D32F2F",
+            color: "#D32F2F",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            "&:hover": {
+              borderColor: "#D32F2F",
+              color: "#D32F2F",
+            },
+          }}
+        >
+          Annuler
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

@@ -124,111 +124,112 @@ const DialogDeleteEvents: React.FC<DialogDeleteEventsProps> = ({ open, onClose }
 
   return (
     <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      maxWidth="md"
-      TransitionComponent={Transition}
+  open={open}
+  onClose={onClose}
+  fullWidth
+  maxWidth="md"
+  TransitionComponent={Transition}
+  sx={{
+    "& .MuiDialog-paper": {
+      overflow: "visible",
+      fontFamily: "Montserrat, sans-serif",
+      borderRadius: "20px",
+      boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.2)",
+      backgroundColor: "#f9f9f9",
+      padding: "32px",
+    },
+  }}
+>
+  {/* Bouton de fermeture */}
+  <CustomCloseButton onClick={onClose} aria-label="close">
+    <CloseIcon />
+  </CustomCloseButton>
+
+  {/* Titre du dialog */}
+  <Box sx={{ textAlign: "center", mb: 4 }}>
+    <Typography
+      variant="h4"
       sx={{
-        "& .MuiDialog-paper": {
-          overflow: "visible",
-          fontFamily: "Poppins, sans-serif",
-          borderRadius: "20px",
-          boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.2)",
-          backgroundColor: "#f9f9f9",
-          padding: "32px",
+        fontFamily: "Montserrat, sans-serif",
+        fontWeight: 600,
+        fontSize: "1.8rem",
+        color: "#333",
+      }}
+    >
+      Supprimer un évènement
+    </Typography>
+  </Box>
+
+  {/* Conteneur avec barre de défilement */}
+  <Box sx={{ maxHeight: "60vh", overflowY: "auto" }}>
+    <Table>
+      <TableHead>
+        <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
+          <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: 600 }}>Sélection</TableCell>
+          <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: 600 }}>Nom de la tâche</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {tasks.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell>
+              <Checkbox
+                checked={selectedTasks.has(task.id)}
+                onChange={() => handleCheckboxChange(task.id)}
+                sx={{
+                  "& .MuiSvgIcon-root": {
+                    fontSize: 24,
+                    borderRadius: "6px",
+                    border: "2px solid #d1d1d1",
+                    transition: "all 0.3s ease-in-out",
+                  },
+                  "&:hover .MuiSvgIcon-root": {
+                    borderColor: "#1976d2",
+                    boxShadow: "0 0 8px rgba(25, 118, 210, 0.5)",
+                  },
+                  "&.Mui-checked .MuiSvgIcon-root": {
+                    backgroundColor: "#4CAF50",
+                    borderColor: "#4CAF50",
+                    color: "#ffffff",
+                  },
+                  "&.Mui-checked:hover .MuiSvgIcon-root": {
+                    backgroundColor: "#43a047",
+                  },
+                }}
+              />
+            </TableCell>
+            <TableCell sx={{ fontFamily: "Open Sans, sans-serif" }}>{task.name}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </Box>
+
+  <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+    <Button
+      variant="outlined"
+      color="error"
+      disabled={selectedTasks.size === 0}
+      sx={{
+        fontFamily: "Open Sans, sans-serif",
+        fontWeight: "bold",
+        borderColor: "#D32F2F",
+        color: "#D32F2F",
+        padding: "10px 20px",
+        borderRadius: "8px",
+        marginRight: "10px",
+        marginBottom: "10px",
+        "&:hover": {
+          borderColor: "#D32F2F",
+          color: "#D32F2F",
+          backgroundColor: "#ffebee",
         },
       }}
     >
-      {/* Bouton de fermeture */}
-      <CustomCloseButton onClick={onClose} aria-label="close">
-        <CloseIcon />
-      </CustomCloseButton>
-
-      {/* Titre du dialog */}
-      <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography
-          variant="h4"
-          sx={{
-            fontFamily: "Poppins, sans-serif",
-            fontWeight: 600,
-            fontSize: "1.8rem",
-            color: "#333",
-          }}
-        >
-          Supprimer un évènement
-        </Typography>
-      </Box>
-
-      <Table>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-            <TableCell sx={{ fontFamily: "Poppins, sans-serif", fontWeight: 600 }}>Sélection</TableCell>
-            <TableCell sx={{ fontFamily: "Poppins, sans-serif", fontWeight: 600 }}>Nom de la tâche</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tasks.map((task) => (
-            <TableRow key={task.id}>
-              <TableCell>
-                <Checkbox
-                    checked={selectedTasks.has(task.id)}
-                    onChange={() => handleCheckboxChange(task.id)}
-                    sx={{
-                        "& .MuiSvgIcon-root": {
-                        fontSize: 24,
-                        borderRadius: "6px", // Coins légèrement arrondis
-                        border: "2px solid #d1d1d1", // Bordure grise par défaut
-                        transition: "all 0.3s ease-in-out",
-                        },
-                        "&:hover .MuiSvgIcon-root": {
-                        borderColor: "#1976d2", // Bordure bleue au survol
-                        boxShadow: "0 0 8px rgba(25, 118, 210, 0.5)", // Glow subtil
-                        },
-                        "&.Mui-checked .MuiSvgIcon-root": {
-                        backgroundColor: "#4CAF50", // Couleur verte lorsqu'il est sélectionné
-                        borderColor: "#4CAF50",
-                        color: "#ffffff", // Icône blanche sur fond vert
-                        },
-                        "&.Mui-checked:hover .MuiSvgIcon-root": {
-                        backgroundColor: "#43a047", // Vert un peu plus sombre au survol
-                        },
-                    }}
-                    />
-
-
-              </TableCell>
-              <TableCell sx={{ fontFamily: "Poppins, sans-serif" }}>{task.name}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-        <Button
-          variant="outlined"
-          color="error"
-          disabled={selectedTasks.size === 0}
-          sx={{
-            fontFamily: "Open Sans, sans-serif",
-            fontWeight: "bold",
-            borderColor: "#D32F2F",
-            color: "#D32F2F",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            marginRight: "10px",
-            marginBottom: "10px",
-            "&:hover": {
-              borderColor: "#D32F2F",
-              color: "#D32F2F",
-              backgroundColor: "#ffebee",
-            },
-          }}
-        >
-          Supprimer
-        </Button>
-      </Box>
-    </Dialog>
+      Supprimer
+    </Button>
+  </Box>
+</Dialog>
   );
 };
 
