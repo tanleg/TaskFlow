@@ -4,6 +4,7 @@ import logo from 'frontend/src/assets/logo_2.png';
 import { CircularProgress, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -22,7 +23,7 @@ const RegisterPage: React.FC = () => {
         try {
             setLoading(true); // Afficher le chargement
 
-            const response = await axios.post("http://localhost:3000/auth/connexion", {
+            const response = await axios.post(`${apiUrl}/auth/connexion`, {
                 email: email,
                 mot_de_passe: password,
             });
@@ -59,7 +60,7 @@ const RegisterPage: React.FC = () => {
         
         try {
             setLoading(true);  // Démarre le chargement
-            const response = await axios.post("http://localhost:3000/auth/creation", {
+            const response = await axios.post(`${apiUrl}/auth/creation`, {
               nom: firstName,
               prenom: lastName,
             //   dateOfBirth: dob,

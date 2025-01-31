@@ -121,7 +121,7 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
               fontSize: "14px",
             }}
           >
-            {Math.round(completionPercentage)}%
+            {completionPercentage ? Math.round(completionPercentage) : "0"}%
           </Typography>
         </Box>
       </Box>

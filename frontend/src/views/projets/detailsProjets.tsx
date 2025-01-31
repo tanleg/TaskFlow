@@ -18,8 +18,7 @@ import DialogUserAssign from "./dialogUserAssign";
 import EditIcon from "@mui/icons-material/Edit";
 import Timeline from "./timeline";
 import File from "./file";
-
-
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const DetailsProjet: React.FC = () => {
   const { id } = useParams(); // Récupère l'identifiant du projet depuis l'URL
@@ -46,24 +45,53 @@ const DetailsProjet: React.FC = () => {
   }
 
   // Fonction pour changer le statut d'une tâche à "Terminée" lorsqu'une checkbox est cochée
-  const handleStatusChange = (index: number) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].status = updatedTasks[index].status === "Terminée" ? "En cours" : "Terminée"; // Alterne le statut
-    setTasks(updatedTasks);
+  const handleStatusChange = async (task: any, index: number) => {
+
+    try {
+        await axios.put(`${apiUrl}/evenements/tache/${task.id}/statut`);
+        
+        const updatedTasks = [...tasks];
+        updatedTasks[index].status = updatedTasks[index].status === "Terminée" ? "En cours" : "Terminée"; // Alterne le statut
+        setTasks(updatedTasks);
+        
+    } catch (err: any) {
+        console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+    }
   };
 
   // Fonction pour assigner une personne à une tâche
-  const handleAssignTask = (index: number) => {
-    setTaskToAssign(index); // Définit la tâche à assigner
+  const handleAssignTask = (id_task: number) => {
+    setTaskToAssign(id_task); // Définit la tâche à assigner
     handleOpenDialogAssign(); // Ouvre la boîte de dialogue
   };
 
-  const assignUserToTask = (userName: string) => {
+  const assignUserToTask = async (userId: number, userName: string) => {
+
     if (taskToAssign !== null) {
-      const updatedTasks = [...tasks];
-      updatedTasks[taskToAssign].assignedTo = userName; // Attribue l'utilisateur à la tâche
-      setTasks(updatedTasks);
-      handleCloseDialogAssign(); // Ferme la boîte de dialogue
+        
+        try {
+            await axios.put(`${apiUrl}/evenements/assigner/chef`, {
+                id_tache: taskToAssign,
+                id_utilisateur_assigne: userId       
+            });
+            
+            const taskIndex = tasks.findIndex(task => task.id === taskToAssign);
+            
+            if (taskIndex !== -1) {
+                const updatedTasks = [...tasks];
+                updatedTasks[taskIndex] = {
+                    ...updatedTasks[taskIndex],
+                    assignedTo: userName
+                };
+
+                setTasks(updatedTasks); // Met à jour l'état avec la nouvelle liste de tâches
+            }
+
+            handleCloseDialogAssign(); // Ferme la boîte de dialogue
+            
+        } catch (err: any) {
+            console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+        }
     }
   };
 
@@ -72,11 +100,12 @@ const DetailsProjet: React.FC = () => {
     let liste_taches = [];
 
     try {
-      const response = await axios.get(`http://localhost:3000/evenements/projet/taches/${id}`);
+      const response = await axios.get(`${apiUrl}/evenements/projet/taches/${id}`);
       
       for (let element of response.data) {
 
         tache = { 
+            id: element.id,
             name: element.nom,
             status: element.termine ? "Terminé" : "En cours",
             assignedTo: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
@@ -97,11 +126,12 @@ const DetailsProjet: React.FC = () => {
     let liste_membres = [];
 
     try {
-      const response = await axios.get(`http://localhost:3000/projets/${id}/users`);
+      const response = await axios.get(`${apiUrl}/projets/${id}/users`);
       
       for (let element of response.data) {
 
         membre = { 
+            id: element.utilisateur.id,
             name: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
             role: element.visiteur ? "Visiteur" : element.chef ? "Chef de projet" : "Chercheur",
             email: element.utilisateur.email,
@@ -128,7 +158,7 @@ const DetailsProjet: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+      const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
       for (let element of response.data) {
         projet = { id: element.id, name: element.nom, description: element.description };
         liste_projets.push(projet);
@@ -138,6 +168,23 @@ const DetailsProjet: React.FC = () => {
       console.log(`projets -> ${err.message} --> erreur car 0 projet`);
     }
   }
+
+
+  async function declarer_chef(memberId: number) {
+
+    try {
+        await axios.put(`${apiUrl}/projets/${id}/users/${memberId}/make-admin`);
+  
+        setMembers((prev) =>
+          prev.map((member) =>
+            member.id === memberId ? { ...member, role: "Chef de projet" } : member
+          )
+        );
+      } catch (err: any) {
+        console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+      }
+  }
+
 
   async function recup_id() {
     const token = localStorage.getItem("authToken");
@@ -149,7 +196,7 @@ const DetailsProjet: React.FC = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/auth/profile", {
+      const response = await axios.get(`${apiUrl}/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -162,37 +209,25 @@ const DetailsProjet: React.FC = () => {
     }
   }
 
+  async function exclure(index: number) {
 
-  //Cette partie sera utilisé lorsque l'api pour changer de le rôle d'un utilisateur en ADMIN sera disponible
+    console.log(id)
+    console.log(members[index].id)
+    try {
+      const memberToRemove = members[index];
+      await axios.delete(`${apiUrl}/projets/supprimer/utilisateur`, {
+        data: {
+          id: id, // L'ID du projet
+          id_utilisateur: memberToRemove.id, // L'ID de l'utilisateur à supprimer
+        }
+      });
 
-  // const handleMakeAdmin = async (memberId: number) => {
-  //   try {
-  //     // Appel API pour changer le rôle de l'utilisateur
-  //     await axios.put(`http://localhost:3000/projets/${id}/users/${memberId}/make-admin`);
-
-  //     // Mettre à jour localement l'état des membres
-  //     setMembers((prev) =>
-  //       prev.map((member) =>
-  //         member.id === memberId ? { ...member, role: "ADMIN" } : member
-  //       )
-  //     );
-  //   } catch (err: any) {
-  //     console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
-  //   }
-  // };
-
-//Cette partie sera utilisé lorsque l'api pour virer un utilisateur du projet sera disponible
-
-  // const handleRemoveMember = async (index: number) => {
-  //   try {
-  //     const memberToRemove = members[index];
-  //     await axios.delete(`http://localhost:3000/projets/${id}/users/${memberToRemove.id}`);
-  //     setMembers((prev) => prev.filter((_, i) => i !== index)); // Supprime localement
-  //     console.log(`Membre ${memberToRemove.name} retiré avec succès.`);
-  //   } catch (err: any) {
-  //     console.error(`Erreur lors de la suppression du membre : ${err.message}`);
-  //   }
-  // };
+      setMembers((prev) => prev.filter((_, i) => i !== index)); // Supprime localement
+      console.log(`Membre ${memberToRemove.name} retiré avec succès.`);
+    } catch (err: any) {
+      console.error(`Erreur lors de la suppression du membre : ${err.message}`);
+    }
+  };
 
 
   useEffect(() => {
@@ -304,11 +339,12 @@ const DetailsProjet: React.FC = () => {
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.email}</TableCell>
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.telephone}</TableCell>
                   <TableCell sx={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {member.role !== "ADMIN" && (
+                    
+                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && (
                       <Button
                        variant="outlined"
-                      color="success"
-                        // onClick={() => handleMakeAdmin(member.id)}
+                       color="success"
+                       onClick={() => declarer_chef(member.id)}
                       sx={{
                         fontFamily: "Open Sans, sans-serif",
                         fontWeight: "bold",
@@ -316,13 +352,15 @@ const DetailsProjet: React.FC = () => {
                         borderRadius: "8px",
                       }}
                       >
-                        Déclarer admin
+                        Déclarer chef de projet
                       </Button>
                     )}
-                    <Button
+                    
+                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && (
+                        <Button
                       variant="outlined"
                       color="error"
-                      // onClick={() => handleRemoveMember(index)} // Fonction pour gérer la suppression
+                      onClick={() => exclure(index)} // Fonction pour gérer la suppression
                       sx={{
                         fontFamily: "Open Sans, sans-serif",
                         fontWeight: "bold",
@@ -331,8 +369,9 @@ const DetailsProjet: React.FC = () => {
                         marginLeft: "10px",
                       }}
                     >
-                      Virer
+                      Exclure
                     </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -359,7 +398,7 @@ const DetailsProjet: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Action</TableCell>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}></TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Nom tâche</TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Statut</TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Personne assignée</TableCell>
@@ -371,7 +410,7 @@ const DetailsProjet: React.FC = () => {
                 <TableCell>
                   <Checkbox
                     checked={task.status === "Terminée"}
-                    onChange={() => handleStatusChange(index)}
+                    onChange={() => handleStatusChange(task, index)}
                     color="primary"
                   />
                 </TableCell>
@@ -396,7 +435,7 @@ const DetailsProjet: React.FC = () => {
                       {task.assignedTo}
                       <Button
                         sx={{ marginLeft: "10px" }}
-                        onClick={() => handleAssignTask(index)}
+                        onClick={() => handleAssignTask(task.id)}
                       >
                         <EditIcon/>
                       </Button>
@@ -449,7 +488,7 @@ const DetailsProjet: React.FC = () => {
         users={members} // Passez la liste des utilisateurs
         onAssign={assignUserToTask} // Fonction pour attribuer une tâche
       />
-      <DialogAddUser open={openDialog} onClose={handleCloseDialog} />
+      <DialogAddUser open={openDialog} onClose={handleCloseDialog} id_projet={id ?? ""}/>
       
       </Box>
     );

@@ -6,6 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("test1@gmail.com");
@@ -39,7 +40,7 @@ const LoginPage: React.FC = () => {
         try {
             setLoading(true); // Afficher le chargement
 
-            const response = await axios.post("http://localhost:3000/auth/connexion", {
+            const response = await axios.post(`${apiUrl}/auth/connexion`, {
                 email: email,
                 mot_de_passe: password,
             });

@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { FadeProps } from "@mui/material/Fade";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Transition pour le dialog
 const Transition = forwardRef(function Transition(
@@ -61,16 +62,18 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
     });
 
     const [members, setMembers] = useState<any[]>([]);
+    
     async function getMembres() {
         let membre;
         let liste_membres = [];
     
         try {
-          const response = await axios.get(`http://localhost:3000/projets/${id}/users`);
+          const response = await axios.get(`${apiUrl}/projets/${id}/users`);
           
           for (let element of response.data) {
     
             membre = { 
+                id: element.utilisateur.id,
                 name: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
                 role: element.visiteur ? "Visiteur" : element.chef ? "Chef de projet" : "Chercheur",
                 email: element.utilisateur.email,
@@ -84,6 +87,68 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
           console.log(`liste membres -> ${err.message}`);
         }
       }
+
+      async function ajouterEvenement() {
+
+        try {
+            if (!id) {
+                console.error("ID du projet introuvable.");
+                return;
+            }
+    
+            let payload: any = {};
+            let endpoint = ''
+
+            if (type === "tache") {
+                    
+                endpoint = `${apiUrl}/evenements/tache/create`;
+    
+                payload = {
+                    nom: formData.nomtache,
+                    date_fin: new Date(formData.endDate).toISOString(),
+                    date_debut: new Date(formData.startDate).toISOString(),
+                    id_projet: id,
+                    id_utilisateur: formData.assignedTo,
+                };
+
+            console.log(payload)
+
+
+            } else if (type === "jalon") {
+                
+                endpoint = `${apiUrl}/evenements/jalon/create`;
+                
+                payload = {
+                    nom: formData.milestoneName,
+                    date_fin: new Date(formData.endDate).toISOString(),
+                    id_projet: id,
+                };
+
+            } else if (type === "livrable") {
+                
+                endpoint = `${apiUrl}/evenements/livrable/create`;
+
+                payload = {
+                    nom: formData.livrableName,
+                    date_fin: new Date(formData.endDate).toISOString(),
+                    id_projet: id,
+                };
+
+            } else {
+                console.error("Type d'événement non reconnu.");
+                return;
+            }
+    
+            const response = await axios.post(endpoint, payload);
+    
+            console.log(`${type} ajouté(e) avec succès :`, response.data);
+    
+            handleCancel();
+        } catch (error: any) {
+            console.error(`Erreur lors de l'ajout de ${type} : ${error.message}`);
+        }
+    }
+    
 
     useEffect(() => {
         getMembres();
@@ -179,7 +244,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 fullWidth
                 SelectProps={{
                   renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
-                    const selectedMember = members.find(member => member.email === selected);
+                    const selectedMember = members.find(member => member.id === selected);
                     return (
                       <Typography>
                         {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
@@ -207,7 +272,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 }}
                 >
                 {members.map((member, index) => (
-                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <MenuItem key={index} value={member.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
                         <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
                     </MenuItem>
@@ -248,49 +313,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 onChange={handleChange}
                 fullWidth
                 />
-                <TextField
-                select
-                label="Personne assignée"
-                name="assignedTo"
-                value={formData.assignedTo}
-                onChange={handleChange}
-                fullWidth
-                SelectProps={{
-                  renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
-                    const selectedMember = members.find(member => member.email === selected);
-                    return (
-                      <Typography>
-                        {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
-                      </Typography>
-                    );
-                  },
-                  MenuProps: {
-                    PaperProps: {
-                      sx: {
-                        maxHeight: 200, // Hauteur maximale du menu
-                        overflow: 'auto', // Active la barre de défilement
-                        '&::-webkit-scrollbar': { // Style pour WebKit (Chrome, Safari, etc.)
-                          width: '8px',
-                        },
-                        '&::-webkit-scrollbar-thumb': { // Style du curseur de la barre de défilement
-                          backgroundColor: '#888',
-                          borderRadius: '4px',
-                        },
-                        '&::-webkit-scrollbar-track': { // Style de la piste de la barre de défilement
-                          backgroundColor: '#f1f1f1',
-                        },
-                      },
-                    },
-                  },
-                }}
-                >
-                {members.map((member, index) => (
-                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
-                        <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
-                    </MenuItem>
-                ))}
-                </TextField>
+                
                 <TextField
                 label="Date de fin"
                 type="date"
@@ -313,49 +336,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                     onChange={handleChange}
                     fullWidth
                     />
-                    <TextField
-                    select
-                    label="Personne assignée"
-                    name="assignedTo"
-                    value={formData.assignedTo}
-                    onChange={handleChange}
-                    fullWidth
-                    SelectProps={{
-                      renderValue: (selected: unknown) => { // Utilisez `unknown` pour correspondre au type attendu
-                        const selectedMember = members.find(member => member.email === selected);
-                        return (
-                          <Typography>
-                            {selectedMember ? `${selectedMember.name} - ${selectedMember.role}` : selected as string}
-                          </Typography>
-                        );
-                      },
-                      MenuProps: {
-                        PaperProps: {
-                          sx: {
-                            maxHeight: 200, // Hauteur maximale du menu
-                            overflow: 'auto', // Active la barre de défilement
-                            '&::-webkit-scrollbar': { // Style pour WebKit (Chrome, Safari, etc.)
-                              width: '8px',
-                            },
-                            '&::-webkit-scrollbar-thumb': { // Style du curseur de la barre de défilement
-                              backgroundColor: '#888',
-                              borderRadius: '4px',
-                            },
-                            '&::-webkit-scrollbar-track': { // Style de la piste de la barre de défilement
-                              backgroundColor: '#f1f1f1',
-                            },
-                          },
-                        },
-                      },
-                    }}
-                    >
-                    {members.map((member, index) => (
-                    <MenuItem key={index} value={member.email} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography sx={{ fontWeight: 'bold', color: '#333' }}>{member.name}</Typography>
-                        <Typography sx={{ color: '#666', fontStyle: 'italic' }}>{member.role}</Typography>
-                    </MenuItem>
-                ))}
-                    </TextField>
+
                     <TextField
                     label="Date de fin"
                     type="date"
@@ -382,6 +363,7 @@ const DialogAddEvents: React.FC<DialogAddEventsProps> = ({ open, onClose }) => {
                 padding: "10px 20px",
                 borderRadius: "8px",
               }}
+              onClick={ajouterEvenement}
             >
               Ajouter
             </Button>

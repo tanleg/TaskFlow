@@ -26,6 +26,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close"; // Icône de fermeture
 import axios from "axios";
 import { Utilisateur } from "../../types/apps/utilisateur";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Transition component for the Dialog
 const Transition = forwardRef(function Transition(
@@ -95,7 +96,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     }
     
     try {
-        const response = await axios.get('http://localhost:3000/auth/profile', {
+        const response = await axios.get(`${apiUrl}/auth/profile`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -110,7 +111,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
 
   async function fetchUsers() {
     try {
-      const response = await axios.get(`http://localhost:3000/auth/otherusers/${user_id}`);
+      const response = await axios.get(`${apiUrl}/auth/otherusers/${user_id}`);
 
       const formattedUsers = response.data.map((user: Utilisateur) => ({
         id: user.id,
@@ -141,7 +142,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
       }
 
       try {
-        const response = await axios.post("http://localhost:3000/projets/create", {
+        const response = await axios.post(`${apiUrl}/projets/create`, {
           nom: projectName,
           description: projectDescription,
           public: statut,
@@ -152,7 +153,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
         
         for (const userId of selectedUsers) {
             try {
-              await axios.post("http://localhost:3000/projets/ajouter/utilisateur", {
+              await axios.post(`${apiUrl}/projets/ajouter/utilisateur`, {
                 id: projetId,
                 id_utilisateur: userId,
               });

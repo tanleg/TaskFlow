@@ -38,18 +38,18 @@ export class EvenementsService {
     ) {}
 
 
-    async createJalon(createJalonDto: CreateJalonDto, projetId: number) {
+    async createJalon(createJalonDto: CreateJalonDto) {
 
         const jalon = this.jalonRepository.create({
           nom: createJalonDto.nom,
           date_fin: createJalonDto.date_fin,
-          projet: { id: projetId },
+          projet: { id: createJalonDto.id_projet },
         });
 
         const savedJalon = await this.jalonRepository.save(jalon);
       
         const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
-            where: { projet: { id: projetId } },
+            where: { projet: { id: createJalonDto.id_projet } },
         });
     
         const utilisateurJalons = utilisateursDuProjet.map(utilisateur => {
@@ -64,20 +64,20 @@ export class EvenementsService {
         return savedJalon;
     }
 
-    async createLivrable(createLivrableDto: CreateLivrableDto, projetId: number) {
+    async createLivrable(createLivrableDto: CreateLivrableDto) {
 
         const livrable = this.livrableRepository.create({
           nom: createLivrableDto.nom,
           date_fin: createLivrableDto.date_fin,
           date_fin_reelle: null,
           termine: false,
-          projet: { id: projetId },
+          projet: { id: createLivrableDto.id_projet },
         });
 
         const savedLivrable = await this.livrableRepository.save(livrable);
       
         const utilisateursDuProjet = await this.utilisateurProjetRepository.find({
-            where: { projet: { id: projetId } },
+            where: { projet: { id: createLivrableDto.id_projet } },
         });
     
         const utilisateurLivrables = utilisateursDuProjet.map(utilisateur => {
@@ -92,7 +92,7 @@ export class EvenementsService {
         return savedLivrable;
     } 
 
-    async createTache(createTacheDto: CreateTacheDto, utilisateurId: number, projetId: number) {
+    async createTache(createTacheDto: CreateTacheDto) {
 
         const tache = this.tacheRepository.create({
           nom: createTacheDto.nom,
@@ -100,8 +100,8 @@ export class EvenementsService {
           date_fin_reelle: null,
           date_fin: createTacheDto.date_fin,
           termine: false,
-          projet: { id: projetId },
-          utilisateur: { id: utilisateurId },
+          projet: { id: createTacheDto.id_projet },
+          utilisateur: { id: createTacheDto.id_utilisateur },
         });
 
         return await this.tacheRepository.save(tache);
@@ -255,6 +255,20 @@ export class EvenementsService {
         }
 
         tache.utilisateur = utilisateur;
+    
+        return await this.tacheRepository.save(tache);
+    }
+
+
+    async changerStatutTache(id_tache: number) {
+        
+        const tache = await this.tacheRepository.findOne({ where: { id: id_tache } });
+    
+        if (!tache) {
+            throw new Error(`Pas de tache avec l'id ${id_tache}`);
+        }
+    
+        tache.termine = tache.termine ? false : true;
     
         return await this.tacheRepository.save(tache);
     }

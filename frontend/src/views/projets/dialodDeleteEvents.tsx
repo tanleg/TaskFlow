@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { FadeProps } from "@mui/material/Fade";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Transition pour le dialog
 const Transition = forwardRef(function Transition(
@@ -67,7 +68,7 @@ const DialogDeleteEvents: React.FC<DialogDeleteEventsProps> = ({ open, onClose }
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/auth/profile", {
+      const response = await axios.get(`${apiUrl}/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,7 +83,7 @@ const DialogDeleteEvents: React.FC<DialogDeleteEventsProps> = ({ open, onClose }
 
   async function getTaches() {
     try {
-      const response = await axios.get(`http://localhost:3000/evenements/projet/taches/${id}`);
+      const response = await axios.get(`${apiUrl}/evenements/projet/taches/${id}`);
 
       const liste_taches = response.data.map((element: any) => ({
         id: element.id,

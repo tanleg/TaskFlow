@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, ReactElement, useState } from "react";
+import React, { forwardRef, Ref, ReactElement, useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { FadeProps } from "@mui/material/Fade";
 import DialogAddInvitation from "./dialoAddInvitation";
+import axios from "axios";
+import { Utilisateur } from "../../types/apps/utilisateur";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Transition pour le dialog
 const Transition = forwardRef(function Transition(
@@ -48,16 +51,12 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 interface DialogAddProjectsProps {
   open: boolean;
   onClose: () => void;
+  id_projet: string;
 }
 
-const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
+const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose, id_projet }) => {
   const [search, setSearch] = useState(""); // Recherche dans la liste des membres
-  const [members, setMembers] = useState([
-    { id: 1, name: "Christophe VIGNAUD", role: "ADMIN" },
-    { id: 2, name: "Sacroud Riad", role: "Chercheur" },
-    { id: 3, name: "John Doe", role: "Chercheur" },
-    { id: 4, name: "Alice Smith", role: "Partenaire Industriel" },
-  ]);
+  const [members, setMembers] = useState<any[]>([]);
 
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]); // IDs des membres sélectionnés
   const [openDialog, setOpenDialog] = useState(false);
@@ -75,6 +74,50 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
       prev.includes(id) ? prev.filter((memberId) => memberId !== id) : [...prev, id]
     );
   };
+  
+  async function fetchUsers() {
+    try {
+      const response = await axios.get(`${apiUrl}/auth/usersnotinprojet/${id_projet}`);
+
+      const formattedUsers = response.data.map((user: Utilisateur) => ({
+        id: user.id,
+        name: `${user.prenom} ${user.nom}`,
+        email: user.email,
+        telephone: user.telephone,
+        role: user.admin ? "Administrateur" : "Chercheur",
+      }));
+
+      setMembers(formattedUsers);
+    
+    } catch (error) {
+      console.error("Erreur lors de la récupération des utilisateurs", error);
+      setMembers([]);
+    }
+  }
+
+  async function ajouter_utilisateurs() {
+    if (selectedMembers.length !== 0){
+        for (const userId of selectedMembers) {
+            try {
+              await axios.post(`${apiUrl}/projets/ajouter/utilisateur`, {
+                id: id_projet,
+                id_utilisateur: userId,
+              });
+              console.log(`Utilisateur ${userId} associé avec succès au projet ${id_projet}`);
+            } catch (error) {
+              console.error(`Erreur lors de l'association de l'utilisateur ${userId} au projet ${id_projet}`, error);
+            }
+        }
+        window.location.reload()    // reload pour afficher les users dans la liste
+    }
+  }
+
+  useEffect(() => {
+    if (id_projet) { // Vérifier si id_projet est bien défini
+      fetchUsers();
+    }
+  }, [id_projet]); // Déclencher l'effet dès que id_projet change
+  
 
   // Supprimer les membres sélectionnés
   // const handleDeleteSelected = () => {
@@ -269,7 +312,9 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose }) => {
                 },
                 padding: "10px 20px",
                 borderRadius: "8px",
-            }}>
+            }}
+            onClick={ajouter_utilisateurs}
+            >
           Ajouter
         </Button>
       </DialogActions>

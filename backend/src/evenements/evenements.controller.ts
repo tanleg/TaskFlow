@@ -23,18 +23,18 @@ export class EvenementsController {
     }
 
     @Post('jalon/create')
-        async createJalon(@Body() createJalonDto: CreateJalonDto, @Body('utilisateurId') utilisateurId: number, @Body('projetId') projetId: number): Promise<JalonEntity> {
-        return this.evenementsService.createJalon(createJalonDto, projetId);
+        async createJalon(@Body() createJalonDto: CreateJalonDto): Promise<JalonEntity> {
+        return this.evenementsService.createJalon(createJalonDto);
     }
 
     @Post('livrable/create')
-        async createLivrable(@Body() createLivrableDto: CreateLivrableDto, @Body('utilisateurId') utilisateurId: number, @Body('projetId') projetId: number): Promise<LivrableEntity> {
-        return this.evenementsService.createLivrable(createLivrableDto, projetId);
+        async createLivrable(@Body() createLivrableDto: CreateLivrableDto): Promise<LivrableEntity> {
+        return this.evenementsService.createLivrable(createLivrableDto);
     }
     
     @Post('tache/create')
-        async createTache(@Body() createTacheDto: CreateTacheDto, @Body('utilisateurId') utilisateurId: number, @Body('projetId') projetId: number): Promise<TacheEntity> {
-        return this.evenementsService.createTache(createTacheDto, utilisateurId, projetId);
+        async createTache(@Body() createTacheDto: CreateTacheDto): Promise<TacheEntity> {
+        return this.evenementsService.createTache(createTacheDto);
     }
 
     // Liste les taches dans un projet
@@ -58,7 +58,7 @@ export class EvenementsController {
     }
 
     // modifier la personne assignee a une tache
-    @Put('assigner')
+    @Put('assigner/chef')
     async updateUtilisateurAssigneAUneTache(@Body() body: { id_tache: number, id_utilisateur_assigne: number }): Promise<TacheEntity> {
         try {
             const { id_tache, id_utilisateur_assigne } = body;
@@ -72,4 +72,11 @@ export class EvenementsController {
             throw new NotFoundException("Erreur pour assigner quelqu'un à la tâche", error.message);
         }
     }
+
+    // modifier la personne assignee a une tache
+    @Put('tache/:id_tache/statut')
+    async changerStatutTache(@Param("id_tache") id_tache: number) {
+            return await this.evenementsService.changerStatutTache(id_tache);
+    }
+
 }

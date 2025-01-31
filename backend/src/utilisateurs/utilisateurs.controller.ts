@@ -74,4 +74,10 @@ export class UtilisateursController {
     async getOtherUsers(@Param('id') id: number): Promise<UtilisateurEntity[]> {
       return this.UtilisateursService.getOtherUsersList(id);
     }
+
+    // Endpoint pour récupérer la liste des utilisateurs sauf ceux du projet passé en parametre
+    @Get('usersnotinprojet/:id')
+    async getUsersNotInProjet(@Param('id') id: number): Promise<UtilisateurEntity[]> {
+        return this.UtilisateursService.getUsersNotInProjet(id);
+    }
 }

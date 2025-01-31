@@ -4,6 +4,7 @@ import { Flag, Assignment, CalendarToday, Work } from "@mui/icons-material"; // 
 import DialogAddProjects from "frontend/src/views/dashboard/dialogAddProjects.tsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 // import InfoVisite from "frontend/src/views/dashboard/infoEvents.tsx";
 
 
@@ -40,7 +41,7 @@ const DashboardContent: React.FC = () => {
     }
     
     try {
-        const response = await axios.get('http://localhost:3000/auth/profile', {
+        const response = await axios.get(`${apiUrl}/auth/profile`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -65,7 +66,7 @@ const DashboardContent: React.FC = () => {
     }
 
     try {
-        const response = await axios.get(`http://localhost:3000/evenements/${user_id}`);
+        const response = await axios.get(`${apiUrl}/evenements/${user_id}`);
         for (let element of response.data){
             console.log(element.type)
             switch (element.type) {
@@ -104,7 +105,7 @@ const DashboardContent: React.FC = () => {
     }
 
     try {
-        const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+        const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
         for (let element of response.data){
             projet = { id: element.id, name: element.nom, description: element.description }
             liste_projets.push(projet)
