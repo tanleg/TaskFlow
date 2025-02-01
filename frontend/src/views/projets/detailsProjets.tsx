@@ -27,6 +27,8 @@ const DetailsProjet: React.FC = () => {
   const [user_id, setId] = useState<string | null>(null);
   const [members, setMembers] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
+  const [jalons, setJalons] = useState<any[]>([]);
+  const [livrables, setLivrables] = useState<any[]>([]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogAssign, setOpenDialogAssign] = useState(false);
@@ -120,6 +122,61 @@ const DetailsProjet: React.FC = () => {
       console.log(`liste taches -> ${err.message}`);
     }
   }
+
+  async function getJalons() {
+    try {
+      const response = await axios.get(`${apiUrl}/evenements/projet/jalons/${id}`);
+      
+      const liste_jalons = [...jalons]; // On copie les jalons déjà présents
+  
+      for (let element of response.data) {
+        const jalonExiste = liste_jalons.some(j => j.id === element.id); // Vérifie si le jalon existe déjà
+        
+        if (!jalonExiste) {
+          const jalon = { 
+            id: element.id,
+            name: element.nom,
+            endDate: element.date_fin,
+          };
+          liste_jalons.push(jalon);
+        }
+      }
+      
+      setJalons(liste_jalons); // Mise à jour de l'état avec la liste mise à jour
+      
+    } catch (err: any) {
+      console.log(`liste jalons -> ${err.message}`);
+    }
+  }
+  
+
+  async function getLivrables() {
+    try {
+      const response = await axios.get(`${apiUrl}/evenements/projet/livrables/${id}`);
+      
+      const liste_livrables = [...livrables]; // On copie les livrables déjà présents
+  
+      for (let element of response.data) {
+        const livrableExiste = liste_livrables.some(j => j.id === element.id); // Vérifie si le livrable existe déjà
+        
+        if (!livrableExiste) {
+          const livrable = { 
+            id: element.id,
+            name: element.nom,
+            status: element.termine ? "Terminé" : "En cours",
+            endDate: element.date_fin,
+          };
+          liste_livrables.push(livrable);
+        }
+      }
+      
+      setLivrables(liste_livrables); // Mise à jour de l'état avec la liste mise à jour
+      
+    } catch (err: any) {
+      console.log(`liste livrables -> ${err.message}`);
+    }
+  }
+  
 
   async function getMembres() {
     let membre;
@@ -237,6 +294,8 @@ const DetailsProjet: React.FC = () => {
   useEffect(() => {
     if (user_id) {
       getTaches();
+      getJalons();
+      getLivrables();
       getProjets();
       getMembres();
     }
@@ -463,7 +522,7 @@ const DetailsProjet: React.FC = () => {
           <Typography variant="h5" sx={{ marginBottom: "10px", color: "#1976d2", fontFamily:"Montserrat, sans-serif" }}>
             Timeline
           </Typography>
-          <Timeline tasks={tasks} />
+          <Timeline tasks={tasks} jalons={jalons} livrables={livrables} />
         </Box>
 
         <Box

@@ -5,15 +5,28 @@ import DialogDeleteEvents from "./dialodDeleteEvents";
 import DialogAddEvents from "./dialogAddEvents";
 
 interface Task {
-  name: string;
-  status: string;
-  assignedTo: string;
-  startDate: string;
-  endDate: string;
+    name: string;
+    status: string;
+    assignedTo: string;
+    startDate: string;
+    endDate: string;
+}
+
+interface Jalon {
+    name: string;
+    endDate: string;
+}
+
+interface Livrable {
+    name: string;
+    endDate: string;
+    status: string;
 }
 
 interface TimelineProps {
   tasks: Task[];
+  jalons: Jalon[];
+  livrables: Livrable[];
 }
 // Barre de progression personnalisée
 const StyledLinearProgress = styled(LinearProgress)(() => ({
@@ -27,7 +40,7 @@ const StyledLinearProgress = styled(LinearProgress)(() => ({
     transition: "width 0.4s ease-in-out",
   },
 }));
-const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
+const Timeline: React.FC<TimelineProps> = ({ tasks, jalons, livrables }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogAddEvents, setOpenDialogAddEvents] = useState(false);
 
@@ -45,11 +58,38 @@ const Timeline: React.FC<TimelineProps> = ({ tasks }) => {
   const chartData = [
     ["Task", "Nom (Info)", "Début", "Fin"],
     ...tasks.map((task) => [
-      task.name,
-      `${task.name} (${new Date(task.startDate).toLocaleDateString("fr-FR")} - ${new Date(task.endDate).toLocaleDateString("fr-FR")})`, 
-      new Date(task.startDate),
-      new Date(task.endDate),
-    ]),
+        task.assignedTo,
+        `${task.status} — ${task.name}`, 
+        new Date(task.startDate),
+        new Date(task.endDate)
+      ]),
+
+    ...jalons.map((jalon) => {
+        const endDate = new Date(jalon.endDate);
+        const endDatePlusOne = new Date(endDate);
+        endDatePlusOne.setDate(endDatePlusOne.getDate() + 1);
+    
+        return [
+            "Jalons",
+            `${jalon.name}`, 
+            endDate,
+            endDatePlusOne
+        ];
+    }),
+
+
+    ...livrables.map((livrable) => {
+        const endDate = new Date(livrable.endDate);
+        const endDatePlusOne = new Date(endDate);
+        endDatePlusOne.setDate(endDatePlusOne.getDate() + 1);
+    
+        return [
+            "Livrables",
+            `${livrable.status} — ${livrable.name}`, 
+            endDate,
+            endDatePlusOne
+        ];
+    })
   ];  
 
   return (

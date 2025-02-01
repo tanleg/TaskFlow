@@ -47,6 +47,26 @@ export class EvenementsController {
         }
     }
 
+    // Liste les jalons dans un projet
+    @Get('projet/jalons/:id_projet')
+    async getJalonsDansProjet(@Param('id_projet') id_projet: number): Promise<any[]> {
+        try {
+            return await this.evenementsService.getJalonsDansProjet(id_projet);
+        } catch (error) {
+            throw new NotFoundException('Erreur lors de la récupération des jalons');
+        }
+    }
+
+    // Liste les livrables dans un projet
+    @Get('projet/livrables/:id_projet')
+    async getLivrablesDansProjet(@Param('id_projet') id_projet: number): Promise<any[]> {
+        try {
+            return await this.evenementsService.getLivrablesDansProjet(id_projet);
+        } catch (error) {
+            throw new NotFoundException('Erreur lors de la récupération des livrables');
+        }
+    }
+
     // Liste les evenements dans un projet
     @Get('projet/:id_projet')
     async getProchainsEvenementsDuProjet(@Param('id_projet') id_projet: number): Promise<any[]> {
