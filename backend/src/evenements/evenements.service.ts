@@ -171,17 +171,35 @@ export class EvenementsService {
     }
     
 
+    // async getTachesDansProjet(ProjetId: number): Promise<TacheEntity[]> {
+    //     const taches = await this.tacheRepository.find({
+    //         where: { 
+    //             projet: { id: ProjetId }
+    //         },
+    //       relations: ['utilisateur', 'projet'],
+    //     });
+
+    //     return taches.sort((a, b) => a.date_debut.getTime() - b.date_debut.getTime());
+
+    // }
+
+
     async getTachesDansProjet(ProjetId: number): Promise<TacheEntity[]> {
         const taches = await this.tacheRepository.find({
             where: { 
                 projet: { id: ProjetId }
             },
-          relations: ['utilisateur', 'projet'],
+            relations: ['utilisateur', 'projet'],
         });
-
-        return taches.sort((a, b) => a.date_debut.getTime() - b.date_debut.getTime());
-
+    
+        return taches
+            .map(tache => ({
+                ...tache,
+                utilisateur: tache.utilisateur ? tache.utilisateur : null // Assure que c'est bien `null` si non défini
+            }))
+            .sort((a, b) => a.date_debut.getTime() - b.date_debut.getTime());
     }
+    
 
     async getJalonsDansProjet(projetId: number): Promise<JalonEntity[]> {
         const utilisateurJalons = await this.utilisateurJalonRepository.find({
@@ -272,6 +290,19 @@ export class EvenementsService {
     
         return await this.tacheRepository.save(tache);
     }
-    
 
+
+    async changerStatutLivrable(id_livrable: number) {
+        
+        const livrable = await this.livrableRepository.findOne({ where: { id: id_livrable } });
+    
+        if (!livrable) {
+            throw new Error(`Pas de livrable avec l'id ${id_livrable}`);
+        }
+    
+        livrable.termine = livrable.termine ? false : true;
+    
+        return await this.livrableRepository.save(livrable);
+    }
+    
 }

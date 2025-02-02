@@ -50,13 +50,15 @@ const Timeline: React.FC<TimelineProps> = ({ tasks, jalons, livrables }) => {
   const handleCloseDialog = () => setOpenDialog(false);
 // Calcul du pourcentage des tâches terminées
   const calculateCompletionPercentage = () => {
-    const completedTasks = tasks.filter((task) => task.status === "Terminée").length;
-    return (completedTasks / tasks.length) * 100;
+    const completedTasks = tasks.filter((task) => task.status === "Terminé").length;
+    const completedLivrables = livrables.filter((livrable) => livrable.status === "Livré").length;
+    return ((completedTasks + completedLivrables)/ (tasks.length + livrables.length)) * 100;
   };
   const completionPercentage = calculateCompletionPercentage();
 
   const chartData = [
     ["Task", "Nom (Info)", "Début", "Fin"],
+
     ...tasks.map((task) => [
         task.assignedTo,
         `${task.status} — ${task.name}`, 

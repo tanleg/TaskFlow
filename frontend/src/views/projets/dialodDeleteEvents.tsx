@@ -89,7 +89,7 @@ const DialogDeleteEvents: React.FC<DialogDeleteEventsProps> = ({ open, onClose }
         id: element.id,
         name: element.nom,
         status: element.termine ? "Terminé" : "En cours",
-        assignedTo: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
+        assignedTo: element.utilisateur ? `${element.utilisateur.prenom} ${element.utilisateur.nom}` : "Non assigné",
         startDate: element.date_debut,
         endDate: element.date_fin,
       }));

@@ -46,20 +46,36 @@ const DetailsProjet: React.FC = () => {
     setTaskToAssign(null);
   }
 
-  // Fonction pour changer le statut d'une tâche à "Terminée" lorsqu'une checkbox est cochée
-  const handleStatusChange = async (task: any, index: number) => {
+  // Fonction pour changer le statut d'une tâche à "Terminé" lorsqu'une checkbox est cochée
+  const handleTaskStatusChange = async (task: any, index: number) => {
 
     try {
         await axios.put(`${apiUrl}/evenements/tache/${task.id}/statut`);
         
         const updatedTasks = [...tasks];
-        updatedTasks[index].status = updatedTasks[index].status === "Terminée" ? "En cours" : "Terminée"; // Alterne le statut
+        updatedTasks[index].status = updatedTasks[index].status === "Terminé" ? "En cours" : "Terminé"; // Alterne le statut
         setTasks(updatedTasks);
         
     } catch (err: any) {
         console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
     }
   };
+
+
+    // Fonction pour changer le statut d'un livrable à "Terminé" lorsqu'une checkbox est cochée
+  const handleLivrableStatusChange = async (livrable: any, index: number) => {
+
+    try {
+        await axios.put(`${apiUrl}/evenements/livrable/${livrable.id}/statut`);
+        
+        const updatedLivrable = [...livrables];
+        updatedLivrable[index].status = updatedLivrable[index].status === "Livré" ? "En cours" : "Livré"; // Alterne le statut
+        setLivrables(updatedLivrable);
+        
+    } catch (err: any) {
+        console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+    }
+    };
 
   // Fonction pour assigner une personne à une tâche
   const handleAssignTask = (id_task: number) => {
@@ -110,7 +126,7 @@ const DetailsProjet: React.FC = () => {
             id: element.id,
             name: element.nom,
             status: element.termine ? "Terminé" : "En cours",
-            assignedTo: `${element.utilisateur.prenom} ${element.utilisateur.nom}`,
+            assignedTo: element.utilisateur ? `${element.utilisateur.prenom} ${element.utilisateur.nom}` : "Non assigné",
             startDate: element.date_debut,
             endDate: element.date_fin,
         }
@@ -163,7 +179,7 @@ const DetailsProjet: React.FC = () => {
           const livrable = { 
             id: element.id,
             name: element.nom,
-            status: element.termine ? "Terminé" : "En cours",
+            status: element.termine ? "Livré" : "En cours",
             endDate: element.date_fin,
           };
           liste_livrables.push(livrable);
@@ -438,7 +454,7 @@ const DetailsProjet: React.FC = () => {
           </Table>
         </Box>
 
-        {/* Section Tâches */}
+        {/* Section Tâches + livrables */}
         <Box
           sx={{
             backgroundColor: "#F5F5F5",
@@ -456,20 +472,20 @@ const DetailsProjet: React.FC = () => {
           </Typography>
           <Table>
             <TableHead>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}></TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Nom tâche</TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Statut</TableCell>
                 <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Personne assignée</TableCell>
-              </TableRow>
+              </TableRow> */}
             </TableHead>
             <TableBody>
             {tasks.map((task, index) => (
               <TableRow key={index}>
                 <TableCell>
                   <Checkbox
-                    checked={task.status === "Terminée"}
-                    onChange={() => handleStatusChange(task, index)}
+                    checked={task.status === "Terminé"}
+                    onChange={() => handleTaskStatusChange(task, index)}
                     color="primary"
                   />
                 </TableCell>
@@ -477,7 +493,7 @@ const DetailsProjet: React.FC = () => {
                 <TableCell
                   sx={{
                     color:
-                      task.status === "Terminée"
+                      task.status === "Terminé"
                         ? "#4CAF50"
                         : task.status === "En cours"
                         ? "#FFC107"
@@ -502,6 +518,52 @@ const DetailsProjet: React.FC = () => {
                   ) : (
                     <span>Non assigné</span> // Optionnel : message si la tâche n'est pas assignée
                   )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+
+          </Table>
+
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: "10px", marginTop: "50px", color: "#1976d2", fontFamily: "Montserrat, sans-serif" }}
+          >
+            Livrables
+          </Typography>
+          <Table>
+            <TableHead>
+              {/* <TableRow>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}></TableCell>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Nom tâche</TableCell>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Statut</TableCell>
+                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Personne assignée</TableCell>
+              </TableRow> */}
+            </TableHead>
+            <TableBody>
+            {livrables.map((livrable, indexLivrable) => (
+              <TableRow key={indexLivrable}>
+                <TableCell>
+                  <Checkbox
+                    checked={livrable.status === "Livré"}
+                    onChange={() => handleLivrableStatusChange(livrable, indexLivrable)}
+                    color="primary"
+                  />
+                </TableCell>
+                <TableCell sx={{ fontFamily: "Open Sans, sans-serif" }}>{livrable.name}</TableCell>
+                <TableCell
+                  sx={{
+                    color:
+                      livrable.status === "Livré"
+                        ? "#4CAF50"
+                        : livrable.status === "En cours"
+                        ? "#FFC107"
+                        : "#FF5722",
+                    fontFamily: "Open Sans, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {livrable.status}
                 </TableCell>
               </TableRow>
             ))}

@@ -77,7 +77,6 @@ export class EvenementsController {
         }
     }
 
-    // modifier la personne assignee a une tache
     @Put('assigner/chef')
     async updateUtilisateurAssigneAUneTache(@Body() body: { id_tache: number, id_utilisateur_assigne: number }): Promise<TacheEntity> {
         try {
@@ -93,10 +92,14 @@ export class EvenementsController {
         }
     }
 
-    // modifier la personne assignee a une tache
     @Put('tache/:id_tache/statut')
     async changerStatutTache(@Param("id_tache") id_tache: number) {
             return await this.evenementsService.changerStatutTache(id_tache);
+    }
+
+    @Put('livrable/:id_livrable/statut')
+    async changerStatutLivrable(@Param("id_livrable") id_livrable: number) {
+            return await this.evenementsService.changerStatutLivrable(id_livrable);
     }
 
 }
