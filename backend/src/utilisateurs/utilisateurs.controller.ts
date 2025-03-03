@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Res, Request, UnauthorizedException, UseGuards, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, Request, UnauthorizedException, UseGuards, Param, Query } from '@nestjs/common';
 import { UtilisateursService } from './utilisateurs.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UtilisateurEntity } from '../entities/utilisateur.entity';
@@ -50,9 +50,9 @@ export class UtilisateursController {
 //   recupere les infos du user avec le bon token
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req): { id: number, prenom: string, nom: string } {
+  getProfile(@Request() req): { id: number, prenom: string, nom: string, admin: boolean } {
     const user = req.user;
-    return { id: user.id, prenom: user.prenom, nom: user.nom };
+    return { id: user.id, prenom: user.prenom, nom: user.nom, admin: user.admin };
   }
 
   
@@ -73,5 +73,11 @@ export class UtilisateursController {
   @Get('otherusers/:id')
   async getOtherUsers(@Param('id') id: number): Promise<UtilisateurEntity[]> {
     return this.UtilisateursService.getOtherUsersList(id);
+  }
+  
+  // Endpoint pour récupérer la liste des utilisateurs sauf ceux du projet passé en parametre
+  @Get('usersnotinprojet/:id')
+  async getUsersNotInProjet(@Param('id') id: number): Promise<UtilisateurEntity[]> {
+    return this.UtilisateursService.getUsersNotInProjet(id);
   }
 }

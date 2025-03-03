@@ -26,7 +26,7 @@ export class FichiersController {
             'src',
             'fichiers',
             'fichiers_storage',
-            String(id_projet),
+            String(id_projet),           
           );
           try {
             await fsPromises.mkdir(storagePath, { recursive: true });

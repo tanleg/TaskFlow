@@ -113,8 +113,11 @@
 // export default Sidebar;
 
 
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FaTachometerAlt, FaProjectDiagram, FaComments, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Pour rediriger après la déconnexion
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -126,6 +129,35 @@ const Sidebar: React.FC = () => {
     navigate("/"); // Redirection vers la page de connexion
   };
 
+  const [isAdmin, setAdmin] = useState<string | null>(null);
+  
+  async function set_admin_state() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.error('Aucun token trouvé');
+      setAdmin(null);
+      return;
+    }
+    
+    try {
+        const response = await axios.get(`${apiUrl}/auth/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+  
+        setAdmin(response.data.admin || null);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du profil utilisateur', error);
+        setAdmin(null);
+    }
+  };
+
+  useEffect(() => {
+    set_admin_state();
+  }, []);
+  
   return (
     <div
       style={{
@@ -240,6 +272,7 @@ const Sidebar: React.FC = () => {
               Chats
             </Link>
           </li>
+          {isAdmin && (
           <li
             style={{
               marginBottom: "20px",
@@ -264,6 +297,7 @@ const Sidebar: React.FC = () => {
               Utilisateurs
             </Link>
           </li>
+          )}
           {/* Log Out */}
           <li
             style={{

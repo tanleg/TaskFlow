@@ -27,6 +27,8 @@ const DetailsProjet: React.FC = () => {
 
   const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
   const [user_id, setId] = useState<string | null>(null);
+  const [isChef, setChef] = useState<boolean | null>(null);
+  const [afficherBtns, affichageBtns] = useState<boolean>(true);
   const [members, setMembers] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
   const [jalons, setJalons] = useState<any[]>([]);
@@ -245,6 +247,21 @@ const DetailsProjet: React.FC = () => {
   }
 
 
+  async function enlever_chef(memberId: number) {
+    try {
+        await axios.put(`${apiUrl}/projets/${id}/users/${memberId}/deprive-admin`);
+  
+        setMembers((prev) =>
+          prev.map((member) =>
+            member.id === memberId ? { ...member, role: "Chercheur" } : member
+          )
+        );
+      } catch (err: any) {
+        console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
+    }
+  }
+
+
   async function declarer_chef(memberId: number) {
 
     try {
@@ -255,11 +272,13 @@ const DetailsProjet: React.FC = () => {
             member.id === memberId ? { ...member, role: "Chef de projet" } : member
           )
         );
+
+        enlever_chef(Number(user_id))
+        affichageBtns(false)
       } catch (err: any) {
         console.error(`Erreur lors de la mise à jour du rôle: ${err.message}`);
-      }
+    }
   }
-
 
   async function recup_id() {
     const token = localStorage.getItem("authToken");
@@ -281,6 +300,16 @@ const DetailsProjet: React.FC = () => {
     } catch (error) {
       console.error("Erreur lors de la récupération du profil utilisateur", error);
       setId(null);
+    }
+  }
+
+  async function chef() {
+
+    try {
+      const response = await axios.get(`${apiUrl}/projets/${id}/${Number(user_id)}/chef`);
+      setChef(response.data.chef);
+    } catch (error) {
+      console.error("Erreur lors de la récupération du chef", error);
     }
   }
 
@@ -311,11 +340,12 @@ const DetailsProjet: React.FC = () => {
 
   useEffect(() => {
     if (user_id) {
-      getTaches();
-      getJalons();
-      getLivrables();
-      getProjets();
-      getMembres();
+        getTaches();
+        getJalons();
+        getLivrables();
+        getProjets();
+        getMembres();
+        chef()
     }
   }, [user_id]);
 
@@ -417,7 +447,7 @@ const DetailsProjet: React.FC = () => {
                   <TableCell sx={{ fontFamily:"Open Sans, sans-serif" }}>{member.telephone}</TableCell>
                   <TableCell sx={{ fontFamily: "Open Sans, sans-serif" }}>
                     
-                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && (
+                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && isChef == true && afficherBtns == true && (
                       <Button
                        variant="outlined"
                        color="success"
@@ -433,7 +463,7 @@ const DetailsProjet: React.FC = () => {
                       </Button>
                     )}
                     
-                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && (
+                    {member.role !== "Chef de projet" && member.role !== "Visiteur" && isChef == true && afficherBtns == true && (
                         <Button
                       variant="outlined"
                       color="error"

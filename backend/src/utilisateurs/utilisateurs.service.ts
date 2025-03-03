@@ -54,7 +54,7 @@ export class UtilisateursService {
 
     // Générer un JWT pour l'utilisateur connecté
     async generateJwt(user: UtilisateurEntity): Promise<string> {
-        const payload = { id: user.id, prenom: user.prenom, nom: user.nom };
+        const payload = { id: user.id, prenom: user.prenom, nom: user.nom, admin: user.admin };
         return this.jwtService.sign(payload); // Générer un jeton JWT
     }
 
@@ -83,6 +83,4 @@ export class UtilisateursService {
             .where("user.id NOT IN (SELECT up.id_utilisateur FROM utilisateur_projet up WHERE up.id = :id_projet)", { id_projet })
             .getMany();
     }
-    
-    
 }

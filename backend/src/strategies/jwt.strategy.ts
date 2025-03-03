@@ -14,9 +14,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 
   async validate(payload: any) {
-    if (!payload || !payload.id || !payload.prenom || !payload.nom) {
+    if (!payload || !payload.id || !payload.prenom || !payload.nom || !('admin' in payload)) {
         throw new UnauthorizedException('Token invalide');
     }
-    return { id: payload.id, prenom: payload.prenom, nom: payload.nom }; // Retourne les données nécessaires
+    return { id: payload.id, prenom: payload.prenom, nom: payload.nom, admin: payload.admin }; // Retourne les données nécessaires
   }
 }

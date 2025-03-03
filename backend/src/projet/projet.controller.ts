@@ -54,4 +54,15 @@ export class ProjetController {
   async declarerChef(@Param('id_user') id_user: number, @Param('id_projet') id_projet: number) {
     return this.projetService.declarerChef(id_user, id_projet);
   }
+
+  @Put(':id_projet/users/:id_user/deprive-admin')
+  async enleverChef(@Param('id_user') id_user: number, @Param('id_projet') id_projet: number) {
+    return this.projetService.enleverChef(id_user, id_projet);
+  }
+
+  @Get(':id_projet/:id_utilisateur/chef')
+  async isChef(@Param('id_projet') id_projet: number, @Param('id_utilisateur') id_utilisateur: number): Promise<{ chef: boolean }> {
+    const chef = await this.projetService.isChef(id_projet, id_utilisateur);
+    return { chef };
+  }
 }

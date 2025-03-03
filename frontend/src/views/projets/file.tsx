@@ -158,7 +158,7 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
 
         try {
             // Envoi du fichier à l'API (assurez-vous d'avoir l'URL correcte)
-            const response = await axios.post(`${apiUrl}/fichiers/upload`, formData, {
+            const response = await axios.post(`${apiUrl}/fichiers/${projet_id}/upload`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

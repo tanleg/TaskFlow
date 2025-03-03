@@ -155,5 +155,20 @@ export class ProjetService {
           { id: id_projet, id_utilisateur: id_user },
           { chef: true }
         );
-      }
+    }
+
+    async enleverChef(id_user: number, id_projet: number) {
+        this.utilisateurProjetRepository.update(
+          { id: id_projet, id_utilisateur: id_user },
+          { chef: false }
+        );
+    }
+
+    async isChef(id_projet: number, id_utilisateur: number): Promise<boolean> {
+        const utilisateurProjet = await this.utilisateurProjetRepository.findOne({
+          where: { id: id_projet, id_utilisateur },
+        });
+    
+        return utilisateurProjet ? utilisateurProjet.chef : false;
+    }
 }
