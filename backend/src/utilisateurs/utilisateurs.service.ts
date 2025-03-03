@@ -54,7 +54,7 @@ export class UtilisateursService {
 
     // Générer un JWT pour l'utilisateur connecté
     async generateJwt(user: UtilisateurEntity): Promise<string> {
-        const payload = { id: user.id, prenom: user.prenom };
+        const payload = { id: user.id, prenom: user.prenom, nom: user.nom };
         return this.jwtService.sign(payload); // Générer un jeton JWT
     }
 
