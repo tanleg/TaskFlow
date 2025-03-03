@@ -57,7 +57,7 @@ export class FichiersController {
     const newPath = path.resolve(process.cwd(), 'src', 'fichiers', 'fichiers_storage', newFileName);
 
     // Vérifier si le répertoire de stockage existe, sinon le créer
-    const storageDir = path.resolve(process.cwd(), 'src', 'fichiers', 'fichiers_storage');
+    const storageDir = path.resolve(process.cwd(), 'src', 'fichiers', 'fichiers_storage', String(id_projet));
     try {
       // Vérifier si le répertoire existe, sinon créer
       await fsPromises.access(storageDir).catch(async () => {
