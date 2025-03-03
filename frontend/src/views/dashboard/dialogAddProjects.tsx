@@ -26,6 +26,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close"; // Icône de fermeture
 import axios from "axios";
 import { Utilisateur } from "../../types/apps/utilisateur";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Transition component for the Dialog
 const Transition = forwardRef(function Transition(
@@ -95,7 +96,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
     }
     
     try {
-        const response = await axios.get('http://localhost:3000/auth/profile', {
+        const response = await axios.get(`${apiUrl}/auth/profile`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -110,7 +111,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
 
   async function fetchUsers() {
     try {
-      const response = await axios.get(`http://localhost:3000/auth/otherusers/${user_id}`);
+      const response = await axios.get(`${apiUrl}/auth/otherusers/${user_id}`);
 
       const formattedUsers = response.data.map((user: Utilisateur) => ({
         id: user.id,
@@ -141,7 +142,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
       }
 
       try {
-        const response = await axios.post("http://localhost:3000/projets/create", {
+        const response = await axios.post(`${apiUrl}/projets/create`, {
           nom: projectName,
           description: projectDescription,
           public: statut,
@@ -152,7 +153,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
         
         for (const userId of selectedUsers) {
             try {
-              await axios.post("http://localhost:3000/projets/ajouter/utilisateur", {
+              await axios.post(`${apiUrl}/projets/ajouter/utilisateur`, {
                 id: projetId,
                 id_utilisateur: userId,
               });
@@ -351,43 +352,43 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
 
       {/* Dialog Actions */}
       <DialogActions sx={{ pb: 2 }}> {/* pb: 2 ajoute de l'espace en bas */}
-  <Button
-    onClick={creer_projet}
-    variant="contained"
-    sx={{
-      mr: 1,
-      fontFamily: "Open Sans, sans-serif",
-      fontWeight: "bold",
-      background: "linear-gradient(135deg, #005B96, #00A676)",
-      "&:hover": {
-        background: "linear-gradient(135deg, #005B96, #00A676)",
-      },
-      padding: "10px 20px",
-      borderRadius: "8px",
-    }}
-  >
-    Ajouter
-  </Button>
-  <Button
-    variant="outlined"
-    onClick={handleClose}
-    color="error"
-    sx={{
-      fontFamily: "Open Sans, sans-serif",
-      fontWeight: "bold",
-      borderColor: "#D32F2F",
-      color: "#D32F2F",
-      padding: "10px 20px",
-      borderRadius: "8px",
-      "&:hover": {
-        borderColor: "#D32F2F",
-        color: "#D32F2F",
-      },
-    }}
-  >
-    Annuler
-  </Button>
-</DialogActions>
+        <Button
+          onClick={creer_projet}
+          variant="contained"
+          sx={{
+            mr: 1,
+            fontFamily: "Open Sans, sans-serif",
+            fontWeight: "bold",
+            background: "linear-gradient(135deg, #005B96, #00A676)",
+            "&:hover": {
+              background: "linear-gradient(135deg, #005B96, #00A676)",
+            },
+            padding: "10px 20px",
+            borderRadius: "8px",
+          }}
+        >
+          Ajouter
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={handleClose}
+          color="error"
+          sx={{
+            fontFamily: "Open Sans, sans-serif",
+            fontWeight: "bold",
+            borderColor: "#D32F2F",
+            color: "#D32F2F",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            "&:hover": {
+              borderColor: "#D32F2F",
+              color: "#D32F2F",
+            },
+          }}
+        >
+          Annuler
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

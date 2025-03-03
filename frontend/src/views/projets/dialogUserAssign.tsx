@@ -42,7 +42,7 @@ interface DialogUserAssignProps {
   open: boolean;
   onClose: () => void;
   users: { id: number; name: string }[]; // Liste des utilisateurs
-  onAssign: (userName: string) => void; // Fonction pour assigner un utilisateur
+  onAssign: (userId: number, userName: string) => void; // Fonction pour assigner un utilisateur
 }
 
 const DialogUserAssign: React.FC<DialogUserAssignProps> = ({
@@ -51,29 +51,33 @@ const DialogUserAssign: React.FC<DialogUserAssignProps> = ({
   users,
   onAssign,
 }) => {
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUserName, setSelectedUserName] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   // Fonction pour sélectionner ou désélectionner un utilisateur
-  const handleSelectUser = (userName: string) => {
-    if (selectedUser === userName) {
+  const handleSelectUser = (userId: number, userName: string) => {
+    if (selectedUserName === userName) {
       // Si l'utilisateur cliqué est déjà sélectionné, on le désélectionne
-      setSelectedUser(null);
+      setSelectedUserName(null);
+      setSelectedUserId(null);
     } else {
       // Sinon, on sélectionne l'utilisateur
-      setSelectedUser(userName);
+      setSelectedUserName(userName);
+      setSelectedUserId(userId);
     }
   };
 
   const handleClose = () => {
-    setSelectedUser(null); // Réinitialiser la sélection de l'utilisateur
+    setSelectedUserName(null); // Réinitialiser la sélection de l'utilisateur
+    setSelectedUserId(null); // Réinitialiser la sélection de l'utilisateur
     onClose(); // Appeler la fonction de fermeture de la boîte de dialogue
   };
   
 
   // Fonction pour assigner l'utilisateur sélectionné à la tâche
   const handleAssign = () => {
-    if (selectedUser) {
-      onAssign(selectedUser); // Appeler la fonction d'assignation avec le nom de l'utilisateur sélectionné
+    if (selectedUserId && selectedUserName) {
+      onAssign(selectedUserId, selectedUserName); // Appeler la fonction d'assignation avec le nom de l'utilisateur sélectionné
       handleClose(); // Fermer la boîte de dialogue
     }
   };
@@ -128,7 +132,7 @@ const DialogUserAssign: React.FC<DialogUserAssignProps> = ({
                   padding: "12px 24px",
                   borderRadius: "20px",
                   backgroundColor:
-                    selectedUser === user.name ? "#bbdefb" : "#e3f2fd",
+                    selectedUserName === user.name ? "#bbdefb" : "#e3f2fd",
                   cursor: "pointer",
                   boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                   transition: "background-color 0.3s ease, box-shadow 0.3s ease",
@@ -137,7 +141,7 @@ const DialogUserAssign: React.FC<DialogUserAssignProps> = ({
                     boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.15)",
                   },
                 }}
-                onClick={() => handleSelectUser(user.name)}
+                onClick={() => handleSelectUser(user.id, user.name)}
               >
                 <Typography
                   sx={{
@@ -190,16 +194,16 @@ const DialogUserAssign: React.FC<DialogUserAssignProps> = ({
             padding: "10px 20px",
             borderRadius: "8px",
             marginBottom: "10px",
-            background: selectedUser
+            background: selectedUserName
                 ? "linear-gradient(135deg, #005B96, #00A676)"  // Dégradé si un utilisateur est sélectionné
                 : "#B0BEC5", // Gris si aucun utilisateur n'est sélectionné
             "&:hover": {
-                background: selectedUser
+                background: selectedUserName
                     ? "linear-gradient(135deg, #004a6e, #008d5c)"  // Dégradé au survol
                     : "#B0BEC5", // Gris au survol si aucun utilisateur n'est sélectionné
             },
           }}
-          disabled={!selectedUser}
+          disabled={!selectedUserName}
         >
           Assigner
         </Button>

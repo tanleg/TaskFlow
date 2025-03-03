@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Delete, Put } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
@@ -44,4 +44,8 @@ export class ProjetController {
     return this.projetService.findUtilisateursDeProjet(projet_id);
   }
 
+  @Put(':id_projet/users/:id_user/make-admin')
+  async declarerChef(@Param('id_user') id_user: number, @Param('id_projet') id_projet: number) {
+    return this.projetService.declarerChef(id_user, id_projet);
+  }
 }

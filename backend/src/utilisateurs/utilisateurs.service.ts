@@ -54,7 +54,7 @@ export class UtilisateursService {
 
     // Générer un JWT pour l'utilisateur connecté
     async generateJwt(user: UtilisateurEntity): Promise<string> {
-        const payload = { id: user.id, prenom: user.prenom };
+        const payload = { id: user.id, prenom: user.prenom, nom: user.nom };
         return this.jwtService.sign(payload); // Générer un jeton JWT
     }
 
@@ -75,4 +75,14 @@ export class UtilisateursService {
             where: { id: Not(id_user)}
         });
     }
+
+    // Méthode pour récupérer la liste des utilisateurs sauf ceux du projet passé en parametre
+    async getUsersNotInProjet(id_projet: number): Promise<UtilisateurEntity[]> {
+        return await this.utilisateurRepository
+            .createQueryBuilder("user")
+            .where("user.id NOT IN (SELECT up.id_utilisateur FROM utilisateur_projet up WHERE up.id = :id_projet)", { id_projet })
+            .getMany();
+    }
+    
+    
 }

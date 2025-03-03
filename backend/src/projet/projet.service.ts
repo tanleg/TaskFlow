@@ -136,4 +136,11 @@ export class ProjetService {
             visiteur: utilisateurProjet.visiteur,
         }));
     }
+
+    async declarerChef(id_user: number, id_projet: number) {
+        this.utilisateurProjetRepository.update(
+          { id: id_projet, id_utilisateur: id_user },
+          { chef: true }
+        );
+      }
 }

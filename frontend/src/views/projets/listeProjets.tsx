@@ -2,6 +2,7 @@
 // import { useNavigate } from "react-router-dom";
 // import { Box, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
 // import axios from "axios";
+// const apiUrl = import.meta.env.VITE_API_URL;
 
 // const ListeProjets: React.FC = () => {
 //   const navigate = useNavigate();
@@ -25,7 +26,7 @@
 //     }
 
 //     try {
-//         const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+//         const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
 //         for (let element of response.data){
 //             projet = { id: element.id, name: element.nom, description: element.description }
 //             liste_projets.push(projet)
@@ -43,7 +44,7 @@
 //     let liste_projets = [];
 
 //     try {
-//         const response = await axios.get(`http://localhost:3000/projets/public`);
+//         const response = await axios.get(`${apiUrl}/projets/public`);
 //         for (let element of response.data){
 //             projet = { id: element.id, name: element.nom, description: element.description }
 //             liste_projets.push(projet)
@@ -65,7 +66,7 @@
 //     }
     
 //     try {
-//         const response = await axios.get('http://localhost:3000/auth/profile', {
+//         const response = await axios.get(`${apiUrl}/auth/profile`, {
 //             headers: {
 //                 Authorization: `Bearer ${token}`,
 //             },
@@ -189,6 +190,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const ListeProjets: React.FC = () => {
   const navigate = useNavigate();
@@ -205,7 +207,7 @@ const ListeProjets: React.FC = () => {
     if (!user_id) return;
 
     try {
-      const response = await axios.get(`http://localhost:3000/projets/display/${user_id}`);
+      const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
       const liste_projets = response.data.map((element: any) => ({
         id: element.id,
         name: element.nom,
@@ -219,7 +221,7 @@ const ListeProjets: React.FC = () => {
 
   async function getProjetsPublics() {
     try {
-      const response = await axios.get(`http://localhost:3000/projets/public`);
+      const response = await axios.get(`${apiUrl}/projets/public`);
       const liste_projets = response.data.map((element: any) => ({
         id: element.id,
         name: element.nom,
@@ -240,7 +242,7 @@ const ListeProjets: React.FC = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/auth/profile", {
+      const response = await axios.get(`${apiUrl}/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
