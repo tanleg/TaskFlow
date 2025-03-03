@@ -20,7 +20,17 @@ export class FichierEntity {
   @Column()
   version: number;
 
-  @ManyToOne(() => ProjetEntity, { nullable: false })
+  @Column()
+  id_projet: number;
+
+  @Column({ nullable: true })
+  id_utilisateur: number;
+
+  @Column({ nullable: true })
+  id_partenaire: number;
+
+  // Si vous avez des relations, assurez-vous qu'elles sont correctement configurées
+  @ManyToOne(() => ProjetEntity)
   @JoinColumn({ name: 'id_projet' })
   projet: ProjetEntity;
 
@@ -28,7 +38,5 @@ export class FichierEntity {
   @JoinColumn({ name: 'id_utilisateur' })
   utilisateur: UtilisateurEntity;
 
-  @ManyToOne(() => PartenaireEntity, { nullable: true })
-  @JoinColumn({ name: 'id_partenaire' })
-  partenaire: PartenaireEntity;
+  // Etc.
 }

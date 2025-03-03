@@ -267,7 +267,7 @@ const Sidebar: React.FC = () => {
           {/* Log Out */}
           <li
             style={{
-              marginTop: "415px", // Espace automatique en haut pour forcer l'alignement en bas
+              marginTop: "375px", // Espace automatique en haut pour forcer l'alignement en bas
               display: "flex",
               alignItems: "center",
               paddingLeft: "15px",
