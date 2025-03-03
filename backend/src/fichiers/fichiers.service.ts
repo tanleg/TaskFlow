@@ -25,24 +25,40 @@ export class FichiersService {
     });
   }
 
-  // Fonction pour obtenir la prochaine version du fichier
+  // Fonction pour obtenir la prochaiane version du fichier
   async getNextVersion(nom: string, id_projet: number): Promise<number> {
+    console.log(`Recherche de la prochaine version pour le fichier "${nom}" dans le projet ID=${id_projet}`);
+    
+    // Récupérer tous les fichiers du projet avec le même nom
     const existingFiles = await this.fichierRepository.find({
-      where: { nom, projet: { id: id_projet } },
+      where: {
+        nom: nom,
+        id_projet: id_projet  // Utiliser directement id_projet au lieu de projet.id
+      }
     });
-    return existingFiles.length > 0
-      ? Math.max(...existingFiles.map((f) => f.version)) + 1
-      : 1;
+  
+    console.log(`Nombre de fichiers trouvés: ${existingFiles.length}`);
+    
+    if (existingFiles.length > 0) {
+      // Extraire toutes les versions
+      const versions = existingFiles.map(fichier => fichier.version);
+      console.log('Versions existantes:', versions);
+      
+      // Trouver la version maximum et incrémenter
+      const nextVersion = Math.max(...versions) + 1;
+      console.log(`Prochaine version: ${nextVersion}`);
+      return nextVersion;
+    } else {
+      console.log('Aucun fichier existant, première version (1)');
+      return 1; // Premier fichier avec ce nom dans ce projet
+    }
   }
 
   // Créer un nouveau fichier
   async create(createFichierDto: CreateFichierDto, url: string): Promise<FichierEntity> {
     const { nom, id_projet, id_utilisateur } = createFichierDto;
 
-    // Générer la version du fichier (attendre la réponse de getNextVersion)
-    const nextVersion = await this.getNextVersion(nom, id_projet);
-
-    // Récupérer les entités projet et utilisateur à partir des id
+    // Vérifier les entités projet et utilisateur
     const projet = await this.projetRepository.findOne({ where: { id: id_projet } });
     const utilisateur = await this.utilisateurRepository.findOne({ where: { id: id_utilisateur } });
 
@@ -50,12 +66,15 @@ export class FichiersService {
       throw new Error('Projet ou utilisateur introuvable');
     }
 
+    // Récupérer la version suivante pour le fichier
+    const nextVersion = await this.getNextVersion(nom, id_projet);
+
     // Créer et sauvegarder le fichier
     const fichier = this.fichierRepository.create({
       nom,
       url,
-      projet, // Entité projet
-      utilisateur, // Entité utilisateur
+      projet,
+      utilisateur,
       date_upload: new Date(),
       version: nextVersion,
     });

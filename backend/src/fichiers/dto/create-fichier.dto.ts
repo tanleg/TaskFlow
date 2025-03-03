@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, IsNumber } from 'class-validator';
 
 export class CreateFichierDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateFichierDto {
   @IsNotEmpty()
   url: string;
 
-  @IsInt()
+  @IsNumber()
   id_projet: number; // Ajouter id_projet
 
   @IsInt()
