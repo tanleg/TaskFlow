@@ -10,6 +10,8 @@ import Register from "frontend/src/pages/register/index.tsx";
 import Layout from "frontend/src/layouts/layouts.tsx";
 import NotFoundPage from "frontend/src/pages/404.tsx";
 import DetailsProjet from "./views/projets/detailsProjets";
+import AccessPage from "./pages/visiteur";    
+import DetailsProjetPartenaire from "./views/projets/detailsProjetsPartenaire";
 
 const App: React.FC = () => {
   return (
@@ -26,8 +28,11 @@ const App: React.FC = () => {
           <Route path="/projet/:id" element={<DetailsProjet />} />
           <Route path="/chats" element={<Chats />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/access/:token" element={<AccessPage />} />
           {/* Ajoutez d'autres routes ici */}
         </Route>
+
+        <Route path="/projet/:id_projet/:token_partenaire" element={<DetailsProjetPartenaire />} />
 
         {/* Route 404 en dehors du Layout */}
         <Route path="*" element={<NotFoundPage />} />

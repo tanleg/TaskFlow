@@ -9,6 +9,8 @@ import { UtilisateurEntity } from './entities/utilisateur.entity';
 import { EvenementsModule } from './evenements/evenements.module';
 import { ProjetModule } from './projet/projet.module';
 import { FichiersModule } from './fichiers/fichiers.module';
+import { PartenaireModule } from './partenaires/partenaire.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,6 +26,10 @@ import { FichiersModule } from './fichiers/fichiers.module';
         synchronize: false,
         logging: true
     }),
+
+    ConfigModule.forRoot({
+        isGlobal: true, // Rend les variables accessibles dans toute l'application
+    }),
     
     TypeOrmModule.forFeature([UtilisateurEntity]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -35,7 +41,8 @@ import { FichiersModule } from './fichiers/fichiers.module';
     UtilisateursModule,
     EvenementsModule,
     ProjetModule,
-    FichiersModule
+    FichiersModule,
+    PartenaireModule,
   ],
   controllers: [AppController],
   providers: [AppService],

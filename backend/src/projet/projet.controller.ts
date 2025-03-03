@@ -23,9 +23,15 @@ export class ProjetController {
     return await this.projetService.supprUtilisateurProjet(ajoutSupprUtilisateurProjetDto);
   }
 
-  @Get('display/:id')
-  async getProjets(@Param('id') utilisateurId: number) {
-    const projets = await this.projetService.liste_projets(utilisateurId);
+  @Get('display/chercheur/:id')
+  async getProjetsChercheur(@Param('id') utilisateurId: number) {
+    const projets = await this.projetService.liste_projets_chercheur(utilisateurId);
+    return projets;
+  }
+
+  @Get('display/partenaire/:id')
+  async getProjetsPartenaire(@Param('id') utilisateurId: number) {
+    const projets = await this.projetService.liste_projets_partenaire(utilisateurId);
     return projets;
   }
 

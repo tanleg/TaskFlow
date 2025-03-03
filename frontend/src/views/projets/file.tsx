@@ -81,6 +81,12 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
 
     const [user_id, setId] = useState<string | null>(null);
     const [nom_utilisateur, setNom] = useState<string | null>(null);
+    
+  const [files, setFiles] = useState([
+    { name: "fichier1.pdf", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
+    { name: "fichier2.py", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
+    { name: "fichier3.docx", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
+  ]);
 
     async function recup_id() {
         const token = localStorage.getItem("authToken");
@@ -137,13 +143,6 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
     useEffect(() => {
         recup_nom();
       }, [recup_id]);
-
-
-  const [files, setFiles] = useState([
-    { name: "fichier1.pdf", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-    { name: "fichier2.py", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-    { name: "fichier3.docx", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-  ]);
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 

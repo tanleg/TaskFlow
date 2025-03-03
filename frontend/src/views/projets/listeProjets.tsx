@@ -207,7 +207,7 @@ const ListeProjets: React.FC = () => {
     if (!user_id) return;
 
     try {
-      const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
+      const response = await axios.get(`${apiUrl}/projets/display/chercheur/${user_id}`);
       const liste_projets = response.data.map((element: any) => ({
         id: element.id,
         name: element.nom,

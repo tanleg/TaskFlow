@@ -105,7 +105,7 @@ const DashboardContent: React.FC = () => {
     }
 
     try {
-        const response = await axios.get(`${apiUrl}/projets/display/${user_id}`);
+        const response = await axios.get(`${apiUrl}/projets/display/chercheur/${user_id}`);
         for (let element of response.data){
             projet = { id: element.id, name: element.nom, description: element.description }
             liste_projets.push(projet)

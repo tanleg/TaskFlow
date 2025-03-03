@@ -19,6 +19,9 @@ export class PartenaireEntity {
   @Column({ length: 200 })
   lien: string;
 
+  @Column({ length: 255, unique: true })
+  token: string;
+
   @ManyToOne(() => ProjetEntity, { nullable: false })
   @JoinColumn({ name: 'id_projet' })
   projet: ProjetEntity;

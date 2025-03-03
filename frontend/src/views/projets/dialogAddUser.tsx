@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { FadeProps } from "@mui/material/Fade";
-import DialogAddInvitation from "./dialoAddInvitation";
+import DialogAddInvitation from "./dialogAddInvitation";
 import axios from "axios";
 import { Utilisateur } from "../../types/apps/utilisateur";
 const apiUrl = import.meta.env.VITE_API_URL;

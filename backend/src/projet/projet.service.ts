@@ -5,6 +5,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjetEntity } from '../entities/projet.entity';
 import { UtilisateurProjetEntity } from 'src/entities/utilisateur_projet.entity';
 import { AjoutSupprUtilisateurProjetDto } from './dto/ajout-suppr-utilisateur-projet.dto';
+import { PartenaireEntity } from 'src/entities/partenaire.entity';
 
 @Injectable()
 export class ProjetService {
@@ -14,6 +15,9 @@ export class ProjetService {
 
         @InjectRepository(UtilisateurProjetEntity)
         private readonly utilisateurProjetRepository: Repository<UtilisateurProjetEntity>,
+
+        @InjectRepository(PartenaireEntity)
+        private readonly partenaireRepository: Repository<PartenaireEntity>,
     ) {}
 
     async create(createProjectDto: CreateProjectDto, utilisateurId:number) {
@@ -37,13 +41,22 @@ export class ProjetService {
         return savedProjet;
     }
     
-    async liste_projets(utilisateurId: number) {
+    async liste_projets_chercheur(utilisateurId: number) {
         const utilisateurProjets = await this.utilisateurProjetRepository.find({
           where: { id_utilisateur: utilisateurId },
           relations: ['projet']
         });
       return utilisateurProjets.map(up => up.projet);
     }
+
+    async liste_projets_partenaire(partenaireId: number) {
+        const partenaireProjets = await this.partenaireRepository.find({
+            where: { id: partenaireId },
+            relations: ['projet'], // Assure-toi que la relation est bien définie dans l'entité Partenaire
+        });
+        return partenaireProjets.map(partenaire => partenaire.projet);
+    }
+    
       
     // Méthode pour récupérer tous les projets
     async findAll(): Promise<ProjetEntity[]> {
