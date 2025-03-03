@@ -597,9 +597,9 @@ const DetailsProjet: React.FC = () => {
           }}
         >
           <Typography variant="h5" sx={{ marginBottom: "10px", color: "#1976d2", fontFamily:"Montserrat, sans-serif" }}>
-            Fichier
+            Fichiers
           </Typography>
-          <File />
+          <File projet_id={id ?? ""}/>
         </Box>
 
       </Paper>
