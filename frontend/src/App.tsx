@@ -10,7 +10,7 @@ import Register from "frontend/src/pages/register/index.tsx";
 import Layout from "frontend/src/layouts/layouts.tsx";
 import NotFoundPage from "frontend/src/pages/404.tsx";
 import DetailsProjet from "./views/projets/detailsProjets";
-import AccessPage from "./pages/visiteur";    
+import AccessPage from "./pages/partenaire";    
 import DetailsProjetPartenaire from "./views/projets/detailsProjetsPartenaire";
 
 const App: React.FC = () => {

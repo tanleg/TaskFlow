@@ -167,7 +167,7 @@ const DetailsProjetPartenaire: React.FC = () => {
     let liste_projets = [];
 
     if (partenaire_id) {
-      recup_id();
+      recup_infos_partenaire();
     } else {
       return;
     }
@@ -184,28 +184,49 @@ const DetailsProjetPartenaire: React.FC = () => {
     }
   }
 
-  async function recup_id() {
-        
+  async function createToken(token:string){
     try {
-        const response = await axios.get(`${apiUrl}/partenaire/profile?token=${token_partenaire}`);
-    
-        console.log(response.data)
+        const response = await axios.post(`${apiUrl}/partenaire/connexion/${token}`);
 
-        if (response.data && response.data.id) {
-            setId(response.data.id);
-        } else {
-            console.warn("ID partenaire non trouvé dans la réponse");
-            setId(null);
-        }
+        console.log("token partenaire : ", response.data);
+        
+        if (response.data.accessToken)
+            localStorage.setItem('authToken', response.data.accessToken);
 
     } catch (error) {
-        console.error("Erreur lors de la récupération du profil partenaire", error);
-        setId(null);
+        console.error("Erreur token jwt partenaire:", error);
+        alert("Erreur. Veuillez réessayer.");
     }
   }
+
+  async function recup_infos_partenaire() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+        console.error('Aucun token trouvé');
+        return;
+    }
+
+    try {
+        const response = await axios.get(`${apiUrl}/partenaire/profile-jwt`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log(`${response.data.id} ${response.data.nom} ${response.data.prenom} ${response.data.admin}` || null);
+        setId(response.data.id);
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération du profil partenaire', error);
+        setId(null);
+    }
+};
+
   
   useEffect(() => {
-    recup_id();
+    createToken(token_partenaire??"")
+    recup_infos_partenaire();
   }, []);
 
   useEffect(() => {

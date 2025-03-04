@@ -6,6 +6,7 @@ import { ProjetEntity } from '../entities/projet.entity';
 import { EntrepriseEntity } from '../entities/entreprise.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class PartenaireService {
@@ -19,7 +20,9 @@ export class PartenaireService {
     @InjectRepository(EntrepriseEntity)
     private readonly entrepriseRepository: Repository<EntrepriseEntity>,
 
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService
+    
   ) {}
 
   async createPartenaire(
@@ -68,4 +71,18 @@ export class PartenaireService {
     });
   }
   
+    async generateJwt(partenaire: PartenaireEntity): Promise<string> {
+        const payload = { id: partenaire.id, prenom: partenaire.prenom, nom: partenaire.nom, admin: false };
+        return this.jwtService.sign(payload);
+    }
+
+    async validatePartenaire(token: string): Promise<PartenaireEntity | null> {
+        const partenaire = await this.partenaireRepository.findOne({ where: { token } });
+            
+        if (!partenaire) {
+            return null;
+        }
+    
+        return partenaire;
+    }
 }
