@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { FichierEntity } from './fichier.entity';
 import { MessageEntity } from './message.entity';
 import { TacheEntity } from './tache.entity';
 import { UtilisateurJalonEntity } from './utilisateur_jalon.entity';
@@ -29,9 +28,6 @@ export class UtilisateurEntity {
 
   @Column()
   admin: boolean;
-
-  @OneToMany(() => FichierEntity, fichier => fichier.utilisateur)
-  fichiers: FichierEntity[];
 
   @OneToMany(() => MessageEntity, message => message.utilisateur)
   messages: MessageEntity[];

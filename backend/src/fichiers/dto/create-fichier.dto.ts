@@ -1,19 +1,14 @@
-import { IsString, IsNotEmpty, IsInt, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateFichierDto {
   @IsString()
   @IsNotEmpty()
   nom: string;
 
+  @IsNumber()
+  id_projet: number;
+
   @IsString()
   @IsNotEmpty()
-  url: string;
-
-  @IsNumber()
-  id_projet: number; // Ajouter id_projet
-
-  @IsInt()
-  id_utilisateur: number; // Ajouter id_utilisateur
-
-  nextVersion?: number; // Champ facultatif pour la version
+  upload_par: string;
 }

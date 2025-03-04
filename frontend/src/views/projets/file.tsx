@@ -79,38 +79,16 @@ interface FileProps {
   
 const File: React.FC<FileProps> = ({ projet_id }) => {
 
-    const [user_id, setId] = useState<string | null>(null);
     const [nom_utilisateur, setNom] = useState<string | null>(null);
     
-  const [files, setFiles] = useState([
-    { name: "fichier1.pdf", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-    { name: "fichier2.py", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-    { name: "fichier3.docx", sharedBy: "Tanguy LE GOFF", date: "18/10/2024" },
-  ]);
-
-    async function recup_id() {
-        const token = localStorage.getItem("authToken");
-
-        if (!token) {
-            console.error("Aucun token trouvé");
-            setId(null);
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${apiUrl}/auth/profile`, {
-                headers: {
-                Authorization: `Bearer ${token}`,
-                },
-            });
-
-            setId(response.data.id || null);
-        
-        } catch (error) {
-            console.error("Erreur lors de la récupération du profil utilisateur", error);
-            setId(null);
-        }
-    }
+    type FileData = {
+        name: string;
+        sharedBy: string;
+        date: string;
+        version: number;
+    };
+    
+    const [files, setFiles] = useState<FileData[]>([]);
 
     //   recupere le nom de l'utilisateur
     async function recup_nom() {
@@ -125,24 +103,65 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
         try {
             const response = await axios.get(`${apiUrl}/auth/profile`, {
                 headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+                    Authorization: `Bearer ${token}`,
+                },
+            });
     
-        setNom(`${response.data.prenom} ${response.data.nom}` || null);
+            setNom(`${response.data.prenom} ${response.data.nom}` || null);
         } catch (error) {
             console.error('Erreur lors de la récupération du profil utilisateur', error);
             setNom(null); // En cas d'erreur, réinitialisez l'utilisateur
         }
     };
 
-    useEffect(() => {
-      recup_id();
-    }, []);
+    //   recupere le nom de l'utilisateur
+    async function liste_fichiers() {
+        try {
+            const response = await axios.get(`${apiUrl}/fichiers/${projet_id}`);
+            
+            const liste = response.data.map((item: any) => ({
+                name: item.nom,
+                sharedBy: item.upload_par,
+                date: new Date(item.date_upload).toLocaleDateString("fr-FR"),
+                version: item.version
+            }));
 
-    useEffect(() => {
-        recup_nom();
-      }, [recup_id]);
+            setFiles(liste);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des fichiers', error);
+            setFiles([]);
+        }
+    };
+
+    async function downloadFile(filename:string, version:number) {
+        try {
+            const lastDotIndex = filename.lastIndexOf('.');
+            if (lastDotIndex === -1) {
+                return `${filename}_v${version}`;
+            }
+            
+            const name = filename.substring(0, lastDotIndex);
+            const extension = filename.substring(lastDotIndex);
+            const versionedFilename = `${name}_v${version}${extension}`;
+
+            const response = await axios.get(`${apiUrl}/fichiers/download/${projet_id}/${versionedFilename}`, {
+                responseType: 'blob',
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', versionedFilename); // Nom du fichier à télécharger
+            document.body.appendChild(link);
+            link.click();
+
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error('Erreur lors du téléchargement du fichier', error);
+        }
+    };
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -152,9 +171,9 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
         // Créer un objet FormData pour envoyer le fichier au serveur
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("id_projet", String(projet_id));  // Remplacer par l'ID du projet réel
-        formData.append("id_utilisateur", String(user_id));  // Remplacer par l'ID de l'utilisateur réel
+        formData.append("id_projet", projet_id);  // Remplacer par l'ID du projet réel
         formData.append("nom", file.name);
+        formData.append("upload_par", nom_utilisateur ?? "");
 
         try {
             // Envoi du fichier à l'API (assurez-vous d'avoir l'URL correcte)
@@ -164,14 +183,7 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
                 },
             });
 
-            // Si l'upload est réussi, ajouter le fichier à la liste des fichiers
-            const newFile = {
-            name: file.name,
-            sharedBy: nom_utilisateur ?? "Utilisateur inconnu",  // Remplacer par le nom de l'utilisateur connecté
-            date: new Date().toLocaleDateString()
-            };
-            
-            setFiles([...files, newFile]); // Ajout du fichier à la liste des fichiers
+            liste_fichiers();
 
             console.log("Fichier uploadé avec succès :", response.data);
         } catch (error) {
@@ -181,9 +193,21 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
         }
     };
 
-  const handleDeleteFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index));
-  };
+    async function handleDeleteFile(filename:string, version:number) {
+        try {
+            
+            await axios.delete(`${apiUrl}/fichiers/delete/${projet_id}/${filename}/${version}`);
+            liste_fichiers();
+
+        } catch (error) {
+            console.error('Erreur lors de la suppression du fichier', error);
+        }
+    };
+
+  useEffect(() => {
+    recup_nom();
+    liste_fichiers();
+  }, []);
 
   return (
     <Box sx={{ fontFamily: "Montserrat, sans-serif", padding: "20px" }}>
@@ -226,15 +250,15 @@ const File: React.FC<FileProps> = ({ projet_id }) => {
         >
           <Grid container alignItems="center" spacing={2}>
             <Grid item xs>
-              <Typography sx={{fontFamily: "Montserrat, sans-serif", fontWeight: "bold", color: "#333333" }}>{file.name}</Typography>
+              <Typography sx={{fontFamily: "Montserrat, sans-serif", fontWeight: "bold", color: "#333333" }}>{file.name} — Version {file.version}</Typography>
               <Typography variant="body2" sx={{ fontFamily: "Open Sans, sans-serif",color: "#333333" }}>Partagé par : {file.sharedBy}</Typography>
               <Typography variant="body2" sx={{fontFamily: "Open Sans, sans-serif", color: "#333333" }}>Le : {file.date}</Typography>
             </Grid>
             <Grid item>
-              <IconButton sx={{ color: "#1976d2" }}>
+              <IconButton sx={{ color: "#1976d2" }} onClick={() => downloadFile(file.name, file.version)}>
                 <DownloadIcon />
               </IconButton>
-              <IconButton sx={{ color: "#d32f2f" }} onClick={() => handleDeleteFile(index)}>
+              <IconButton sx={{ color: "#d32f2f" }} onClick={() => handleDeleteFile(file.name, file.version)}>
                 <DeleteIcon />
               </IconButton>
             </Grid>
