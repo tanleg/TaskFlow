@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaTachometerAlt, FaProjectDiagram, FaComments, FaUsers, FaSignOutAlt, FaCheckCircle } from "react-icons/fa";
+import { FaTachometerAlt, FaProjectDiagram, FaComments, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Pour rediriger après la déconnexion
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -92,7 +92,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               <img
-                src="../../public/logofez.png" // Assure-toi que l'image est bien accessible
+                src="../../public/logo.png" // Assure-toi que l'image est bien accessible
                 style={{ height: "60px", marginRight: "10px" }} // Ajuste la taille selon ton design
                 />
             </Link>
