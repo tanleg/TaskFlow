@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from 'frontend/src/assets/logo_2.png';
+import logo from 'frontend/public/logo_2.png';
 import { CircularProgress, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from "axios";
