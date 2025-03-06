@@ -27,14 +27,16 @@ interface DialogUserInfoProps {
   user: Utilisateur | null;
 }
 
-const getInitials = (name: string) => {
-  const nameParts = name.split(" ");
+const getInitials = (nom: string) => {
+  const nameParts = nom.split(" ");
   return nameParts.map(part => part[0]).join("").toUpperCase();
 };
 
 const DialogUserInfo: React.FC<DialogUserInfoProps> = ({ open, onClose, user }) => {
   if (!user) return null;
-
+    
+  console.log(user)
+  
   return (
     <Dialog
       open={open}
@@ -57,10 +59,10 @@ const DialogUserInfo: React.FC<DialogUserInfoProps> = ({ open, onClose, user }) 
       </DialogTitle>
       <DialogContent>
         <Avatar sx={{ width: 80, height: 80, margin: "auto", fontFamily: "Montserrat, sans-serif", mb: 2, boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)" }}>
-          {getInitials(user.name)}
+          {getInitials(user.nom)}
         </Avatar>
         <Typography variant="h5" sx={{ fontWeight: "bold", fontFamily: "Montserrat, sans-serif", color: "#000" }}>
-          {user.name}
+          {user.nom}
         </Typography>
         <Divider sx={{ my: 2, backgroundColor: "#ddd" }} />
         <Box sx={{ textAlign: "left", mt: 2, fontFamily: "Open Sans, sans-serif", fontSize: "15px", color: "#333333" }}>

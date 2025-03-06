@@ -18,7 +18,7 @@ const ListeUtilisateurs: React.FC = () => {
       const response = await axios.get(`${apiUrl}/auth/user`);
       const formattedUsers = response.data.map((user: Utilisateur) => ({
         id: user.id,
-        name: `${user.prenom} ${user.nom}`,
+        nom: `${user.prenom} ${user.nom}`,
         email: user.email,
         telephone: user.telephone,
         role: user.admin ? "Administrateur" : "Chercheur",
@@ -36,7 +36,7 @@ const ListeUtilisateurs: React.FC = () => {
 
   // Filtrage des utilisateurs en fonction du terme de recherche
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.nom.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Fonction pour gérer la suppression d'un utilisateur
@@ -105,7 +105,7 @@ const ListeUtilisateurs: React.FC = () => {
               }}
             >
               <ListItemText
-                primary={user.name} // Affichage prénom + nom
+                primary={user.nom} // Affichage prénom + nom
                 primaryTypographyProps={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
