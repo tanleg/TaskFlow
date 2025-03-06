@@ -22,9 +22,9 @@ export class PartenaireService {
 
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService
-    
   ) {}
 
+  // Crée un partenaire après avoir vérifié l'existence du projet et de l'entreprise
   async createPartenaire(
     nom: string,
     prenom: string,
@@ -32,25 +32,25 @@ export class PartenaireService {
     entrepriseNom: string,
     projetId: number,
   ): Promise<PartenaireEntity> {
-    // Vérifier si le projet existe
+    // Vérifie si le projet existe
     const projet = await this.projetRepository.findOne({ where: { id: projetId } });
     if (!projet) {
       throw new NotFoundException(`Projet avec ID ${projetId} non trouvé`);
     }
 
-    // Vérifier si l'entreprise existe, sinon la créer
+    // Vérifie si l'entreprise existe, sinon la crée
     let entreprise = await this.entrepriseRepository.findOne({ where: { entreprise: entrepriseNom } });
     if (!entreprise) {
       entreprise = this.entrepriseRepository.create({ entreprise: entrepriseNom });
       await this.entrepriseRepository.save(entreprise);
     }
 
-    // Générer un lien d’accès unique
+    // Génère un lien d'accès unique avec un token
     const token = uuidv4();
     const urlSite = this.configService.get<string>('URL_SITE');
     const accessLink = `${urlSite}/access/${token}`;
 
-    // Créer le partenaire
+    // Crée et sauvegarde le partenaire
     const partenaire = this.partenaireRepository.create({
       nom,
       prenom,
@@ -64,6 +64,7 @@ export class PartenaireService {
     return this.partenaireRepository.save(partenaire);
   }
 
+  // Trouve un partenaire par son token
   async findByToken(token: string): Promise<PartenaireEntity | null> {
     return this.partenaireRepository.findOne({
       where: { token },
@@ -71,18 +72,20 @@ export class PartenaireService {
     });
   }
   
-    async generateJwt(partenaire: PartenaireEntity): Promise<string> {
-        const payload = { id: partenaire.id, prenom: partenaire.prenom, nom: partenaire.nom, admin: false };
-        return this.jwtService.sign(payload);
+  // Génère un JWT pour un partenaire
+  async generateJwt(partenaire: PartenaireEntity): Promise<string> {
+    const payload = { id: partenaire.id, prenom: partenaire.prenom, nom: partenaire.nom, admin: false };
+    return this.jwtService.sign(payload);
+  }
+
+  // Valide un partenaire par son token
+  async validatePartenaire(token: string): Promise<PartenaireEntity | null> {
+    const partenaire = await this.partenaireRepository.findOne({ where: { token } });
+    
+    if (!partenaire) {
+      return null;
     }
 
-    async validatePartenaire(token: string): Promise<PartenaireEntity | null> {
-        const partenaire = await this.partenaireRepository.findOne({ where: { token } });
-            
-        if (!partenaire) {
-            return null;
-        }
-    
-        return partenaire;
-    }
+    return partenaire;
+  }
 }
