@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist",
+      "declaration": true,
+      "declarationDir": "./dist/types",
+      "strict": true,
+      "baseUrl": ".",
+      "paths": {
+        "shared/*": ["shared/src/*"]
+      }
+    },
+    "include": ["src/**/*"]
+}
