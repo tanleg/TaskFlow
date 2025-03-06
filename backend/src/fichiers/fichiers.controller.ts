@@ -14,23 +14,25 @@ import { Response } from 'express';
 export class FichiersController {
   constructor(private readonly fichierService: FichiersService) {}
 
+  // Endpoint pour télécharger un fichier et le stocker
   @Post('/:id_projet/upload')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
+        // Définition du répertoire de stockage et gestion des erreurs
         destination: async (req, file, callback) => {
-
           const { id_projet } = req.params;
           if (!id_projet) {
             return callback(new Error('ID projet manquant dans la requête'), null);
           }
 
+          // Construction du chemin de stockage
           const storagePath = path.join(
             process.cwd(),
             'src',
             'fichiers',
             'fichiers_storage',
-            String(id_projet),           
+            String(id_projet),
           );
 
           try {
@@ -43,9 +45,10 @@ export class FichiersController {
           callback(null, storagePath);
         },
 
+        // Définition du nom du fichier
         filename: (req, file, callback) => {
-          const ext = extname(file.originalname);
-          const fileName = `${Date.now()}${ext}`;
+          const ext = extname(file.originalname); // Extension du fichier
+          const fileName = `${Date.now()}${ext}`; // Nom basé sur le timestamp
           callback(null, fileName);
         },
       }),
@@ -55,29 +58,32 @@ export class FichiersController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createFichierDto: CreateFichierDto,
   ) {
-   
     const { nom, id_projet, upload_par } = createFichierDto;
     console.log(createFichierDto)
+
+    // Vérification des informations nécessaires dans la requête
     if (!nom || !id_projet || !upload_par) {
       throw new Error('Nom fichier, id_projet ou nom utilisateur manquant dans la requête.');
     }
 
-    // Récupérer la version suivante du fichier
+    // Récupération de la prochaine version du fichier à partir du service
     const nextVersion = await this.fichierService.getNextVersion(nom, Number(id_projet));
     const fileNameWithoutExt = nom.slice(0, nom.lastIndexOf(".")) || nom;
-    
+
+    // Construction du nouveau nom de fichier avec la version
     const newFileName = `${fileNameWithoutExt}_v${nextVersion}${extname(file.originalname)}`;
-    // Déterminer les anciens et nouveaux chemins
+    
+    // Définition des anciens et nouveaux chemins du fichier
     const projectDir = path.resolve(process.cwd(), 'src', 'fichiers', 'fichiers_storage', String(id_projet));
     const oldPath = path.join(projectDir, file.filename);
     const newPath = path.join(projectDir, newFileName);
     
     try {
-      // Renommer le fichier
+      // Renommage du fichier sur le système de fichiers
       await fsPromises.rename(oldPath, newPath);
       console.log(`Fichier renommé en : ${newFileName}`);
       
-      // Créer un enregistrement pour le fichier dans la base de données
+      // Création d'un enregistrement du fichier dans la base de données
       await this.fichierService.create(createFichierDto, newPath);
       
       return { 
@@ -92,29 +98,32 @@ export class FichiersController {
     }
   }
   
+  // Endpoint pour télécharger un fichier existant
   @Get('/download/:id_projet/:filename')
   async downloadFile(@Param('id_projet') id_projet: number, @Param('filename') filename: string, @Res() res: Response) {
     const filePath = path.join(process.cwd(), 'src', 'fichiers', 'fichiers_storage', String(id_projet), filename);
 
-    // Vérifier si le fichier existe
+    // Vérification si le fichier existe
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('Fichier non trouvé');
     }
 
-    // Définir le type MIME et le forcer au téléchargement
+    // Envoi du fichier avec les bons en-têtes HTTP
     res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
     res.setHeader('Content-Type', 'application/octet-stream');
 
-    // Lire et envoyer le fichier
+    // Lecture et envoi du fichier
     const fileStream = fs.createReadStream(filePath);
     fileStream.pipe(res);
   }
 
+  // Endpoint pour supprimer un fichier
   @Delete('/delete/:id_projet/:filename/:version')
   async supprimerFichier(@Param('id_projet') id_projet: number, @Param('filename') filename: string, @Param('version') version: number) {
     return await this.fichierService.supprFichier(id_projet, filename, version);
   }
 
+  // Endpoint pour récupérer les fichiers d'un projet donné
   @Get('/:id_projet')
   async getOtherUsers(@Param('id_projet') id_projet: number): Promise<FichierEntity[]> {
     return this.fichierService.getFilesByProjectId(id_projet);
