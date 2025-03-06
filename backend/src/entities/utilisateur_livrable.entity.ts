@@ -11,8 +11,10 @@ export class UtilisateurLivrableEntity {
   id_utilisateur: number;  // UtilisateurId comme clé primaire partagée pour lier les utilisateurs aux livrables
 
   @ManyToOne(() => LivrableEntity, livrable => livrable.utilisateurs)
+  @JoinColumn({ name: 'id' })
   livrable: LivrableEntity; // Lien vers l'entité LivrableEntity, représente le livrable associé à l'utilisateur
 
   @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.livrables)
+  @JoinColumn({ name: 'id_utilisateur' })
   utilisateur: UtilisateurEntity; // Lien vers l'entité UtilisateurEntity, représente l'utilisateur associé au livrable
 }
