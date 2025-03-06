@@ -9,22 +9,25 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const LoginPage: React.FC = () => {
+  // Déclarations d'état pour les valeurs du formulaire
   const [email, setEmail] = useState("test1@gmail.com");
   const [password, setPassword] = useState("1234");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // Etat pour le chargement
+  const [loading, setLoading] = useState(false); // Chargement en cours
   
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook pour la navigation
 
+  // Fonction de gestion de la soumission du formulaire
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (email && password) {
 
         try {
-            setLoading(true); // Afficher le chargement
+            setLoading(true); // Afficher le spinner de chargement
 
+            // Envoi de la requête POST pour se connecter
             const response = await axios.post(`${apiUrl}/auth/connexion`, {
                 email: email,
                 mot_de_passe: password,
@@ -32,13 +35,13 @@ const LoginPage: React.FC = () => {
 
             console.log("Réponse du serveur :", response.data);
             
+            // Traitement de la réponse du serveur
             if (response.data){
                 alert("Inscription réussie !");
-
                 if (response.data.accessToken)
                     localStorage.setItem('authToken', response.data.accessToken);
 
-                navigate("/dashboard");    
+                navigate("/dashboard");  // Redirection vers le tableau de bord
             }else{
                 alert("Mauvais mot de passe");
             }
@@ -47,7 +50,7 @@ const LoginPage: React.FC = () => {
             console.error("Erreur lors de la connexion :", error);
             alert("Erreur lors de la connexion. Veuillez réessayer.");
         } finally {
-            setLoading(false);
+            setLoading(false); // Stopper le chargement
         }
 
     } else {
@@ -55,6 +58,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  // Fonction de redirection vers la page d'inscription
   const handleRegisterRedirect = () => {
     navigate("/register");
   };
@@ -77,10 +81,9 @@ const LoginPage: React.FC = () => {
           padding: "40px",
           width: "380px",
           textAlign: "center",
-          transition: "all 0.3s ease-in-out",
         }}
       >
-        {/* Container pour le logo et le titre */}
+        {/* Logo et titre */}
         <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
           <img
             src={logo}
@@ -96,15 +99,9 @@ const LoginPage: React.FC = () => {
           <h2
             style={{
               color: "#333333",
-              marginBottom: "20px",
               fontSize: "30px",
               fontWeight: "bold",
               textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-              fontFamily: "'Montserrat', sans-serif",
             }}
           >
             Connexion
@@ -112,6 +109,7 @@ const LoginPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleLogin}>
+          {/* Champ email */}
           <input
             type="email"
             placeholder="Email"
@@ -124,16 +122,12 @@ const LoginPage: React.FC = () => {
               borderRadius: "10px",
               border: "1px solid #e0e0e0",
               fontSize: "16px",
-              fontFamily: "'Open Sans', sans-serif",
               outline: "none",
               backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.3s ease-in-out",
             }}
-            onFocus={(e) => (e.target as HTMLInputElement).style.borderColor = "#00A676"}
-            onBlur={(e) => (e.target as HTMLInputElement).style.borderColor = "#e0e0e0"}
           />
 
+          {/* Champ mot de passe */}
           <div style={{ position: "relative", marginBottom: "20px" }}>
             <input
               type={showPassword ? "text" : "password"}
@@ -146,21 +140,16 @@ const LoginPage: React.FC = () => {
                 borderRadius: "10px",
                 border: "1px solid #e0e0e0",
                 fontSize: "16px",
-                fontFamily: "'Open Sans', sans-serif",
                 outline: "none",
                 backgroundColor: "#f9f9f9",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.3s ease-in-out",
               }}
-              onFocus={(e) => (e.target as HTMLInputElement).style.borderColor = "#00A676"}
-              onBlur={(e) => (e.target as HTMLInputElement).style.borderColor = "#e0e0e0"}
             />
             <InputAdornment position="end">
               <IconButton
                 edge="end"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword(!showPassword)} // Toggle visibility du mot de passe
                 onMouseDown={(e) => e.preventDefault()}
-                style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)" }}
+                style={{ position: "absolute", right: "10px", top: "50%" }}
               >
                 {showPassword ? (
                   <Visibility sx={{fontSize:"1.25rem"}} />
@@ -171,35 +160,21 @@ const LoginPage: React.FC = () => {
             </InputAdornment>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              marginBottom: "20px",
-            }}
-          >
+          {/* Checkbox "Se souvenir de moi" */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", marginBottom: "20px" }}>
            <FormControlLabel
                 control={
                 <Checkbox
                     checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    style={{
-                    padding: 0, // Supprime l'espacement autour du checkbox
-                    }}
+                    onChange={(e) => setRememberMe(e.target.checked)} // Gérer l'état "se souvenir de moi"
                 />
                 }
                 label="Se souvenir de moi"
-                style={{
-                color: "#333333",
-                fontFamily: "'Open Sans', sans-serif",
-                marginLeft: "10px", // Ajuste l'espacement entre le checkbox et le texte
-                }}
+                style={{ marginLeft: "10px" }}
             />
-
-           
           </div>
 
+          {/* Bouton de connexion */}
           <button
             type="submit"
             style={{
@@ -210,22 +185,20 @@ const LoginPage: React.FC = () => {
               border: "none",
               borderRadius: "8px",
               cursor: "pointer",
-              fontFamily: "'Open Sans', sans-serif",
-              fontWeight: "500",
-              transition: "background-color 0.3s",
             }}
             onMouseEnter={(e) => (e.target as HTMLButtonElement).style.backgroundColor = "#00A676"}
             onMouseLeave={(e) => (e.target as HTMLButtonElement).style.backgroundColor = "#005B96"}
           >
             {loading ? (
-              <CircularProgress size={24} style={{ color: "#fff" }} />
+              <CircularProgress size={24} style={{ color: "#fff" }} /> // Afficher le spinner pendant le chargement
             ) : (
               "Se connecter"
             )}
           </button>
         </form>
 
-        <div style={{ marginTop: "20px", fontSize: "14px", color: "#333333", fontFamily: "'Open Sans', sans-serif", }}>
+        {/* Lien vers la page d'inscription */}
+        <div style={{ marginTop: "20px", fontSize: "14px", color: "#333333" }}>
           New on our platform?{" "}
           <span
             onClick={handleRegisterRedirect}
@@ -234,7 +207,6 @@ const LoginPage: React.FC = () => {
               cursor: "pointer",
               textDecoration: "underline",
               fontWeight: "bold",
-              fontFamily: "'Open Sans', sans-serif",
             }}
           >
             Create an account
