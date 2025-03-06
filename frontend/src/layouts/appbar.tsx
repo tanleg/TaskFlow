@@ -3,15 +3,16 @@ import { AppBar, Toolbar, IconButton, Box, Drawer, Typography, List, ListItem, L
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import CircleIcon from "@mui/icons-material/Circle";
 
+// Composant AppBar avec notifications
 const AppBarComponent: React.FC = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);  // État pour gérer l'ouverture/fermeture du tiroir
 
   // Fonction pour ouvrir/fermer le tiroir
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open);
   };
 
-  // Exemple de notifications avec des statuts (vous pouvez récupérer ces données dynamiquement)
+  // Exemple de notifications avec des statuts
   const notifications = [
     { id: 1, text: "Nouvelle tâche assignée", status: "important" },
     { id: 2, text: "Message de l'équipe", status: "info" },
@@ -19,7 +20,7 @@ const AppBarComponent: React.FC = () => {
     { id: 4, text: "Rappel : Réunion à 14h", status: "default" },
   ];
 
-  // Fonction pour définir une couleur en fonction du statut de la notification
+  // Fonction pour déterminer la couleur de l'icône en fonction du statut
   const getStatusColor = (status: string) => {
     switch (status) {
       case "important":
@@ -40,7 +41,7 @@ const AppBarComponent: React.FC = () => {
         justifyContent: "center",
         padding: "16px",
         backgroundColor: "#F3F3F5",
-        marginLeft: "290px",
+        marginLeft: "290px", // Décalage du contenu
       }}
     >
       <AppBar
@@ -89,6 +90,7 @@ const AppBarComponent: React.FC = () => {
           <Divider />
 
           <List sx={{ marginTop: 1 }}>
+            {/* Boucle pour afficher les notifications */}
             {notifications.map((notification) => (
               <ListItem
                 key={notification.id}
@@ -101,6 +103,7 @@ const AppBarComponent: React.FC = () => {
                   transition: "all 0.3s ease",
                 }}
               >
+                {/* Avatar avec icône circulaire de couleur selon le statut */}
                 <ListItemAvatar>
                   <Avatar
                     sx={{
@@ -142,4 +145,3 @@ const AppBarComponent: React.FC = () => {
 };
 
 export default AppBarComponent;
-
