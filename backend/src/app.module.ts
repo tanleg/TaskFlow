@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-
+    //Connexion à la base de données
     TypeOrmModule.forRoot({
         type: 'postgres',
         host: 'localhost',
@@ -34,7 +34,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forFeature([UtilisateurEntity]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'yourSecretKey', // Utilisez une clé sécurisée dans un fichier d'env
+      secret: 'yourSecretKey', // Utiliser une clé sécurisée dans un fichier d'env
       signOptions: { expiresIn: '1h' },
     }),
 

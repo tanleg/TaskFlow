@@ -4,8 +4,8 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const AccessPage = () => {
-  const { token } = useParams<{ token: string }>(); // Récupérer le token depuis l'URL
-  const navigate = useNavigate();
+  const { token } = useParams<{ token: string }>(); // Récupère le token
+  const navigate = useNavigate(); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,11 +14,9 @@ const AccessPage = () => {
       try {
         const response = await axios.get(`${apiUrl}/partenaire/access/${token}`);
         const partenaire = response.data;
-
-        // Rediriger vers la page du projet
-        navigate(`/projet/${partenaire.projet.id}/${token}`);
+        navigate(`/projet/${partenaire.projet.id}/${token}`); // Redirige si valide
       } catch (err) {
-        navigate(`/404`);
+        navigate(`/404`); // Redirige vers 404 en cas d'erreur
         setError("Lien invalide ou expiré.");
       } finally {
         setLoading(false);

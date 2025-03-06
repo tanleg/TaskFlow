@@ -4,28 +4,21 @@ import { UtilisateurEntity } from './utilisateur.entity';
 
 @Entity('utilisateur_projet')
 export class UtilisateurProjetEntity {
-  // Clé primaire composite : id (clé étrangère vers Projet)
   @PrimaryColumn()
-  id: number;
+  id: number;  // Identifiant unique de la relation entre utilisateur et projet (clé primaire partagée)
 
-  // Clé primaire composite : id_utilisateur (clé étrangère vers Utilisateur)
   @PrimaryColumn()
-  id_utilisateur: number;
+  id_utilisateur: number;  // Identifiant de l'utilisateur, utilisé comme clé primaire partagée pour la relation
 
-  // Relation vers ProjetEntity (clé étrangère id -> Projet.id)
   @ManyToOne(() => ProjetEntity, projet => projet.utilisateurProjets, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id' })
-  projet: ProjetEntity;
+  projet: ProjetEntity; // Lien vers l'entité ProjetEntity, représente le projet auquel l'utilisateur est associé
 
-  // Relation vers UtilisateurEntity (clé étrangère id_utilisateur -> Utilisateur.id)
   @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.utilisateurProjets, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id_utilisateur' })
-  utilisateur: UtilisateurEntity;
-
-  // Attributs
-  @Column({ type: 'boolean' })
-  chef: boolean;
+  utilisateur: UtilisateurEntity; // Lien vers l'entité UtilisateurEntity, représente l'utilisateur associé au projet
 
   @Column({ type: 'boolean' })
-  visiteur: boolean;
+  chef: boolean;  // Indique si l'utilisateur est le chef du projet (true/false)
+
+  @Column({ type: 'boolean' })
+  visiteur: boolean;  // Indique si l'utilisateur a un rôle de visiteur sur le projet (true/false)
 }

@@ -77,7 +77,7 @@ npx expo start --clear
 1. Ouvrir un navigateur web.  
 2. Aller à l'adresse suivante :  
    ```markdown
-   [🔗 Accéder à l'application](https://ton-site.com)
+   [🔗 Accéder à l'application](https://adresse_ip_de_l'instance_EC2.com)
 3. Se connecter avec un compte existant ou créer un nouveau compte.  
 
 #### 📱 Version Mobile  
@@ -85,27 +85,19 @@ npx expo start --clear
 2. Lancer l'application et s'authentifier.  
 
 ### 📝 2. Création d'un projet  
-1. Aller sur la page **"Créer un projet"**.  
+1. Créer un projet depuis le **Dashboard**.  
 2. Remplir les informations requises :  
-   - **Nom du projet**  
-   - **Description**  
-   - **Membres de l’équipe**  
-   - **Catégorie du projet**  
-3. Cliquer sur **"Soumettre"** pour enregistrer le projet.  
+3. Valider pour enregistrer le projet.  
 
 ### 📊 3. Suivi des projets  
-- Accéder à la page **"Mes projets"** pour voir tous les projets en cours.  
-- Cliquer sur un projet pour voir ses détails et suivre son avancement via la **timeline**.  
+- suivez tous vos projets en cours depuis le **Dashboard** et accédez au projet public.  
+- Consultez aussi vos futures tâches depuis le **Dashboard**.
+- Cliquer sur un projet pour voir ses détails, en modifier les mebres et suivre son avancement via la **timeline**.  
 
 ### 💬 4. Collaboration et communication  
 - Utiliser le **chat intégré** pour échanger avec les membres de l’équipe.  
 - Partager des fichiers en les déposant dans l’**espace de stockage** du projet.  
-- Être notifié des mises à jour grâce aux **notifications en temps réel**.  
-
-### ⚙️ 5. Paramètres et gestion du compte  
-- Modifier les informations du compte dans **"Mon Profil"**.  
-- Gérer les préférences de notifications dans **"Paramètres"**.  
-- Se déconnecter via le menu **"Déconnexion"**.  
+- Consultez la liste des utilisateurs depuis le **Dashboard** 
 
 ## 👥 Équipe projet
 - **Le Goff Tanguy** : Product Owner et développeur Backend
