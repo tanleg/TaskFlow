@@ -77,7 +77,7 @@ npx expo start --clear
 1. Ouvrir un navigateur web.  
 2. Aller à l'adresse suivante :  
    ```markdown
-   [🔗 Accéder à l'application](https://ton-site.com)
+   [🔗 Accéder à l'application](https://adresse_ip_de_l'instance_EC2.com)
 3. Se connecter avec un compte existant ou créer un nouveau compte.  
 
 #### 📱 Version Mobile  
