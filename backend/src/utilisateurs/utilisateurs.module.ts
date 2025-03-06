@@ -7,16 +7,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 
+// Déclaration du module Utilisateurs
 @Module({
-    imports: [TypeOrmModule.forFeature([UtilisateurEntity]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-        secret: 'yourSecretKey', // Utilise une clé secrète pour signer les JWT
-        signOptions: { expiresIn: '1h' }, // Expiration du token après 1 heure
-    })],
-    controllers: [UtilisateursController],
-    providers: [UtilisateursService, JwtStrategy],
-    exports: [JwtModule, PassportModule],
+    imports: [
+        TypeOrmModule.forFeature([UtilisateurEntity]), // Accès à l'entité Utilisateur
+        PassportModule.register({ defaultStrategy: 'jwt' }), // Authentification JWT
+        JwtModule.register({
+            secret: 'yourSecretKey', // Clé secrète pour signer les tokens
+            signOptions: { expiresIn: '1h' }, // Expiration du token
+        }),
+    ],
+    controllers: [UtilisateursController], // Gestion des routes Utilisateurs
+    providers: [UtilisateursService, JwtStrategy], // Services et stratégie JWT
+    exports: [JwtModule, PassportModule], // Export pour réutilisation
 })
 export class UtilisateursModule {}
-
