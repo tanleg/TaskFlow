@@ -6,28 +6,28 @@ import { UtilisateurEntity } from './utilisateur.entity';
 @Entity('tache')
 export class TacheEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number; // ID unique de la tâche
 
   @Column({ length: 50 })
-  nom: string;
+  nom: string; // Nom de la tâche
 
   @Column({ type: 'timestamp' })
-  date_debut: Date;
+  date_debut: Date; // Date de début de la tâche
 
   @Column({type: 'timestamp', nullable: true})
-  date_fin_reelle: Date | null ;
+  date_fin_reelle: Date | null; // Date de fin réelle de la tâche, peut être nulle si la tâche n'est pas terminée
 
   @Column({ type: 'timestamp' })
-  date_fin: Date;
+  date_fin: Date; // Date de fin prévue de la tâche
 
   @Column({ default: false })
-  termine: boolean;
+  termine: boolean; // Indique si la tâche est terminée ou non (true/false)
 
   @ManyToOne(() => ProjetEntity, projet => projet.taches)
   @JoinColumn({ name: 'id_projet' })
-  projet: ProjetEntity;
+  projet: ProjetEntity; // Projet auquel cette tâche est associée
 
   @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.taches)
   @JoinColumn({ name: 'id_utilisateur' })
-  utilisateur: UtilisateurEntity;
+  utilisateur: UtilisateurEntity; // Utilisateur responsable de cette tâche
 }

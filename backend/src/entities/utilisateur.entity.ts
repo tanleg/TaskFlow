@@ -9,42 +9,43 @@ import { UtilisateurProjetEntity } from './utilisateur_projet.entity';
 @Entity('utilisateur')
 export class UtilisateurEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number;  // Identifiant unique de l'utilisateur
 
   @Column()
-  nom: string;
+  nom: string;  // Nom de l'utilisateur
 
   @Column()
-  prenom: string;
+  prenom: string;  // Prénom de l'utilisateur
 
   @Column()
-  email: string;
+  email: string;  // Adresse email de l'utilisateur
 
   @Column()
-  mot_de_passe: string;
+  mot_de_passe: string;  // Mot de passe de l'utilisateur (enregistré sous forme cryptée)
 
   @Column()
-  telephone: string;
+  telephone: string;  // Numéro de téléphone de l'utilisateur
 
   @Column()
-  admin: boolean;
+  admin: boolean;  // Indique si l'utilisateur est un administrateur (true/false)
 
   @OneToMany(() => MessageEntity, message => message.utilisateur)
-  messages: MessageEntity[];
+  messages: MessageEntity[];  // Liste des messages envoyés par l'utilisateur
 
   @OneToMany(() => TacheEntity, tache => tache.utilisateur)
-  taches: TacheEntity[];
+  taches: TacheEntity[];  // Liste des tâches assignées à l'utilisateur
 
   @OneToMany(() => UtilisateurJalonEntity, utilisateurJalon => utilisateurJalon.utilisateur)
-  jalons: UtilisateurJalonEntity[];
+  jalons: UtilisateurJalonEntity[];  // Liste des jalons associés à l'utilisateur
 
   @OneToMany(() => UtilisateurLivrableEntity, utilisateurLivrable => utilisateurLivrable.utilisateur)
-  livrables: UtilisateurLivrableEntity[];
+  livrables: UtilisateurLivrableEntity[];  // Liste des livrables associés à l'utilisateur
 
   @OneToMany(() => UtilisateurNotifEntity, utilisateurNotif => utilisateurNotif.utilisateur)
-  notifs: UtilisateurNotifEntity[];
+  notifs: UtilisateurNotifEntity[];  // Liste des notifications envoyées à l'utilisateur
 
   @OneToMany(() => UtilisateurProjetEntity, utilisateurProjet => utilisateurProjet.utilisateur)
-  projets: UtilisateurProjetEntity[];
-    utilisateurProjets: any;
+  projets: UtilisateurProjetEntity[];  // Liste des projets associés à l'utilisateur
+
+  utilisateurProjets: any;  // (non utilisé dans ce code mais peut être une relation supplémentaire)
 }

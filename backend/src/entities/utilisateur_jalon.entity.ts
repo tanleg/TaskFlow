@@ -6,15 +6,15 @@ import { UtilisateurEntity } from './utilisateur.entity';
 export class UtilisateurJalonEntity {
   @PrimaryColumn()
   id: number;  // JalonId comme clé primaire partagée
-  
+
   @PrimaryColumn()
   id_utilisateur: number;  // UtilisateurId comme clé primaire partagée
 
   @ManyToOne(() => JalonEntity, jalon => jalon.utilisateurs)
-  @JoinColumn({ name: 'id' })  // Spécifier la colonne de jointure
-  jalon: JalonEntity;
+  @JoinColumn({ name: 'id' })  
+  jalon: JalonEntity; // Lien vers l'entité JalonEntity, représente le jalon associé à l'utilisateur
 
   @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.jalons)
-  @JoinColumn({ name: 'id_utilisateur' })  // Spécifier la colonne de jointure
-  utilisateur: UtilisateurEntity;
+  @JoinColumn({ name: 'id_utilisateur' })  
+  utilisateur: UtilisateurEntity; // Lien vers l'entité UtilisateurEntity, représente l'utilisateur associé au jalon
 }

@@ -13,50 +13,50 @@ import { UtilisateurProjetEntity } from './utilisateur_projet.entity';
 @Entity('projet')
 export class ProjetEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number; // ID unique du projet
 
   @Column({ length: 150 })
-  nom: string;
+  nom: string; // Nom du projet
 
   @Column({ length: 2000 })
-  description: string;
+  description: string; // Description détaillée du projet
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  date_creation: Date;
+  date_creation: Date; // Date de création du projet (par défaut : date actuelle)
 
   @Column({ type: 'boolean', default: false })
-  public: boolean;
+  public: boolean; // Statut de visibilité (public ou privé)
 
   @Column({ length: 150 })
-  statut: string;
+  statut: string; // Statut du projet (en cours, terminé...)
 
   // Relations OneToMany avec les autres entités
   @OneToMany(() => FichierEntity, fichier => fichier.projet)
-  fichiers: FichierEntity[];
+  fichiers: FichierEntity[]; // Liste des fichiers liés au projet
 
   @OneToMany(() => JalonEntity, jalon => jalon.projet)
-  jalons: JalonEntity[];
+  jalons: JalonEntity[]; // Liste des jalons du projet
 
   @OneToMany(() => LivrableEntity, livrable => livrable.projet)
-  livrables: LivrableEntity[];
+  livrables: LivrableEntity[]; // Liste des livrables du projet
 
   @OneToMany(() => MessageEntity, message => message.projet)
-  messages: MessageEntity[];
+  messages: MessageEntity[]; // Liste des messages liés au projet
 
   @OneToMany(() => NotifEntity, notif => notif.projet)
-  notifications: NotifEntity[];
+  notifications: NotifEntity[]; // Notifications associées au projet
 
   @OneToMany(() => PartenaireEntity, partenaire => partenaire.projet)
-  partenaires: PartenaireEntity[];
+  partenaires: PartenaireEntity[]; // Liste des partenaires du projet
 
   @OneToMany(() => TacheEntity, tache => tache.projet)
-  taches: TacheEntity[];
+  taches: TacheEntity[]; // Liste des tâches du projet
 
   @OneToMany(() => UtilisateurProjetEntity, utilisateurProjet => utilisateurProjet.projet)
-  utilisateurProjets: UtilisateurProjetEntity[];
+  utilisateurProjets: UtilisateurProjetEntity[]; // Association des utilisateurs au projet
 
-  // Relation avec le statut
+  // Relation avec le statut du projet
   @ManyToOne(() => StatutProjetEntity, statut => statut.projets)
   @JoinColumn({ name: 'statut' })
-  statutProjet: StatutProjetEntity;
+  statutProjet: StatutProjetEntity; // Statut du projet sous forme d'entité
 }
