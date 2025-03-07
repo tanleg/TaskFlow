@@ -40,7 +40,7 @@ Cette plateforme web permet de centraliser et gérer des projets de recherche co
 ### Installation locale
 ```bash
 # Cloner le dépôt
-git clone <https://github.com/tanleg/TaskFlow.git>
+git clone https://github.com/tanleg/TaskFlow.git
 cd TaskFlow
 
 # Backend
@@ -72,7 +72,7 @@ npx expo start --clear
 cd frontend
 npm run build
 ```
-3. Sur le serveur remplacer le contenu de /var/www/taskflow par le contenu du dossier frontend/dist obtenu à l'étape précédente
+3. Sur le serveur remplacer le contenu de /var/www/taskflow par le contenu du dossier frontend/dist obtenu à l'étape précédente.
 
 #### Lancement du Backend
 1. Sur le serveur :
@@ -82,7 +82,7 @@ sudo nano .env
 ```
 Remplacer la variable d'environnement URL_SITE par l'adresse ip de l'instance EC2.
 
-2. Sur le serveur:
+2. Sur le serveur :
 ```bash
 cd /var/www/backend/dist/backend/src
 sudo nano main.js
@@ -116,7 +116,7 @@ pm2 restart backend
 #### Version Mobile  
 **La version mobile est toujours en cours de développement**
 1. Télécharger Expo Go depuis un mobile
-2. Modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
+2. Sur la machine locale modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
 3. Depuis un terminal :
 ```bash
 npx expo start --clear
