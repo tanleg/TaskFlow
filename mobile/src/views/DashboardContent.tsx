@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const apiUrl = process.env.API_URL;
-
+type DashboardNavigationProp = StackNavigationProp<RootStackParamList, 'Dashboard'>;
 interface ProfileResponse {
     id:number,
     prenom: string,
@@ -12,7 +14,8 @@ interface ProfileResponse {
     admin: boolean
 }
 
-const DashboardContent: React.FC = ({ navigation }: any) => {
+const DashboardContent: React.FC = () => {
+  const navigation = useNavigation<DashboardNavigationProp>();  // Appliquer le type ici
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [upcomingProjects, setUpcomingProjects] = useState<any[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
@@ -71,16 +74,26 @@ const DashboardContent: React.FC = ({ navigation }: any) => {
     <ScrollView style={styles.container}>
       
       <Text style={styles.sectionTitle}>Événements à venir</Text>
-      {upcomingEvents.map((event, index) => (
-        <View key={index} style={styles.eventCard}>
-          <Text style={styles.eventText}>{event.date_fin} - {event.type}</Text>
-          <Text style={styles.eventProject}>{event.nom}</Text>
-        </View>
-      ))}
+      {upcomingEvents.map((event, index) => {
+        const date = new Date(event.date_fin);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = `${day}/${month}/${year}`;
+
+        return (
+          <View key={index} style={styles.eventCard}>
+            <Text style={styles.eventText}>
+              {event.type} - {formattedDate} 
+            </Text>
+            <Text style={styles.eventProject}>{event.nom}</Text>
+          </View>
+        );
+      })}
       
       <Text style={styles.sectionTitle}>Projets en cours</Text>
       {upcomingProjects.map((project) => (
-        <TouchableOpacity key={project.id} style={styles.projectCard} onPress={() => navigation.navigate('ProjectDetails', { id: project.id })}>
+        <TouchableOpacity key={project.id} style={styles.projectCard} onPress={() => navigation.navigate('DetailsProjet', { id: project.id })}>
           <Text style={styles.projectTitle}>{project.nom}</Text>
           <Text style={styles.projectDescription}>{project.description}</Text>
         </TouchableOpacity>
@@ -96,14 +109,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    padding: 20,
+    padding: 10,
   },
   button: {
     backgroundColor: '#005B96',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#fff',

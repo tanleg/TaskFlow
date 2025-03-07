@@ -6,10 +6,10 @@ import axios from 'axios';
 const apiUrl = process.env.API_URL;
 
 interface ProfileResponse {
-    id:number,
-    prenom: string,
-    nom: string,
-    admin: boolean
+  id: number;
+  prenom: string;
+  nom: string;
+  admin: boolean;
 }
 
 const DashboardHeader: React.FC = () => {
@@ -53,11 +53,13 @@ export default DashboardHeader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 0,
+    justifyContent: 'flex-start', // Aligner le contenu en haut
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    padding: 20,
+    paddingTop: 50, // Ajout d'un peu de padding en haut pour espacer du bord
+    paddingHorizontal: 20,
+    marginBottom: 50, // Marge inférieure pour espacer des éléments en dessous
   },
   greeting: {
     fontSize: 24,
