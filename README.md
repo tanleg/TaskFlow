@@ -28,7 +28,7 @@ Cette plateforme web permet de centraliser et gérer des projets de recherche co
 
 **Modèle conceptuel de données**  
 ![Schéma du MCD](/resources/taskflow_mcd.png)  
-![Télécharger le MCD](/resources/bdd_taskflow.sql)
+![Télécharger le fichier SQL](/resources/bdd_taskflow.sql)
 
 ## Installation & Déploiement
 
