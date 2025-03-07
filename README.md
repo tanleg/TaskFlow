@@ -103,7 +103,7 @@ npx expo start --clear
 ### 4. Collaboration et communication  
 - Utiliser le **chat intégré** pour échanger avec les membres de l’équipe.  
 - Partager des fichiers en les déposant dans l’**espace de stockage** du projet.  
-- Consultez la liste des utilisateurs depuis le **Dashboard** 
+- Consultez la liste des utilisateurs en tant qu'administrateur depuis le **Dashboard** 
 
 ## Équipe projet
 - **Le Goff Tanguy** : Product Owner et développeur Backend
