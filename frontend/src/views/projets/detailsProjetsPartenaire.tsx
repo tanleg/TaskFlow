@@ -342,12 +342,7 @@ const DetailsProjetPartenaire: React.FC = () => {
           </Typography>
           <Table>
             <TableHead>
-              {/* <TableRow>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}></TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Nom tâche</TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Statut</TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Personne assignée</TableCell>
-              </TableRow> */}
+
             </TableHead>
             <TableBody>
             {tasks.map((task, index) => (
@@ -397,12 +392,7 @@ const DetailsProjetPartenaire: React.FC = () => {
           </Typography>
           <Table>
             <TableHead>
-              {/* <TableRow>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}></TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Nom tâche</TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Statut</TableCell>
-                <TableCell sx={{ fontFamily: "Montserrat, sans-serif", fontWeight: "bold" }}>Personne assignée</TableCell>
-              </TableRow> */}
+
             </TableHead>
             <TableBody>
             {livrables.map((livrable, indexLivrable) => (

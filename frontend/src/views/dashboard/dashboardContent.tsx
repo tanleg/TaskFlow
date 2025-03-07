@@ -5,7 +5,6 @@ import DialogAddProjects from "frontend/src/views/dashboard/dialogAddProjects.ts
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
-// import InfoVisite from "frontend/src/views/dashboard/infoEvents.tsx";
 
 
 const DashboardContent: React.FC = () => {
