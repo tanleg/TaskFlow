@@ -110,11 +110,11 @@ pm2 restart backend
 1. Ouvrir un navigateur web.  
 2. Aller à l'adresse suivante :  
    ```markdown
-   [Accéder à l'application](https://adresse_ip_de_l'instance_EC2.com)
+   https://adresse_ip_de_l'instance_EC2.com
 3. Se connecter avec un compte existant ou créer un nouveau compte.  
 
 #### Version Mobile  
-**La version mobile est toujours en cours de développement
+**La version mobile est toujours en cours de développement**
 1. Télécharger Expo Go depuis un mobile
 2. Modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
 3. Depuis un terminal :
