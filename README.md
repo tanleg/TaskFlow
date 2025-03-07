@@ -129,14 +129,20 @@ npx expo start --clear
 3. Valider pour enregistrer le projet.  
 
 ### 3. Suivi des projets  
-- suivez tous vos projets en cours depuis le **Dashboard** et accédez au projet public.  
-- Consultez aussi vos futures tâches depuis le **Dashboard**.
-- Cliquer sur un projet pour voir ses détails, en modifier les mebres et suivre son avancement via la **timeline**.  
+- Suivez tous vos projets en cours depuis le **Dashboard** et accédez au projet public.  
+- Consultez aussi vos événements à venir depuis le **Dashboard**.
+- Cliquer sur un projet pour voir ses détails, en modifier les membres et suivre son avancement via la **timeline**.  
 
 ### 4. Collaboration et communication  
 - Utiliser le **chat intégré** pour échanger avec les membres de l’équipe.  
 - Partager des fichiers en les déposant dans l’**espace de stockage** du projet.  
-- Consultez la liste des utilisateurs en tant qu'administrateur depuis le **Dashboard** 
+- Consultez la liste des utilisateurs en tant qu'administrateur en cliquant sur "Utilisateurs" depuis la **barre de navigation**.
+
+### 5. Invitez des partenaires industriels
+1. Depuis une  **page projet**, appuez sur "ajouter un utilisateur".
+2. Cliquer sur **"invitation"**.
+3. Remplir les informations nécessaires puis copier le **lien** obtenu.
+4. Envoyer le lien à votre **partenaire**.
 
 ## Équipe projet
 - **Le Goff Tanguy** : Product Owner et développeur Backend
