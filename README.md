@@ -60,14 +60,42 @@ npx expo start --clear
 ```
 
 ### Déploiement sur serveur
+
+#### Démarrage
 1. Lancer l'instance AWS EC2
 2. Ajouter des règles sur l'instance Amazon EC2 autorisant autorisant le trafic HTTP, TCP (port 3000 et 3001), ssh et PostgreSQL pour les machines qui utiliseront l'application.
-3. Sur le serveur, modifier le fichier /var/www/backend/.env. Remplacer la variable d'environnement par l'adresse ip du serveur
-4. Modifier le fichier /var/www/backend/src/main.ts ligne 11, autoriser l'adresse ip du serveur.
 
+#### Lancement du Frontend
+1. Modifier localement le fichier frontend/.env. Remplacer la variable d'environnement VITE_API_URL par l'adresse ip de l'instance EC2.
+2. 
+Localement :
+```bash
+cd frontend
+npm run build
+```
+3. Sur le serveur remplacer le contenu de /var/www/taskflow par le contenu du dossier frontend/dist obtenu à l'étape précédente
 
+#### Lancement du Backend
+1. Sur le serveur :
+```bash
+cd /var/www/backend
+sudo nano .env 
+```
+Remplacer la variable d'environnement URL_SITE par l'adresse ip de l'instance EC2.
 
+2. Sur le serveur:
+```bash
+cd /var/www/backend/dist/backend/src
+sudo nano main.js
+```
+Ligne 11 : ajouter les adresses ip de l'instance EC2 et des machines locales.
 
+#### Recharger l'application
+1. Sur le serveur :
+```bash
+sudo systemctl restart apache2
+pm2 restart backend
+```
 
 ## Calendrier du projet
 | Date | Événement |
