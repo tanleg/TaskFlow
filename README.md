@@ -87,8 +87,14 @@ npx expo start --clear
 3. Se connecter avec un compte existant ou créer un nouveau compte.  
 
 #### Version Mobile  
-1. Télécharger l'application depuis [le lien de téléchargement](https://ton-site.com/download).  
-2. Lancer l'application et s'authentifier.  
+**La version mobile est toujours en cours de développement
+1. Télécharger Expo Go depuis un mobile
+2. Modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
+3. Depuis un terminal :
+```bash
+npx expo start --clear
+```
+4. Scanner le QRcode avec Expo Go
 
 ### 2. Création d'un projet  
 1. Créer un projet depuis le **Dashboard**.  
