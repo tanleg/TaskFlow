@@ -11,9 +11,11 @@ export class UtilisateurProjetEntity {
   id_utilisateur: number;  // Identifiant de l'utilisateur, utilisé comme clé primaire partagée pour la relation
 
   @ManyToOne(() => ProjetEntity, projet => projet.utilisateurProjets, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id' })
   projet: ProjetEntity; // Lien vers l'entité ProjetEntity, représente le projet auquel l'utilisateur est associé
 
   @ManyToOne(() => UtilisateurEntity, utilisateur => utilisateur.utilisateurProjets, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id_utilisateur' })
   utilisateur: UtilisateurEntity; // Lien vers l'entité UtilisateurEntity, représente l'utilisateur associé au projet
 
   @Column({ type: 'boolean' })

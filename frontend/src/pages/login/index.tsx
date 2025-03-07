@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from 'frontend/src/assets/logo_2.png';
+import logo from 'frontend/public/logo_2.png';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const LoginPage: React.FC = () => {
   // Déclarations d'état pour les valeurs du formulaire
-  const [email, setEmail] = useState("test1@gmail.com");
-  const [password, setPassword] = useState("1234");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false); // Chargement en cours
   
@@ -149,7 +148,7 @@ const LoginPage: React.FC = () => {
                 edge="end"
                 onClick={() => setShowPassword(!showPassword)} // Toggle visibility du mot de passe
                 onMouseDown={(e) => e.preventDefault()}
-                style={{ position: "absolute", right: "10px", top: "50%" }}
+                style={{ position: "absolute", right: "10px", top: "15%" }}
               >
                 {showPassword ? (
                   <Visibility sx={{fontSize:"1.25rem"}} />
@@ -158,20 +157,6 @@ const LoginPage: React.FC = () => {
                 )}
               </IconButton>
             </InputAdornment>
-          </div>
-
-          {/* Checkbox "Se souvenir de moi" */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", marginBottom: "20px" }}>
-           <FormControlLabel
-                control={
-                <Checkbox
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)} // Gérer l'état "se souvenir de moi"
-                />
-                }
-                label="Se souvenir de moi"
-                style={{ marginLeft: "10px" }}
-            />
           </div>
 
           {/* Bouton de connexion */}
@@ -199,7 +184,6 @@ const LoginPage: React.FC = () => {
 
         {/* Lien vers la page d'inscription */}
         <div style={{ marginTop: "20px", fontSize: "14px", color: "#333333" }}>
-          New on our platform?{" "}
           <span
             onClick={handleRegisterRedirect}
             style={{
@@ -209,7 +193,7 @@ const LoginPage: React.FC = () => {
               fontWeight: "bold",
             }}
           >
-            Create an account
+            Créer un compte
           </span>
         </div>
       </div>

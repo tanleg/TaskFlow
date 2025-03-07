@@ -64,10 +64,29 @@ const Sidebar: React.FC = () => {
       <nav style={{ width: "100%" }}>
         <ul style={{ listStyle: "none", padding: 0, width: "100%", height: "100%" }}>
           <li style={{ marginBottom: "30px", display: "flex", alignItems: "center", paddingLeft: "15px", fontSize: "24px", color: "white", fontWeight: "bold" }}>
-            <h2 style={{ margin: 0, fontSize: "24px" }}>Navigation</h2>
+            <Link
+              to="/dashboard"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#333333",
+                fontSize: "26px",
+                fontWeight: "bold",
+                fontFamily: "monserrat",
+                textDecoration: "none",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
+            >
+
+            <img
+              src="../../public/logo.png"
+              style={{ height: "60px", marginRight: "10px" }}
+            />
+
+            </Link>
           </li>
 
-          {/* Liens vers les différentes pages avec icônes */}
           <li style={{ marginBottom: "20px", display: "flex", alignItems: "center", paddingLeft: "15px", fontSize: "18px" }}>
             <FaTachometerAlt style={{ marginRight: "15px", color: "white", fontSize: "20px" }} />
             <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>Dashboard</Link>
