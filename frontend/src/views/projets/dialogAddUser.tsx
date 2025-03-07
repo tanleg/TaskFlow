@@ -118,23 +118,6 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose, id_pro
     }
   }, [id_projet]); // Déclencher l'effet dès que id_projet change
   
-
-  // Supprimer les membres sélectionnés
-  // const handleDeleteSelected = () => {
-  //   setMembers((prev) => prev.filter((member) => !selectedMembers.includes(member.id)));
-  //   setSelectedMembers([]); // Réinitialiser la sélection
-  // };
-
-  // Rendre les membres sélectionnés administrateurs
-  // const handleMakeAdmin = () => {
-  //   setMembers((prev) =>
-  //     prev.map((member) =>
-  //       selectedMembers.includes(member.id) ? { ...member, role: "ADMIN" } : member
-  //     )
-  //   );
-  //   setSelectedMembers([]); // Réinitialiser la sélection
-  // };
-
   return (
     <Dialog
       open={open}
@@ -253,27 +236,7 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose, id_pro
           py: 2,
         }}
       >
-        {/* <Button
-          variant="outlined"
-          color="error"
-          disabled={selectedMembers.length === 0}
-          onClick={handleDeleteSelected}
-          
-            sx={{
-                fontFamily: "Open Sans, sans-serif",
-                fontWeight: "bold",
-                borderColor: "#D32F2F",
-                color: "#D32F2F",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                "&:hover": {
-                borderColor: "#D32F2F",
-                color: "#D32F2F",
-                },
-            }}
-        >
-          Supprimer
-        </Button> */}
+
         <Button 
             variant="outlined" 
             color="primary"
@@ -286,20 +249,7 @@ const DialogAddUser: React.FC<DialogAddProjectsProps> = ({ open, onClose, id_pro
             }}>
            Invitation
          </Button>
-        {/* <Button
-          variant="outlined"
-          color="success"
-          disabled={selectedMembers.length === 0}
-          onClick={handleMakeAdmin}
-          sx={{
-            fontFamily: "Open Sans, sans-serif",
-            fontWeight: "bold",
-            padding: "10px 20px",
-            borderRadius: "8px",
-        }}
-        >
-          Déclarer ADMIN
-        </Button> */}
+
         <Button 
             variant="contained" 
             sx={{

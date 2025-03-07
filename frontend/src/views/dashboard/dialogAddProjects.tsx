@@ -163,11 +163,7 @@ const DialogAddProjects: React.FC<DialogAddProjectsProps> = ({ open, onClose }) 
             }
           }
 
-        // handleClose();
-        ////// pas ouf :
         window.location.reload()    // reload pour afficher le projet dans la liste
-        // faire une fonction pour afficher --> mieux et + fluide
-        //////
       
     } catch (error) {
         console.error("Erreur lors de la création du projet :", error);
