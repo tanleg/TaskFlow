@@ -83,7 +83,8 @@ const DashboardContent: React.FC = () => {
                   break;
               }
             
-            evenement = { date: element.date_fin, type: element.type, project: element.nom, color: color, icon: icon }
+            const formattedDate = element.date_fin.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/, "$3/$2/$1");
+            evenement = { date: formattedDate, type: element.type, project: element.nom, color: color, icon: icon }
             liste_evenement.push(evenement)
         }
         setUpcomingEvents(liste_evenement);

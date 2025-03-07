@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaTachometerAlt, FaProjectDiagram, FaComments, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Importation de Link et useNavigate pour la navigation
+import logo from 'frontend/public/logo.png';
 
 const apiUrl = import.meta.env.VITE_API_URL; // URL de l'API définie dans les variables d'environnement
 
@@ -80,7 +81,7 @@ const Sidebar: React.FC = () => {
             >
 
             <img
-              src="../../public/logo.png"
+              src={logo}
               style={{ height: "60px", marginRight: "10px" }}
             />
 
