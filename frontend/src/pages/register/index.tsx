@@ -9,8 +9,6 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-//   const [dob, setDob] = useState("");
-//   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
@@ -50,21 +48,12 @@ const RegisterPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (firstName && lastName /*&& dob && address */&& email && telephone && password) {
-        // setLoading(true);  // Démarre le chargement
-
-        // setTimeout(() => {  // Simule un délai avant la redirection
-        //   console.log("Inscription réussie :", firstName, lastName, email);
-        //   navigate("/dashboard");
-        // }, 2000); // Temps de chargement de 2 secondes
-
         
         try {
             setLoading(true);  // Démarre le chargement
             const response = await axios.post(`${apiUrl}/auth/creation`, {
               nom: firstName,
               prenom: lastName,
-            //   dateOfBirth: dob,
-            //   address: address,
               email: email,
               mot_de_passe: password,
               telephone: telephone,
@@ -75,7 +64,6 @@ const RegisterPage: React.FC = () => {
             
             alert("Inscription réussie !");
             autoLogin()
-            // navigate("/dashboard");
     
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);
@@ -226,45 +214,6 @@ const RegisterPage: React.FC = () => {
               transition: "all 0.3s ease-in-out",
             }}
           />
-
-          {/* <input
-            type="date"
-            placeholder="Date de naissance"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              padding: "14px",
-              borderRadius: "10px",
-              border: "1px solid #e0e0e0",
-              fontSize: "16px",
-              fontFamily: "'Open Sans', sans-serif",
-              outline: "none",
-              backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.3s ease-in-out",
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Adresse"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              padding: "14px",
-              borderRadius: "10px",
-              border: "1px solid #e0e0e0",
-              fontSize: "16px",
-              fontFamily: "'Open Sans', sans-serif",
-              outline: "none",
-              backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.3s ease-in-out",
-            }}
-          /> */}
           
           <div style={{ position: "relative", marginBottom: "20px" }}>
             <input

@@ -60,10 +60,13 @@ npx expo start --clear
 ```
 
 ### Déploiement sur serveur
-1. Créer une insance AWS EC2
-2. Ajouter une règle sur l'instance Amazon EC2 autorisant autorisant le trafic ipv4 pour les machines qui utiliseront l'application.
-3. Modifier le fichier backend/src/main.ts ligne 11, autoriser les adresses ipv4 des machines qui utiliseront l'application.
-4. 
+1. Lancer l'instance AWS EC2
+2. Ajouter des règles sur l'instance Amazon EC2 autorisant autorisant le trafic HTTP, TCP (port 3000 et 3001), ssh et PostgreSQL pour les machines qui utiliseront l'application.
+3. Sur le serveur, modifier le fichier /var/www/backend/.env. Remplacer la variable d'environnement par l'adresse ip du serveur
+4. Modifier le fichier /var/www/backend/src/main.ts ligne 11, autoriser l'adresse ip du serveur.
+
+
+
 
 
 ## Calendrier du projet
