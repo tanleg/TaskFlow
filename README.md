@@ -67,8 +67,7 @@ npx expo start --clear
 
 #### Lancement du Frontend
 1. Modifier localement le fichier frontend/.env. Remplacer la variable d'environnement VITE_API_URL par l'adresse ip de l'instance EC2.
-2. 
-Localement :
+2. Sur la machine locale :
 ```bash
 cd frontend
 npm run build
