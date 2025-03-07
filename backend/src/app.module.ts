@@ -11,6 +11,7 @@ import { ProjetModule } from './projet/projet.module';
 import { FichiersModule } from './fichiers/fichiers.module';
 import { PartenaireModule } from './partenaires/partenaire.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ConfigModule } from '@nestjs/config';
     ProjetModule,
     FichiersModule,
     PartenaireModule,
+    ChatModule
   ],
   controllers: [AppController],
   providers: [AppService],

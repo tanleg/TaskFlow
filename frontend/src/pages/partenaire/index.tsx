@@ -12,9 +12,9 @@ const AccessPage = () => {
   useEffect(() => {
     const verifyAccess = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/partenaire/access/${token}`);
-        const partenaire = response.data;
-        navigate(`/projet/${partenaire.projet.id}/${token}`); // Redirige si valide
+          const response = await axios.get(`${apiUrl}/partenaire/access/${token}`);
+          const partenaire = response.data;
+          navigate(`/projet/${partenaire.projet.id}/${token}`); // Redirige si valide
       } catch (err) {
         navigate(`/404`); // Redirige vers 404 en cas d'erreur
         setError("Lien invalide ou expiré.");

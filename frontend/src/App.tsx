@@ -12,6 +12,7 @@ import NotFoundPage from "frontend/src/pages/404.tsx";
 import DetailsProjet from "./views/projets/detailsProjets";
 import AccessPage from "./pages/partenaire";    
 import DetailsProjetPartenaire from "./views/projets/detailsProjetsPartenaire";
+import ChatPage from "./views/chat/chatPage";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projet/:id" element={<DetailsProjet />} />
           <Route path="/chats" element={<Chats />} />
+          <Route path="/chat/:projectId" element={<ChatPage />} />
           <Route path="/users" element={<Users />} />
           <Route path="/access/:token" element={<AccessPage />} />
         </Route>
