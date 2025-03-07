@@ -40,7 +40,7 @@ Cette plateforme web permet de centraliser et gérer des projets de recherche co
 ### Installation locale
 ```bash
 # Cloner le dépôt
-git clone <https://github.com/tanleg/TaskFlow.git>
+git clone https://github.com/tanleg/TaskFlow.git
 cd TaskFlow
 
 # Backend
@@ -72,7 +72,7 @@ npx expo start --clear
 cd frontend
 npm run build
 ```
-3. Sur le serveur remplacer le contenu de /var/www/taskflow par le contenu du dossier frontend/dist obtenu à l'étape précédente
+3. Sur le serveur remplacer le contenu de /var/www/taskflow par le contenu du dossier frontend/dist obtenu à l'étape précédente.
 
 #### Lancement du Backend
 1. Sur le serveur :
@@ -82,7 +82,7 @@ sudo nano .env
 ```
 Remplacer la variable d'environnement URL_SITE par l'adresse ip de l'instance EC2.
 
-2. Sur le serveur:
+2. Sur le serveur :
 ```bash
 cd /var/www/backend/dist/backend/src
 sudo nano main.js
@@ -110,13 +110,13 @@ pm2 restart backend
 1. Ouvrir un navigateur web.  
 2. Aller à l'adresse suivante :  
    ```markdown
-   [Accéder à l'application](https://adresse_ip_de_l'instance_EC2.com)
+   https://adresse_ip_de_l'instance_EC2.com
 3. Se connecter avec un compte existant ou créer un nouveau compte.  
 
 #### Version Mobile  
-**La version mobile est toujours en cours de développement
+**La version mobile est toujours en cours de développement**
 1. Télécharger Expo Go depuis un mobile
-2. Modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
+2. Sur la machine locale modifier mobile/.env. Remplacer la variable d'environnement par l'adresse ip du PC.
 3. Depuis un terminal :
 ```bash
 npx expo start --clear
@@ -129,14 +129,20 @@ npx expo start --clear
 3. Valider pour enregistrer le projet.  
 
 ### 3. Suivi des projets  
-- suivez tous vos projets en cours depuis le **Dashboard** et accédez au projet public.  
-- Consultez aussi vos futures tâches depuis le **Dashboard**.
-- Cliquer sur un projet pour voir ses détails, en modifier les mebres et suivre son avancement via la **timeline**.  
+- Suivez tous vos projets en cours depuis le **Dashboard** et accédez au projet public.  
+- Consultez aussi vos événements à venir depuis le **Dashboard**.
+- Cliquer sur un projet pour voir ses détails, en modifier les membres et suivre son avancement via la **timeline**.  
 
 ### 4. Collaboration et communication  
 - Utiliser le **chat intégré** pour échanger avec les membres de l’équipe.  
 - Partager des fichiers en les déposant dans l’**espace de stockage** du projet.  
-- Consultez la liste des utilisateurs en tant qu'administrateur depuis le **Dashboard** 
+- Consultez la liste des utilisateurs en tant qu'administrateur en cliquant sur "Utilisateurs" depuis la **barre de navigation**.
+
+### 5. Invitez des partenaires industriels
+1. Depuis une  **page projet**, appuez sur "ajouter un utilisateur".
+2. Cliquer sur **"invitation"**.
+3. Remplir les informations nécessaires puis copier le **lien** obtenu.
+4. Envoyer le lien à votre **partenaire**.
 
 ## Équipe projet
 - **Le Goff Tanguy** : Product Owner et développeur Backend
